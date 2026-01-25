@@ -112,6 +112,12 @@ function Login() {
                     id="code"
                     name="code"
                     placeholder="Enter code"
+                    autoComplete="off"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                    spellCheck="false"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     required
                     className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-center text-2xl tracking-widest"
                   />

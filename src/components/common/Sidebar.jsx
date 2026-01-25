@@ -59,7 +59,7 @@ function Sidebar({ collapsed, onToggleCollapse, user }) {
     >
       <div className="flex flex-col h-full">
         {/* Logo */}
-        <div className="p-4 border-b border-white/10">
+        <div className="p-4 border-b border-gray-200 dark:border-white/10">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-teal-400 to-purple-500 flex items-center justify-center">
               <span className="text-white font-bold text-lg">F</span>
@@ -85,10 +85,9 @@ function Sidebar({ collapsed, onToggleCollapse, user }) {
                 <NavLink
                   to={item.path}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 hover-glow ${
-                      isActive
-                        ? 'bg-teal-500/20 text-teal-400'
-                        : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 hover-glow ${isActive
+                      ? 'bg-teal-500/20 text-teal-600 dark:text-teal-400'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5'
                     }`
                   }
                 >
@@ -110,10 +109,10 @@ function Sidebar({ collapsed, onToggleCollapse, user }) {
         </nav>
 
         {/* Collapse Toggle */}
-        <div className="p-4 border-t border-white/10">
+        <div className="p-4 border-t border-gray-200 dark:border-white/10">
           <button
             onClick={onToggleCollapse}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
           >
             <svg
               className={`w-5 h-5 transition-transform ${collapsed ? 'rotate-180' : ''}`}
@@ -129,9 +128,9 @@ function Sidebar({ collapsed, onToggleCollapse, user }) {
 
         {/* User Info */}
         {user && (
-          <div className="p-4 border-t border-white/10">
+          <div className="p-4 border-t border-gray-200 dark:border-white/10">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-teal-400 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-teal-500 flex items-center justify-center">
                 <span className="text-white text-sm font-medium">
                   {user.displayName?.[0]?.toUpperCase() || 'U'}
                 </span>
@@ -143,10 +142,10 @@ function Sidebar({ collapsed, onToggleCollapse, user }) {
                   exit={{ opacity: 0 }}
                   className="overflow-hidden"
                 >
-                  <p className="text-sm font-medium text-white truncate">
+                  <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                     {user.displayName || 'User'}
                   </p>
-                  <p className="text-xs text-gray-400 truncate">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                     {user.email}
                   </p>
                 </motion.div>

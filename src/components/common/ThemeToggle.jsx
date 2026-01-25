@@ -19,7 +19,7 @@ function ThemeToggle({ user, currentTheme }) {
   return (
     <motion.button
       onClick={toggleTheme}
-      className="relative w-14 h-7 rounded-full bg-navy-700 dark:bg-navy-600 border border-white/10 flex items-center transition-colors duration-400"
+      className="relative w-14 h-7 rounded-full bg-gray-200 dark:bg-navy-600 border border-gray-300 dark:border-white/10 flex items-center transition-colors duration-400"
       whileTap={{ scale: 0.95 }}
     >
       <motion.div

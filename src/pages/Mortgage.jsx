@@ -71,10 +71,10 @@ function Mortgage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-display font-bold text-white">
+          <h1 className="text-2xl font-display font-bold text-gray-900 dark:text-white">
             Mortgage
           </h1>
-          <p className="text-gray-400">
+          <p className="text-gray-500 dark:text-gray-400">
             Track your home loan and equity
           </p>
         </div>
@@ -91,8 +91,8 @@ function Mortgage() {
       {/* Home Value & Equity */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
-          <p className="text-gray-400 text-sm mb-1">Home Value</p>
-          <p className="text-2xl font-display font-bold text-orange-400">
+          <p className="text-gray-500 dark:text-gray-400 text-sm mb-1">Home Value</p>
+          <p className="text-2xl font-display font-bold text-orange-600 dark:text-orange-400">
             {formatCurrency(homeValue, currency)}
           </p>
           {household?.appreciationRate && (
@@ -102,8 +102,8 @@ function Mortgage() {
           )}
         </Card>
         <Card>
-          <p className="text-gray-400 text-sm mb-1">Mortgage Balance</p>
-          <p className="text-2xl font-display font-bold text-red-400">
+          <p className="text-gray-500 dark:text-gray-400 text-sm mb-1">Mortgage Balance</p>
+          <p className="text-2xl font-display font-bold text-red-600 dark:text-red-400">
             {formatCurrency(mortgage?.currentBalance || 0, currency)}
           </p>
           {mortgage && (
@@ -113,8 +113,8 @@ function Mortgage() {
           )}
         </Card>
         <Card>
-          <p className="text-gray-400 text-sm mb-1">Home Equity</p>
-          <p className="text-2xl font-display font-bold text-teal-400">
+          <p className="text-gray-500 dark:text-gray-400 text-sm mb-1">Home Equity</p>
+          <p className="text-2xl font-display font-bold text-teal-600 dark:text-teal-400">
             {formatCurrency(equity, currency)}
           </p>
           {homeValue > 0 && (
@@ -129,37 +129,37 @@ function Mortgage() {
         <>
           {/* Loan Details */}
           <Card>
-            <h2 className="text-lg font-display font-semibold text-white mb-4">
+            <h2 className="text-lg font-display font-semibold text-gray-900 dark:text-white mb-4">
               Loan Details
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                <p className="text-gray-400 text-sm">Lender</p>
-                <p className="text-white font-medium">{mortgage.lender}</p>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">Lender</p>
+                <p className="text-gray-900 dark:text-white font-medium">{mortgage.lender}</p>
               </div>
               <div>
-                <p className="text-gray-400 text-sm">Original Amount</p>
-                <p className="text-white font-medium">
+                <p className="text-gray-500 dark:text-gray-400 text-sm">Original Amount</p>
+                <p className="text-gray-900 dark:text-white font-medium">
                   {formatCurrency(mortgage.originalAmount, currency)}
                 </p>
               </div>
               <div>
-                <p className="text-gray-400 text-sm">Term</p>
-                <p className="text-white font-medium">{mortgage.termYears} years</p>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">Term</p>
+                <p className="text-gray-900 dark:text-white font-medium">{mortgage.termYears} years</p>
               </div>
               <div>
-                <p className="text-gray-400 text-sm">Start Date</p>
-                <p className="text-white font-medium">{formatDate(mortgage.startDate)}</p>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">Start Date</p>
+                <p className="text-gray-900 dark:text-white font-medium">{formatDate(mortgage.startDate)}</p>
               </div>
               <div>
-                <p className="text-gray-400 text-sm">Monthly Payment</p>
-                <p className="text-white font-medium">
+                <p className="text-gray-500 dark:text-gray-400 text-sm">Monthly Payment</p>
+                <p className="text-gray-900 dark:text-white font-medium">
                   {formatCurrency(mortgage.monthlyPayment, currency)}
                 </p>
               </div>
               <div>
-                <p className="text-gray-400 text-sm">Interest Rate</p>
-                <p className="text-white font-medium">
+                <p className="text-gray-500 dark:text-gray-400 text-sm">Interest Rate</p>
+                <p className="text-gray-900 dark:text-white font-medium">
                   {formatPercentage(mortgage.interestRate)}
                 </p>
               </div>
@@ -169,33 +169,33 @@ function Mortgage() {
           {/* Payoff Projections */}
           {projections && (
             <Card>
-              <h2 className="text-lg font-display font-semibold text-white mb-4">
+              <h2 className="text-lg font-display font-semibold text-gray-900 dark:text-white mb-4">
                 Payoff Projections
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
-                  <p className="text-gray-400 text-sm">Payoff Date</p>
-                  <p className="text-white font-medium">
+                  <p className="text-gray-500 dark:text-gray-400 text-sm">Payoff Date</p>
+                  <p className="text-gray-900 dark:text-white font-medium">
                     {formatDate(projections.payoffDate)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-400 text-sm">Total Interest</p>
-                  <p className="text-red-400 font-medium">
+                  <p className="text-gray-500 dark:text-gray-400 text-sm">Total Interest</p>
+                  <p className="text-red-600 dark:text-red-400 font-medium">
                     {formatCurrency(projections.totalInterest, currency)}
                   </p>
                 </div>
                 {projections.interestSaved > 0 && (
                   <>
                     <div>
-                      <p className="text-gray-400 text-sm">Interest Saved</p>
-                      <p className="text-teal-400 font-medium">
+                      <p className="text-gray-500 dark:text-gray-400 text-sm">Interest Saved</p>
+                      <p className="text-teal-600 dark:text-teal-400 font-medium">
                         {formatCurrency(projections.interestSaved, currency)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-gray-400 text-sm">Months Saved</p>
-                      <p className="text-teal-400 font-medium">
+                      <p className="text-gray-500 dark:text-gray-400 text-sm">Months Saved</p>
+                      <p className="text-teal-600 dark:text-teal-400 font-medium">
                         {projections.monthsSaved} months
                       </p>
                     </div>
@@ -292,12 +292,12 @@ function MortgageForm({ mortgage, household, householdId, onClose }) {
         className="glass-card rounded-xl p-6 w-full max-w-lg"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-xl font-display font-semibold text-white mb-6">
+        <h2 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-6">
           {mortgage ? 'Edit' : 'Add'} Mortgage Details
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
               Lender
             </label>
             <input
@@ -306,12 +306,12 @@ function MortgageForm({ mortgage, household, householdId, onClose }) {
               onChange={(e) => setFormData({ ...formData, lender: e.target.value })}
               placeholder="e.g., Wells Fargo, Chase"
               required
-              className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
                 Original Amount
               </label>
               <input
@@ -320,11 +320,11 @@ function MortgageForm({ mortgage, household, householdId, onClose }) {
                 value={formData.originalAmount}
                 onChange={(e) => setFormData({ ...formData, originalAmount: e.target.value })}
                 required
-                className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
                 Current Balance
               </label>
               <input
@@ -333,13 +333,13 @@ function MortgageForm({ mortgage, household, householdId, onClose }) {
                 value={formData.currentBalance}
                 onChange={(e) => setFormData({ ...formData, currentBalance: e.target.value })}
                 required
-                className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
               />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
                 Interest Rate (%)
               </label>
               <input
@@ -348,26 +348,26 @@ function MortgageForm({ mortgage, household, householdId, onClose }) {
                 value={formData.interestRate}
                 onChange={(e) => setFormData({ ...formData, interestRate: e.target.value })}
                 required
-                className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
                 Term (Years)
               </label>
               <select
                 value={formData.termYears}
                 onChange={(e) => setFormData({ ...formData, termYears: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
               >
-                <option value="15">15 years</option>
-                <option value="20">20 years</option>
-                <option value="30">30 years</option>
+                <option value="15" className="bg-white dark:bg-navy-800">15 years</option>
+                <option value="20" className="bg-white dark:bg-navy-800">20 years</option>
+                <option value="30" className="bg-white dark:bg-navy-800">30 years</option>
               </select>
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
               Start Date
             </label>
             <input
@@ -375,14 +375,14 @@ function MortgageForm({ mortgage, household, householdId, onClose }) {
               value={formData.startDate}
               onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
               required
-              className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
           </div>
           <div className="flex justify-end gap-3 pt-4">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-lg text-gray-400 hover:text-white transition-colors"
+              className="px-4 py-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors"
             >
               Cancel
             </button>

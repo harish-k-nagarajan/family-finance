@@ -1,5 +1,5 @@
 function SkeletonLoader({ className = '', variant = 'text' }) {
-  const baseClasses = 'animate-pulse bg-white/10 rounded';
+  const baseClasses = 'animate-pulse bg-gray-200 dark:bg-white/10 rounded';
 
   const variants = {
     text: 'h-4 w-full',

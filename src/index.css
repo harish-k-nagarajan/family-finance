@@ -17,11 +17,11 @@
 
   --color-electric-blue: #3B82F6;
 
-  --color-soft-white: #F8F9FC;
-  --color-soft-gray: #F3F4F6;
+  --color-soft-white: #FAFBFC;
+  --color-soft-gray: #F5F6F8;
 
-  /* Custom fonts */
-  --font-display: 'Plus Jakarta Sans', 'Clash Display', system-ui, sans-serif;
+  /* Custom fonts - Plus Jakarta Sans for display, Inter for body */
+  --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
   --font-body: 'Inter', system-ui, sans-serif;
 
   /* Custom scale */
@@ -35,13 +35,13 @@
 
   body {
     background-color: var(--color-soft-white);
-    color: #111827;
-    transition: background-color 0.3s, color 0.3s;
+    color: #1F2937;
+    transition: background-color 0.4s, color 0.4s;
   }
 
   body.dark {
     background-color: var(--color-navy-900);
-    color: white;
+    color: #F9FAFB;
   }
 }
 
@@ -49,18 +49,27 @@
   /* Glassmorphism card styles */
   .glass-card {
     backdrop-filter: blur(16px);
-    background-color: rgba(0, 0, 0, 0.04);
+    background-color: #ffffff;
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   }
 
   .dark .glass-card {
     background-color: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: none;
   }
 
   /* Gradient text */
   .gradient-text {
+    background: linear-gradient(to right, var(--color-teal-600), var(--color-purple-600));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .dark .gradient-text {
     background: linear-gradient(to right, var(--color-teal-400), var(--color-purple-400));
     -webkit-background-clip: text;
     background-clip: text;
@@ -76,10 +85,10 @@
 
   .hover-glow:hover {
     transform: scale(1.02);
-    box-shadow: 0 10px 15px -3px rgba(20, 184, 166, 0.2);
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
   }
 
   .dark .hover-glow:hover {
-    box-shadow: 0 10px 15px -3px rgba(45, 212, 191, 0.3);
+    box-shadow: 0 10px 20px -5px rgba(45, 212, 191, 0.25);
   }
 }

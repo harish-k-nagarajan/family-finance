@@ -20,8 +20,8 @@ function OwnerTabs({ owners, selectedOwner, onSelect }) {
           onClick={() => onSelect(tab.id)}
           className={`relative px-4 py-2 text-sm font-medium rounded-md transition-colors ${
             selectedOwner === tab.id
-              ? 'text-white'
-              : 'text-gray-400 hover:text-white'
+              ? 'text-gray-900 dark:text-white'
+              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white'
           }`}
         >
           {selectedOwner === tab.id && (

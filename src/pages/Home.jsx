@@ -119,10 +119,10 @@ function Home() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <h1 className="text-3xl font-display font-bold text-white dark:text-white text-gray-900 mb-2">
+        <h1 className="text-3xl font-display font-bold text-gray-900 dark:text-white mb-2">
           Welcome back, {currentUser?.displayName || 'User'}
         </h1>
-        <p className="text-gray-400">
+        <p className="text-gray-600 dark:text-gray-400">
           Here's your financial overview
         </p>
       </motion.div>
@@ -137,7 +137,7 @@ function Home() {
             transition={{ delay: index * 0.1 }}
           >
             <Card hover>
-              <p className="text-gray-400 text-sm mb-2">{stat.label}</p>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">{stat.label}</p>
               <p className={`text-2xl font-display font-bold bg-gradient-to-r ${stat.gradient} bg-clip-text text-transparent`}>
                 <AnimatedNumber
                   value={stat.value}
@@ -152,7 +152,7 @@ function Home() {
       {/* Trend Chart */}
       <Card>
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-display font-semibold text-white dark:text-white text-gray-900">
+          <h2 className="text-lg font-display font-semibold text-gray-900 dark:text-white">
             Net Worth Trend
           </h2>
           <div className="flex gap-2">
@@ -161,8 +161,8 @@ function Home() {
                 key={range}
                 onClick={() => setTimeRange(range)}
                 className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${timeRange === range
-                  ? 'bg-teal-500/20 text-teal-400'
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
+                  ? 'bg-teal-500/20 text-teal-600 dark:text-teal-400'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5'
                   }`}
               >
                 {range}
@@ -176,7 +176,7 @@ function Home() {
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
-          <h2 className="text-lg font-display font-semibold text-white dark:text-white text-gray-900 mb-4">
+          <h2 className="text-lg font-display font-semibold text-gray-900 dark:text-white mb-4">
             Bank Accounts
           </h2>
           {accounts.length > 0 ? (
@@ -184,10 +184,10 @@ function Home() {
               {accounts.slice(0, 3).map((account) => (
                 <div
                   key={account.id}
-                  className="flex items-center justify-between p-3 rounded-lg bg-white/5"
+                  className="flex items-center justify-between p-3 rounded-lg bg-gray-100 dark:bg-white/5"
                 >
-                  <span className="text-gray-300">{account.institution}</span>
-                  <span className="text-teal-400 font-medium">
+                  <span className="text-gray-700 dark:text-gray-300">{account.institution}</span>
+                  <span className="text-teal-600 dark:text-teal-400 font-medium">
                     {formatCurrency(account.balance, currency)}
                   </span>
                 </div>
@@ -206,7 +206,7 @@ function Home() {
         </Card>
 
         <Card>
-          <h2 className="text-lg font-display font-semibold text-white dark:text-white text-gray-900 mb-4">
+          <h2 className="text-lg font-display font-semibold text-gray-900 dark:text-white mb-4">
             Investments
           </h2>
           {investments.length > 0 ? (
@@ -214,15 +214,15 @@ function Home() {
               {investments.slice(0, 3).map((investment) => (
                 <div
                   key={investment.id}
-                  className="flex items-center justify-between p-3 rounded-lg bg-white/5"
+                  className="flex items-center justify-between p-3 rounded-lg bg-gray-100 dark:bg-white/5"
                 >
                   <div>
-                    <span className="text-gray-300">{investment.institution}</span>
+                    <span className="text-gray-700 dark:text-gray-300">{investment.institution}</span>
                     <span className="text-gray-500 text-sm ml-2">
                       ({investment.accountType})
                     </span>
                   </div>
-                  <span className="text-purple-400 font-medium">
+                  <span className="text-purple-600 dark:text-purple-400 font-medium">
                     {formatCurrency(investment.balance, currency)}
                   </span>
                 </div>
