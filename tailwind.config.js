@@ -4,7 +4,7 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: 'class',
+  // darkMode configured via @custom-variant in index.css (Tailwind v4)
   theme: {
     extend: {
       colors: {

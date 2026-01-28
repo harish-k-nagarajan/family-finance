@@ -50,7 +50,10 @@ const navItems = [
   },
 ];
 
-function Sidebar({ collapsed, onToggleCollapse, user }) {
+function Sidebar({ collapsed, onToggleCollapse, user, household }) {
+  const visibleNavItems = household?.mortgageEnabled
+    ? navItems
+    : navItems.filter((item) => item.path !== '/mortgage');
   return (
     <motion.aside
       initial={false}
@@ -80,7 +83,7 @@ function Sidebar({ collapsed, onToggleCollapse, user }) {
         {/* Navigation */}
         <nav className="flex-1 p-4">
           <ul className="space-y-2">
-            {navItems.map((item) => (
+            {visibleNavItems.map((item) => (
               <li key={item.path}>
                 <NavLink
                   to={item.path}

@@ -19,6 +19,7 @@ export const currencies = [
   { code: 'NOK', symbol: 'kr', name: 'Norwegian Krone' },
   { code: 'SEK', symbol: 'kr', name: 'Swedish Krona' },
   { code: 'DKK', symbol: 'kr', name: 'Danish Krone' },
+  { code: 'CZK', symbol: 'Kč', name: 'Czech Koruna' },
   { code: 'NZD', symbol: 'NZ$', name: 'New Zealand Dollar' },
   { code: 'ZAR', symbol: 'R', name: 'South African Rand' },
   { code: 'RUB', symbol: '₽', name: 'Russian Ruble' },

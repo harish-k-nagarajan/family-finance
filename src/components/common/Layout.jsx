@@ -3,7 +3,7 @@ import Sidebar from './Sidebar';
 import Toast from './Toast';
 import ThemeToggle from './ThemeToggle';
 
-function Layout({ children, user, theme }) {
+function Layout({ children, user, theme, household }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
@@ -12,6 +12,7 @@ function Layout({ children, user, theme }) {
         collapsed={sidebarCollapsed}
         onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
         user={user}
+        household={household}
       />
       <main
         className={`flex-1 transition-all duration-300 ${sidebarCollapsed ? 'ml-20' : 'ml-64'

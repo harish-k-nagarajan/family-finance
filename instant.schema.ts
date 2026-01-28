@@ -7,6 +7,7 @@ const _schema = i.schema({
       appreciationRate: i.number(),
       homePurchasePrice: i.number(),
       homePurchaseDate: i.number(), // Unix timestamp
+      mortgageEnabled: i.boolean(), // Show/hide mortgage section
       createdAt: i.number(),
       updatedAt: i.number(),
     }),

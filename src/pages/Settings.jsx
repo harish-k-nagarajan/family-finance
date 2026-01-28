@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { id } from '@instantdb/react';
 import { db } from '../lib/instant';
 import Card from '../components/common/Card';
 import SkeletonLoader from '../components/common/SkeletonLoader';
@@ -41,23 +39,6 @@ function Settings() {
     );
   };
 
-  const handleCreateHousehold = async (householdData) => {
-    const now = Date.now();
-    const householdId = id();
-
-    await db.transact([
-      db.tx.households[householdId].update({
-        ...householdData,
-        createdAt: now,
-        updatedAt: now,
-      }),
-      db.tx.users[currentUser.id].update({
-        householdId,
-        updatedAt: now,
-      }),
-    ]);
-  };
-
   const handleSignOut = async () => {
     await db.auth.signOut();
   };
@@ -78,7 +59,7 @@ function Settings() {
         <h1 className="text-2xl font-display font-bold text-gray-900 dark:text-white">
           Settings
         </h1>
-        <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">
+        <p className="text-gray-600 dark:text-gray-400">
           Manage your account and household preferences
         </p>
       </div>
@@ -103,25 +84,15 @@ function Settings() {
       </Card>
 
       {/* Household Settings */}
-      {household ? (
+      {household && (
         <Card>
           <h2 className="text-lg font-display font-semibold text-gray-900 dark:text-white mb-4">
-            Household Settings
+            Household
           </h2>
           <HouseholdSettingsForm
             household={household}
             onUpdate={handleUpdateHousehold}
           />
-        </Card>
-      ) : (
-        <Card>
-          <h2 className="text-lg font-display font-semibold text-gray-900 dark:text-white mb-4">
-            Create Household
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 mb-4">
-            Set up your household to start tracking finances
-          </p>
-          <CreateHouseholdForm onCreate={handleCreateHousehold} />
         </Card>
       )}
 
@@ -222,6 +193,7 @@ function HouseholdSettingsForm({ household, onUpdate }) {
     homePurchaseDate: household?.homePurchaseDate
       ? new Date(household.homePurchaseDate).toISOString().split('T')[0]
       : '',
+    mortgageEnabled: household?.mortgageEnabled || false,
   });
   const [isSaving, setIsSaving] = useState(false);
 
@@ -235,12 +207,38 @@ function HouseholdSettingsForm({ household, onUpdate }) {
       homePurchaseDate: formData.homePurchaseDate
         ? new Date(formData.homePurchaseDate).getTime()
         : null,
+      mortgageEnabled: formData.mortgageEnabled,
     });
     setIsSaving(false);
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Mortgage tracking toggle */}
+      <div className="flex items-center justify-between p-4 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10">
+        <div>
+          <p className="text-sm font-medium text-gray-900 dark:text-white">Mortgage tracking</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+            Track your mortgage, home equity, and include it in your net worth
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setFormData({ ...formData, mortgageEnabled: !formData.mortgageEnabled })}
+          className={`relative w-11 h-6 rounded-full transition-colors ${
+            formData.mortgageEnabled
+              ? 'bg-teal-500'
+              : 'bg-gray-300 dark:bg-gray-600'
+          }`}
+        >
+          <span
+            className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${
+              formData.mortgageEnabled ? 'translate-x-5' : 'translate-x-0'
+            }`}
+          />
+        </button>
+      </div>
+
       <div>
         <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
           Currency
@@ -301,58 +299,6 @@ function HouseholdSettingsForm({ household, onUpdate }) {
         className="px-4 py-2 rounded-lg bg-gradient-to-r from-teal-500 to-purple-500 text-white font-medium hover:opacity-90 disabled:opacity-50 transition-opacity"
       >
         {isSaving ? 'Saving...' : 'Save Changes'}
-      </button>
-    </form>
-  );
-}
-
-function CreateHouseholdForm({ onCreate }) {
-  const [formData, setFormData] = useState({
-    currency: 'USD',
-    appreciationRate: '3',
-    homePurchasePrice: '',
-    homePurchaseDate: '',
-  });
-  const [isCreating, setIsCreating] = useState(false);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsCreating(true);
-    await onCreate({
-      currency: formData.currency,
-      appreciationRate: parseFloat(formData.appreciationRate) || 0,
-      homePurchasePrice: parseFloat(formData.homePurchasePrice) || 0,
-      homePurchaseDate: formData.homePurchaseDate
-        ? new Date(formData.homePurchaseDate).getTime()
-        : null,
-    });
-    setIsCreating(false);
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
-          Currency
-        </label>
-        <select
-          value={formData.currency}
-          onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
-          className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
-        >
-          {currencies.map((c) => (
-            <option key={c.code} value={c.code} className="bg-white dark:bg-navy-800 text-gray-900 dark:text-white">
-              {c.code} - {c.name} ({c.symbol})
-            </option>
-          ))}
-        </select>
-      </div>
-      <button
-        type="submit"
-        disabled={isCreating}
-        className="px-4 py-2 rounded-lg bg-gradient-to-r from-teal-500 to-purple-500 text-white font-medium hover:opacity-90 disabled:opacity-50 transition-opacity"
-      >
-        {isCreating ? 'Creating...' : 'Create Household'}
       </button>
     </form>
   );

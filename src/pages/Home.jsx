@@ -38,8 +38,10 @@ function Home() {
   const totalBankBalance = accounts.reduce((sum, a) => sum + (a.balance || 0), 0);
   const totalInvestments = investments.reduce((sum, i) => sum + (i.balance || 0), 0);
 
+  const mortgageEnabled = household?.mortgageEnabled;
+
   let homeValue = 0;
-  if (household?.homePurchasePrice && household?.homePurchaseDate) {
+  if (mortgageEnabled && household?.homePurchasePrice && household?.homePurchaseDate) {
     homeValue = calculateHomeValue(
       household.homePurchasePrice,
       household.homePurchaseDate,
@@ -47,7 +49,7 @@ function Home() {
     );
   }
 
-  const mortgageBalance = mortgage?.currentBalance || 0;
+  const mortgageBalance = mortgageEnabled ? (mortgage?.currentBalance || 0) : 0;
   const netWorth = totalBankBalance + totalInvestments + homeValue - mortgageBalance;
 
   // Filter snapshots by time range
@@ -103,11 +105,13 @@ function Home() {
       value: totalInvestments,
       gradient: 'from-purple-400 to-pink-400',
     },
-    {
-      label: 'Home Equity',
-      value: homeValue - mortgageBalance,
-      gradient: 'from-orange-400 to-yellow-400',
-    },
+    ...(mortgageEnabled
+      ? [{
+          label: 'Home Equity',
+          value: homeValue - mortgageBalance,
+          gradient: 'from-orange-400 to-yellow-400',
+        }]
+      : []),
   ];
 
   const timeRanges = ['1M', '3M', '6M', '1Y', 'ALL'];

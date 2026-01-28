@@ -17,11 +17,21 @@ A web-based personal finance dashboard for tracking shared household finances be
 
 ## User Experience Decisions
 
+### Information Architecture
+```
+Household (auto-created on first signup)
+├── User 1 (creator) + User 2 (invited)
+│   └── Each user: unlimited bank accounts + investments
+├── Mortgage (household-level, shared — not per-user)
+└── Views: per-person or combined
+```
+
 ### Users & Permissions
-- **View Mode:** Tabs by owner - "Harish | Wife | Combined" filtering throughout app
+- **Household Creation:** A household is **automatically created** when a new user first signs up. No manual "Create Household" step — the onboarding wizard handles it.
+- **View Mode:** Tabs by owner - "User1 | User2 | Combined" filtering throughout app
 - **User Names:** Configurable during onboarding (not hardcoded)
 - **Permissions:** Equal permissions for both users (no admin role)
-- **New Users:** Can create their own separate household if not invited to existing one
+- **Invite Flow:** First user can invite a second user to join their household via email
 - **Real-time Sync:** Silent sync - changes appear automatically, no notifications
 
 ### Visual Design (Premium Fintech Aesthetic)
@@ -110,16 +120,18 @@ A web-based personal finance dashboard for tracking shared household finances be
 - Change display name
 - Change currency
 - Update appreciation rate
-- Manage household (remove second user)
+- Manage household (invite/remove second user)
+- **Enable/disable mortgage tracking** — toggle to show or hide the Mortgage section from the sidebar and exclude it from net worth calculations when disabled
 
 ### 6. Onboarding
-- **First-time flow:** Guided setup wizard
+- **First-time flow:** Guided setup wizard that **automatically creates a household** for the user (no separate "Create Household" step)
   1. Set currency from dropdown (popular world currencies with symbols)
   2. Set display name
-  3. Add first bank account
-  4. Add first investment (optional)
-  5. Add mortgage (optional)
-- **Invite second user:** Enter email to add to household
+  3. Household is auto-created at this point with the selected currency
+  4. Add first bank account
+  5. Add first investment (optional)
+  6. Add mortgage (optional)
+- **Invite second user:** Enter email to add to household (from Settings)
 
 ---
 
