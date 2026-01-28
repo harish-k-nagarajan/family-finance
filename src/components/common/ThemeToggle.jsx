@@ -1,25 +1,33 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { db } from '../../lib/instant';
 
 function ThemeToggle({ user, currentTheme }) {
+  const [isToggling, setIsToggling] = useState(false);
+
   const toggleTheme = async () => {
+    if (isToggling) return;
+
+    setIsToggling(true);
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    
+
     // Update theme in InstantDB
     if (user?.id) {
       await db.transact(
         db.tx.users[user.id].update({ theme: newTheme })
       );
     }
-    
+
     // Apply theme class to body
     document.body.classList.toggle('dark', newTheme === 'dark');
+    setIsToggling(false);
   };
 
   return (
     <motion.button
       onClick={toggleTheme}
-      className="relative w-14 h-7 rounded-full bg-gray-200 dark:bg-navy-600 border border-gray-300 dark:border-white/10 flex items-center transition-colors duration-400"
+      disabled={isToggling}
+      className="relative w-14 h-7 rounded-full bg-gray-200 dark:bg-navy-600 border border-gray-300 dark:border-white/10 flex items-center transition-colors duration-400 disabled:opacity-50"
       whileTap={{ scale: 0.95 }}
     >
       <motion.div

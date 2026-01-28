@@ -16,7 +16,7 @@ function TrendChart({ data, currency = 'USD', timeRange = 'all' }) {
         if (active && payload && payload.length) {
             return (
                 <div className="glass-card p-4 shadow-lg">
-                    <p className="text-sm text-gray-400 mb-2">{formatDate(label)}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{formatDate(label)}</p>
                     {payload.map((entry, index) => (
                         <p key={index} className="text-sm font-medium" style={{ color: entry.color }}>
                             {entry.name}: {formatCurrency(entry.value, currency)}
@@ -55,16 +55,19 @@ function TrendChart({ data, currency = 'USD', timeRange = 'all' }) {
                             <stop offset="95%" stopColor="#EAB308" stopOpacity={0.8} />
                         </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                    <CartesianGrid
+                        strokeDasharray="3 3"
+                        stroke={document.body.classList.contains('dark') ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}
+                    />
                     <XAxis
                         dataKey="date"
                         tickFormatter={(date) => formatDate(date, 'short')}
-                        stroke="rgba(255,255,255,0.5)"
+                        stroke={document.body.classList.contains('dark') ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'}
                         style={{ fontSize: '12px' }}
                     />
                     <YAxis
-                        tickFormatter={(value) => formatCurrency(value, currency, true)}
-                        stroke="rgba(255,255,255,0.5)"
+                        tickFormatter={(value) => formatCurrency(value, currency)}
+                        stroke={document.body.classList.contains('dark') ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)'}
                         style={{ fontSize: '12px' }}
                     />
                     <Tooltip content={<CustomTooltip />} />

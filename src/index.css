@@ -34,9 +34,9 @@
   }
 
   body {
-    background-color: var(--color-soft-white);
+    background: linear-gradient(135deg, #F0F4FF 0%, #FDF2F8 100%);
     color: #1F2937;
-    transition: background-color 0.4s, color 0.4s;
+    transition: background 0.4s, color 0.4s;
   }
 
   body.dark {
@@ -49,10 +49,10 @@
   /* Glassmorphism card styles */
   .glass-card {
     backdrop-filter: blur(16px);
-    background-color: #ffffff;
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    background-color: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.8);
     border-radius: 0.75rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
   }
 
   .dark .glass-card {

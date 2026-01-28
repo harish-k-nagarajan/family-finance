@@ -38,7 +38,7 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-navy-900 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-soft-white dark:bg-navy-900 p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -57,16 +57,16 @@ function Login() {
 
           {!sentEmail ? (
             <form onSubmit={handleSubmit}>
-              <h1 className="text-xl font-display font-semibold text-white text-center mb-2">
+              <h1 className="text-xl font-display font-semibold text-gray-900 dark:text-white text-center mb-2">
                 Welcome Back
               </h1>
-              <p className="text-gray-400 text-center mb-6">
+              <p className="text-gray-600 dark:text-gray-400 text-center mb-6">
                 Enter your email to sign in with a magic link
               </p>
 
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Email Address
                   </label>
                   <input
@@ -76,12 +76,12 @@ function Login() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"
                     required
-                    className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                   />
                 </div>
 
                 {error && (
-                  <p className="text-red-400 text-sm">{error}</p>
+                  <p className="text-red-500 dark:text-red-400 text-sm">{error}</p>
                 )}
 
                 <button
@@ -95,16 +95,16 @@ function Login() {
             </form>
           ) : (
             <form onSubmit={handleVerify}>
-              <h1 className="text-xl font-display font-semibold text-white text-center mb-2">
+              <h1 className="text-xl font-display font-semibold text-gray-900 dark:text-white text-center mb-2">
                 Check Your Email
               </h1>
-              <p className="text-gray-400 text-center mb-6">
-                We sent a code to <span className="text-teal-400">{sentEmail}</span>
+              <p className="text-gray-600 dark:text-gray-400 text-center mb-6">
+                We sent a code to <span className="text-teal-500 dark:text-teal-400">{sentEmail}</span>
               </p>
 
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="code" className="block text-sm font-medium text-gray-300 mb-2">
+                  <label htmlFor="code" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Verification Code
                   </label>
                   <input
@@ -119,12 +119,12 @@ function Login() {
                     inputMode="numeric"
                     pattern="[0-9]*"
                     required
-                    className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-center text-2xl tracking-widest"
+                    className="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-center text-2xl tracking-widest"
                   />
                 </div>
 
                 {error && (
-                  <p className="text-red-400 text-sm">{error}</p>
+                  <p className="text-red-500 dark:text-red-400 text-sm">{error}</p>
                 )}
 
                 <button
@@ -138,7 +138,7 @@ function Login() {
                 <button
                   type="button"
                   onClick={() => setSentEmail('')}
-                  className="w-full py-2 text-gray-400 hover:text-white text-sm transition-colors"
+                  className="w-full py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-sm transition-colors"
                 >
                   Use a different email
                 </button>

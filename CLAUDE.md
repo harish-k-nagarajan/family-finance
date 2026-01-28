@@ -41,7 +41,7 @@ Configuration files:
 
 ### Utility Modules
 - `src/utils/mortgageCalculations.js` - Amortization math, extra payment projections
-- `src/utils/formatters.js` - Date (DD/MM/YYYY), currency, number formatting
+- `src/utils/formatters.js` - Date formatting (DD/MM/YYYY or DD/MM with 'short' format), currency, number formatting
 - `src/utils/currencies.js` - Currency list with symbols
 
 ## Coding Standards
@@ -57,12 +57,16 @@ Configuration files:
 - Optimistic updates for instant UI feedback using `db.transact()`
 - Store user preferences in InstantDB user settings, NOT localStorage
 - Theme preference stored in InstantDB, read before first render to avoid flicker
+- **Toast notifications:** `<ToastProvider>` wraps `<App />` in `main.jsx` - use `useToast()` hook to show notifications
 
 ### Styling
-- **Tailwind utility classes only** - No custom CSS files
+- **Tailwind utility classes only** - No custom CSS files except `index.css` for base styles
 - Use theme colors from `tailwind.config.js` (e.g., `bg-navy-900`, `text-teal-400`)
-- Glassmorphism: `backdrop-blur-lg bg-white/10 border border-white/20`
+- **Glassmorphism:** Use `.glass-card` CSS class which automatically adapts to theme
+  - Light mode: Translucent white cards with soft shadows over gradient background
+  - Dark mode: Translucent dark cards with subtle borders
 - Responsive: desktop-first, use `md:` breakpoints for mobile adjustments
+- **Accessibility:** All text must meet WCAG AA contrast ratios (4.5:1 for normal text, 3:1 for large text)
 
 ### Data Types
 - **Monetary values:** Always stored as numbers (not strings) in database
@@ -129,12 +133,21 @@ Call `createSnapshot()` utility function after any account/investment/mortgage b
 **Dark Mode (default):**
 - Backgrounds: `#0A0E27` to `#1A1F3A` (deep navy/charcoal)
 - Accents: Vibrant teal, purple, electric blue
-- Glassmorphic cards: `backdrop-blur-lg bg-white/8 border border-white/12`
+- Glassmorphic cards: `backdrop-blur(16px) bg-white/8 border border-white/12`
+- Text: `#F9FAFB` (off-white) with gray variants for secondary text
 
 **Light Mode:**
-- Backgrounds: `#F8F9FC` to `#FFFFFF` (soft off-white)
-- Cards: `#F3F4F6` (subtle gray)
-- Glassmorphic cards: `backdrop-blur-lg bg-black/4 border border-black/8`
+- Background: `linear-gradient(135deg, #F0F4FF 0%, #FDF2F8 100%)` (blue-tint to pink-tint gradient for glassmorphism depth)
+- Glassmorphic cards: `backdrop-blur(16px) bg-white/60 border border-white/80 shadow-[0_4px_24px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)]`
+- Text: `#1F2937` (dark gray) with lighter variants for secondary text
+- Accents: Darker teal/purple variants for better contrast (teal-600, purple-600)
+
+**Theme Implementation:**
+- Theme stored in InstantDB user settings (source of truth)
+- Cached in localStorage to prevent flicker on page load
+- Inline script in `index.html` reads localStorage before React hydrates
+- `App.jsx` syncs theme from InstantDB to body class and localStorage
+- All components use `dark:` prefix for dark mode styles
 
 ### Typography
 - **Headers:** Plus Jakarta Sans Bold OR Clash Display (bold, geometric)

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { db } from './lib/instant';
 import Layout from './components/common/Layout';
@@ -19,10 +20,12 @@ function App() {
   const currentUser = userData?.users?.[0];
   const theme = currentUser?.theme || 'dark';
 
-  // Apply theme class to body
-  if (typeof document !== 'undefined') {
-    document.body.classList.toggle('dark', theme === 'dark');
-  }
+  // Apply theme class to body and sync to localStorage
+  useEffect(() => {
+    const isDark = theme === 'dark';
+    document.body.classList.toggle('dark', isDark);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   if (isLoading) {
     return (

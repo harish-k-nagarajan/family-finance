@@ -1,13 +1,19 @@
 /**
- * Format a Unix timestamp to DD/MM/YYYY
+ * Format a Unix timestamp to DD/MM/YYYY or DD/MM
  * @param {number} timestamp - Unix timestamp in milliseconds
+ * @param {string} format - Format type: 'full' (default) or 'short' (no year)
  * @returns {string} Formatted date string
  */
-export function formatDate(timestamp) {
+export function formatDate(timestamp, format = 'full') {
   if (!timestamp) return '';
   const date = new Date(timestamp);
   const day = String(date.getDate()).padStart(2, '0');
   const month = String(date.getMonth() + 1).padStart(2, '0');
+
+  if (format === 'short') {
+    return `${day}/${month}`;
+  }
+
   const year = date.getFullYear();
   return `${day}/${month}/${year}`;
 }
