@@ -116,7 +116,7 @@ function Investments() {
           <h1 className="text-2xl font-display font-bold text-gray-900 dark:text-white">
             Investments
           </h1>
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">
             Track your 401(k), IRA, and brokerage accounts
           </p>
         </div>
@@ -137,7 +137,7 @@ function Investments() {
 
       {/* Total Balance */}
       <Card>
-        <p className="text-gray-500 dark:text-gray-400 text-sm mb-1">Total Investments</p>
+        <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm mb-1">Total Investments</p>
         <p className="text-3xl font-display font-bold gradient-text">
           {formatCurrency(totalBalance, currency)}
         </p>
@@ -165,7 +165,7 @@ function Investments() {
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                     {investment.institution}
                   </h3>
-                  <p className="text-gray-500 dark:text-gray-400 text-sm">
+                  <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">
                     {investment.accountType} • {users.find((u) => u.id === investment.ownerId)?.displayName || 'Unknown'}
                   </p>
                 </div>
@@ -199,7 +199,7 @@ function Investments() {
 
         {investments.length === 0 && !isAdding && (
           <Card className="text-center py-8">
-            <p className="text-gray-500">No investments found</p>
+            <p className="text-gray-600 dark:text-gray-400">No investments found</p>
             <button
               onClick={() => setIsAdding(true)}
               className="mt-4 text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 transition-colors"
@@ -303,7 +303,7 @@ function InvestmentForm({ investment, users, onSubmit, onCancel }) {
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors"
+            className="px-4 py-2 rounded-lg text-gray-600 dark:text-gray-400 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors"
           >
             Cancel
           </button>

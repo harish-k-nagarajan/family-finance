@@ -122,7 +122,7 @@ function Home() {
         <h1 className="text-3xl font-display font-bold text-gray-900 dark:text-white mb-2">
           Welcome back, {currentUser?.displayName || 'User'}
         </h1>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className="text-gray-700 dark:text-gray-400">
           Here's your financial overview
         </p>
       </motion.div>
@@ -162,7 +162,7 @@ function Home() {
                 onClick={() => setTimeRange(range)}
                 className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${timeRange === range
                   ? 'bg-teal-500/20 text-teal-600 dark:text-teal-400'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5'
+                  : 'text-gray-600 dark:text-gray-400 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5'
                   }`}
               >
                 {range}
@@ -193,13 +193,13 @@ function Home() {
                 </div>
               ))}
               {accounts.length > 3 && (
-                <p className="text-gray-500 text-sm text-center">
+                <p className="text-gray-600 dark:text-gray-400 text-sm text-center">
                   +{accounts.length - 3} more accounts
                 </p>
               )}
             </div>
           ) : (
-            <p className="text-gray-500 text-center py-4">
+            <p className="text-gray-600 dark:text-gray-400 text-center py-4">
               No bank accounts added yet
             </p>
           )}
@@ -218,7 +218,7 @@ function Home() {
                 >
                   <div>
                     <span className="text-gray-700 dark:text-gray-300">{investment.institution}</span>
-                    <span className="text-gray-500 text-sm ml-2">
+                    <span className="text-gray-600 dark:text-gray-400 text-sm ml-2">
                       ({investment.accountType})
                     </span>
                   </div>
@@ -228,13 +228,13 @@ function Home() {
                 </div>
               ))}
               {investments.length > 3 && (
-                <p className="text-gray-500 text-sm text-center">
+                <p className="text-gray-600 dark:text-gray-400 text-sm text-center">
                   +{investments.length - 3} more investments
                 </p>
               )}
             </div>
           ) : (
-            <p className="text-gray-500 text-center py-4">
+            <p className="text-gray-600 dark:text-gray-400 text-center py-4">
               No investments added yet
             </p>
           )}

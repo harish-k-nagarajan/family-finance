@@ -11,15 +11,17 @@ function ThemeToggle({ user, currentTheme }) {
     setIsToggling(true);
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
 
-    // Update theme in InstantDB
+    // Apply theme class immediately (optimistic)
+    document.body.classList.toggle('dark', newTheme === 'dark');
+    localStorage.setItem('theme', newTheme);
+
+    // Persist to InstantDB
     if (user?.id) {
       await db.transact(
         db.tx.users[user.id].update({ theme: newTheme })
       );
     }
 
-    // Apply theme class to body
-    document.body.classList.toggle('dark', newTheme === 'dark');
     setIsToggling(false);
   };
 

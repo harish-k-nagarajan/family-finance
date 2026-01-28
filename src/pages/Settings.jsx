@@ -78,7 +78,7 @@ function Settings() {
         <h1 className="text-2xl font-display font-bold text-gray-900 dark:text-white">
           Settings
         </h1>
-        <p className="text-gray-500 dark:text-gray-400">
+        <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">
           Manage your account and household preferences
         </p>
       </div>
@@ -118,7 +118,7 @@ function Settings() {
           <h2 className="text-lg font-display font-semibold text-gray-900 dark:text-white mb-4">
             Create Household
           </h2>
-          <p className="text-gray-500 dark:text-gray-400 mb-4">
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 mb-4">
             Set up your household to start tracking finances
           </p>
           <CreateHouseholdForm onCreate={handleCreateHousehold} />
@@ -162,7 +162,7 @@ function UserSettingsForm({ user, onUpdate }) {
           type="email"
           value={user?.email || ''}
           disabled
-          className="w-full px-4 py-2 rounded-lg bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-500 cursor-not-allowed"
+          className="w-full px-4 py-2 rounded-lg bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-400 cursor-not-allowed"
         />
       </div>
       <div>

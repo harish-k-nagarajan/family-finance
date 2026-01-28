@@ -5,6 +5,7 @@ import { db } from '../lib/instant';
 function Login() {
   const [email, setEmail] = useState('');
   const [sentEmail, setSentEmail] = useState('');
+  const [code, setCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -16,6 +17,8 @@ function Login() {
     try {
       await db.auth.sendMagicCode({ email });
       setSentEmail(email);
+      setEmail(''); // Clear email input
+      setCode(''); // Clear code input
     } catch (err) {
       setError(err.message || 'Failed to send magic link');
     } finally {
@@ -25,7 +28,6 @@ function Login() {
 
   const handleVerify = async (e) => {
     e.preventDefault();
-    const code = e.target.code.value;
     setIsLoading(true);
     setError('');
 
@@ -72,9 +74,11 @@ function Login() {
                   <input
                     type="email"
                     id="email"
+                    name="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"
+                    autoComplete="email webauthn"
                     required
                     className="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                   />
@@ -111,14 +115,17 @@ function Login() {
                     type="text"
                     id="code"
                     name="code"
-                    placeholder="Enter code"
-                    autoComplete="off"
+                    value={code}
+                    onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
+                    placeholder="000000"
+                    autoComplete="one-time-code"
                     autoCorrect="off"
                     autoCapitalize="off"
                     spellCheck="false"
                     inputMode="numeric"
-                    pattern="[0-9]*"
+                    maxLength={6}
                     required
+                    autoFocus
                     className="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-center text-2xl tracking-widest"
                   />
                 </div>
@@ -137,7 +144,11 @@ function Login() {
 
                 <button
                   type="button"
-                  onClick={() => setSentEmail('')}
+                  onClick={() => {
+                    setSentEmail('');
+                    setCode('');
+                    setError('');
+                  }}
                   className="w-full py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-sm transition-colors"
                 >
                   Use a different email

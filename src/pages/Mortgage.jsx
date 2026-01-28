@@ -74,7 +74,7 @@ function Mortgage() {
           <h1 className="text-2xl font-display font-bold text-gray-900 dark:text-white">
             Mortgage
           </h1>
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">
             Track your home loan and equity
           </p>
         </div>
@@ -91,34 +91,34 @@ function Mortgage() {
       {/* Home Value & Equity */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
-          <p className="text-gray-500 dark:text-gray-400 text-sm mb-1">Home Value</p>
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm mb-1">Home Value</p>
           <p className="text-2xl font-display font-bold text-orange-600 dark:text-orange-400">
             {formatCurrency(homeValue, currency)}
           </p>
           {household?.appreciationRate && (
-            <p className="text-gray-500 text-sm mt-1">
+            <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
               {formatPercentage(household.appreciationRate)} annual appreciation
             </p>
           )}
         </Card>
         <Card>
-          <p className="text-gray-500 dark:text-gray-400 text-sm mb-1">Mortgage Balance</p>
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm mb-1">Mortgage Balance</p>
           <p className="text-2xl font-display font-bold text-red-600 dark:text-red-400">
             {formatCurrency(mortgage?.currentBalance || 0, currency)}
           </p>
           {mortgage && (
-            <p className="text-gray-500 text-sm mt-1">
+            <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
               {formatPercentage(mortgage.interestRate)} interest rate
             </p>
           )}
         </Card>
         <Card>
-          <p className="text-gray-500 dark:text-gray-400 text-sm mb-1">Home Equity</p>
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm mb-1">Home Equity</p>
           <p className="text-2xl font-display font-bold text-teal-600 dark:text-teal-400">
             {formatCurrency(equity, currency)}
           </p>
           {homeValue > 0 && (
-            <p className="text-gray-500 text-sm mt-1">
+            <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
               {formatPercentage((equity / homeValue) * 100, 1)} of home value
             </p>
           )}
@@ -134,31 +134,31 @@ function Mortgage() {
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                <p className="text-gray-500 dark:text-gray-400 text-sm">Lender</p>
+                <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Lender</p>
                 <p className="text-gray-900 dark:text-white font-medium">{mortgage.lender}</p>
               </div>
               <div>
-                <p className="text-gray-500 dark:text-gray-400 text-sm">Original Amount</p>
+                <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Original Amount</p>
                 <p className="text-gray-900 dark:text-white font-medium">
                   {formatCurrency(mortgage.originalAmount, currency)}
                 </p>
               </div>
               <div>
-                <p className="text-gray-500 dark:text-gray-400 text-sm">Term</p>
+                <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Term</p>
                 <p className="text-gray-900 dark:text-white font-medium">{mortgage.termYears} years</p>
               </div>
               <div>
-                <p className="text-gray-500 dark:text-gray-400 text-sm">Start Date</p>
+                <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Start Date</p>
                 <p className="text-gray-900 dark:text-white font-medium">{formatDate(mortgage.startDate)}</p>
               </div>
               <div>
-                <p className="text-gray-500 dark:text-gray-400 text-sm">Monthly Payment</p>
+                <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Monthly Payment</p>
                 <p className="text-gray-900 dark:text-white font-medium">
                   {formatCurrency(mortgage.monthlyPayment, currency)}
                 </p>
               </div>
               <div>
-                <p className="text-gray-500 dark:text-gray-400 text-sm">Interest Rate</p>
+                <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Interest Rate</p>
                 <p className="text-gray-900 dark:text-white font-medium">
                   {formatPercentage(mortgage.interestRate)}
                 </p>
@@ -174,13 +174,13 @@ function Mortgage() {
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
-                  <p className="text-gray-500 dark:text-gray-400 text-sm">Payoff Date</p>
+                  <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Payoff Date</p>
                   <p className="text-gray-900 dark:text-white font-medium">
                     {formatDate(projections.payoffDate)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-500 dark:text-gray-400 text-sm">Total Interest</p>
+                  <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Total Interest</p>
                   <p className="text-red-600 dark:text-red-400 font-medium">
                     {formatCurrency(projections.totalInterest, currency)}
                   </p>
@@ -188,13 +188,13 @@ function Mortgage() {
                 {projections.interestSaved > 0 && (
                   <>
                     <div>
-                      <p className="text-gray-500 dark:text-gray-400 text-sm">Interest Saved</p>
+                      <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Interest Saved</p>
                       <p className="text-teal-600 dark:text-teal-400 font-medium">
                         {formatCurrency(projections.interestSaved, currency)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-gray-500 dark:text-gray-400 text-sm">Months Saved</p>
+                      <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Months Saved</p>
                       <p className="text-teal-600 dark:text-teal-400 font-medium">
                         {projections.monthsSaved} months
                       </p>
@@ -207,7 +207,7 @@ function Mortgage() {
         </>
       ) : (
         <Card className="text-center py-8">
-          <p className="text-gray-500 mb-4">No mortgage information added yet</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">No mortgage information added yet</p>
           <button
             onClick={() => setIsEditing(true)}
             className="px-4 py-2 rounded-lg bg-gradient-to-r from-teal-500 to-purple-500 text-white font-medium hover:opacity-90 transition-opacity"
@@ -382,7 +382,7 @@ function MortgageForm({ mortgage, household, householdId, onClose }) {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors"
+              className="px-4 py-2 rounded-lg text-gray-600 dark:text-gray-400 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors"
             >
               Cancel
             </button>

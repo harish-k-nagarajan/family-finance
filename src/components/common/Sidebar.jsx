@@ -55,11 +55,11 @@ function Sidebar({ collapsed, onToggleCollapse, user }) {
     <motion.aside
       initial={false}
       animate={{ width: collapsed ? 80 : 256 }}
-      className="fixed left-0 top-0 h-full glass-card border-r z-50"
+      className="fixed left-0 top-0 h-full glass-card border-r border-gray-200/60 dark:border-white/10 z-50"
     >
       <div className="flex flex-col h-full">
         {/* Logo */}
-        <div className="p-4 border-b border-gray-200 dark:border-white/10">
+        <div className="p-4 border-b border-gray-200/60 dark:border-white/10">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-teal-400 to-purple-500 flex items-center justify-center">
               <span className="text-white font-bold text-lg">F</span>
@@ -109,7 +109,7 @@ function Sidebar({ collapsed, onToggleCollapse, user }) {
         </nav>
 
         {/* Collapse Toggle */}
-        <div className="p-4 border-t border-gray-200 dark:border-white/10">
+        <div className="p-4 border-t border-gray-200/60 dark:border-white/10">
           <button
             onClick={onToggleCollapse}
             className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
@@ -128,7 +128,7 @@ function Sidebar({ collapsed, onToggleCollapse, user }) {
 
         {/* User Info */}
         {user && (
-          <div className="p-4 border-t border-gray-200 dark:border-white/10">
+          <div className="p-4 border-t border-gray-200/60 dark:border-white/10">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-teal-500 flex items-center justify-center">
                 <span className="text-white text-sm font-medium">

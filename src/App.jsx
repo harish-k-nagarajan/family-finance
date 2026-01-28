@@ -29,8 +29,8 @@ function App() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-navy-900">
-        <div className="animate-pulse text-teal-400 text-xl font-display">
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-pulse text-teal-600 dark:text-teal-400 text-xl font-display">
           Loading...
         </div>
       </div>
@@ -39,8 +39,8 @@ function App() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-navy-900">
-        <div className="text-red-400">
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-red-500 dark:text-red-400">
           Error: {error.message}
         </div>
       </div>
