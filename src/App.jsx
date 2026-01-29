@@ -35,13 +35,6 @@ function App() {
   const household = userData?.households?.[0];
   const theme = currentUser?.theme || localStorage.getItem('theme') || 'dark';
 
-  // Apply theme class to body and sync to localStorage
-  useEffect(() => {
-    const isDark = theme === 'dark';
-    document.body.classList.toggle('dark', isDark);
-    localStorage.setItem('theme', theme);
-  }, [theme]);
-
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">

@@ -72,17 +72,6 @@ function Settings() {
         <UserSettingsForm user={currentUser} onUpdate={handleUpdateUser} />
       </Card>
 
-      {/* Theme Settings */}
-      <Card>
-        <h2 className="text-lg font-display font-semibold text-gray-900 dark:text-white mb-4">
-          Appearance
-        </h2>
-        <ThemeSelector
-          currentTheme={currentUser?.theme || 'dark'}
-          onSelect={(theme) => handleUpdateUser({ theme })}
-        />
-      </Card>
-
       {/* Household Settings */}
       {household && (
         <Card>
@@ -156,32 +145,6 @@ function UserSettingsForm({ user, onUpdate }) {
         {isSaving ? 'Saving...' : 'Save Changes'}
       </button>
     </form>
-  );
-}
-
-function ThemeSelector({ currentTheme, onSelect }) {
-  const themes = [
-    { id: 'dark', label: 'Dark', icon: '🌙' },
-    { id: 'light', label: 'Light', icon: '☀️' },
-  ];
-
-  return (
-    <div className="flex gap-4">
-      {themes.map((theme) => (
-        <button
-          key={theme.id}
-          onClick={() => onSelect(theme.id)}
-          className={`flex items-center gap-3 px-4 py-3 rounded-lg border transition-all ${
-            currentTheme === theme.id
-              ? 'border-teal-500 bg-teal-500/10'
-              : 'border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20'
-          }`}
-        >
-          <span className="text-2xl">{theme.icon}</span>
-          <span className="text-gray-900 dark:text-white font-medium">{theme.label}</span>
-        </button>
-      ))}
-    </div>
   );
 }
 
