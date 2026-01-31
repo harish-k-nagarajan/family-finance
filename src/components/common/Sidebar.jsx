@@ -133,10 +133,14 @@ function Sidebar({ collapsed, onToggleCollapse, user, household }) {
         {user && (
           <div className="p-4 border-t border-gray-200/60 dark:border-white/10">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-teal-500 flex items-center justify-center">
-                <span className="text-white text-sm font-medium">
-                  {user.displayName?.[0]?.toUpperCase() || 'U'}
-                </span>
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-teal-500 flex items-center justify-center overflow-hidden">
+                {user.profilePicture ? (
+                  <img src={user.profilePicture} alt={user.displayName} className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-white text-sm font-medium">
+                    {user.displayName?.[0]?.toUpperCase() || 'U'}
+                  </span>
+                )}
               </div>
               {!collapsed && (
                 <motion.div

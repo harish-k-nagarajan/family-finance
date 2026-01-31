@@ -3,17 +3,22 @@ import { i } from '@instantdb/react';
 const _schema = i.schema({
   entities: {
     households: i.entity({
+      name: i.string(), // NEW: Household name
+      ownerId: i.string(), // NEW: ID of the user who owns the household
       currency: i.string(),
       appreciationRate: i.number(),
       homePurchasePrice: i.number(),
       homePurchaseDate: i.number(), // Unix timestamp
       mortgageEnabled: i.boolean(), // Show/hide mortgage section
+      debtType: i.string(), // NEW: 'home', 'car', 'student', 'personal', 'other'
       createdAt: i.number(),
       updatedAt: i.number(),
     }),
     users: i.entity({
       email: i.string().unique(),
+      name: i.string(), // NEW: Full name
       displayName: i.string(),
+      profilePicture: i.string(), // NEW: Base64 or URL
       householdId: i.string().indexed(),
       theme: i.string(), // 'dark' or 'light'
       createdAt: i.number(),
@@ -80,7 +85,7 @@ const _schema = i.schema({
 });
 
 type _AppSchema = typeof _schema;
-interface AppSchema extends _AppSchema {}
+interface AppSchema extends _AppSchema { }
 const schema: AppSchema = _schema;
 
 export type { AppSchema };
