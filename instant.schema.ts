@@ -6,6 +6,8 @@ const _schema = i.schema({
       name: i.string(), // NEW: Household name
       ownerId: i.string(), // NEW: ID of the user who owns the household
       currency: i.string(),
+      country: i.string(), // NEW: Country code (e.g. 'US', 'GB')
+      relationshipStatus: i.string(), // NEW: Household-level status (Married, Domestic Partnership, etc.)
       appreciationRate: i.number(),
       homePurchasePrice: i.number(),
       homePurchaseDate: i.number(), // Unix timestamp
@@ -18,6 +20,7 @@ const _schema = i.schema({
       email: i.string().unique(),
       name: i.string(), // NEW: Full name
       displayName: i.string(),
+      // relationshipStatus removed from here
       profilePicture: i.string(), // NEW: Base64 or URL
       householdId: i.string().indexed(),
       theme: i.string(), // 'dark' or 'light'

@@ -8,6 +8,7 @@ import ProfilePictureUpload from '../components/Settings/ProfilePictureUpload';
 import DeleteAccountModal from '../components/Settings/DeleteAccountModal';
 import AddMemberModal from '../components/Settings/AddMemberModal';
 import DemoDataSection from '../components/Settings/DemoDataSection';
+import CountrySelect from '../components/common/CountrySelect';
 import { currencies } from '../utils/currencies';
 
 function Settings() {
@@ -156,6 +157,47 @@ function Settings() {
                   </div>
                 </div>
               </div>
+
+              {/* Country of Residence */}
+              <div>
+                <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+                  Country of Residence
+                </label>
+                <CountrySelect
+                  value={household.country}
+                  onChange={(code) => updateHousehold({ country: code })}
+                />
+              </div>
+
+              {/* Relationship Status */}
+              <div>
+                <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+                  Relationship Status
+                </label>
+                <div className="relative">
+                  <select
+                    value={household.relationshipStatus || 'Single'}
+                    onChange={(e) => updateHousehold({ relationshipStatus: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 appearance-none transition-all cursor-pointer"
+                  >
+                    <option value="Single">Single</option>
+                    <option value="In a Relationship">In a Relationship</option>
+                    <option value="Engaged">Engaged</option>
+                    <option value="Married">Married</option>
+                    <option value="Domestic Partnership">Domestic Partnership</option>
+                    <option value="Legally Cohabiting">Legally Cohabiting</option>
+                    <option value="Civil Union">Civil Union</option>
+                    <option value="Widowed">Widowed</option>
+                    <option value="Separated">Separated</option>
+                    <option value="Divorced">Divorced</option>
+                  </select>
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </Card>
@@ -232,6 +274,8 @@ function Settings() {
                       className="w-full px-3 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-transparent focus:bg-white dark:focus:bg-navy-900 border-gray-200 dark:border-white/10 focus:border-teal-500 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                     />
                   </div>
+
+
 
                   <div>
                     <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
