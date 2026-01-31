@@ -7,6 +7,7 @@ import CollapsibleSection from '../components/common/CollapsibleSection';
 import ProfilePictureUpload from '../components/Settings/ProfilePictureUpload';
 import DeleteAccountModal from '../components/Settings/DeleteAccountModal';
 import AddMemberModal from '../components/Settings/AddMemberModal';
+import DemoDataSection from '../components/Settings/DemoDataSection';
 import { currencies } from '../utils/currencies';
 
 function Settings() {
@@ -435,6 +436,9 @@ function Settings() {
           </div>
         </Card>
       </section>
+
+      {/* 5. Demo Data */}
+      <DemoDataSection household={household} currentUser={currentUser} />
 
       {/* Add Member Modal */}
       <AddMemberModal

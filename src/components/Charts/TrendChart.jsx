@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { formatCurrency, formatDate } from '../../utils/formatters';
 
 function TrendChart({ data, currency = 'USD', timeRange = 'all' }) {
+    // Only show "No data" if absolutely nothing (not even forecast)
     if (!data || data.length === 0) {
         return (
             <div className="h-80 flex items-center justify-center text-gray-500">
@@ -17,11 +18,20 @@ function TrendChart({ data, currency = 'USD', timeRange = 'all' }) {
             return (
                 <div className="glass-card p-4 shadow-lg">
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{formatDate(label)}</p>
-                    {payload.map((entry, index) => (
-                        <p key={index} className="text-sm font-medium" style={{ color: entry.color }}>
-                            {entry.name}: {formatCurrency(entry.value, currency)}
+                    {payload.map((entry, index) => {
+                        // Handle Forecast label specifically
+                        const name = entry.name === 'forecast' ? 'Projected NW' : entry.name;
+                        return (
+                            <p key={index} className="text-sm font-medium" style={{ color: entry.color }}>
+                                {name}: {formatCurrency(entry.value, currency)}
+                            </p>
+                        );
+                    })}
+                    {payload.some(p => p.dataKey === 'forecast') && (
+                        <p className="text-xs text-gray-500 mt-2 italic">
+                            * Projection based on 5% annual growth
                         </p>
-                    ))}
+                    )}
                 </div>
             );
         }
@@ -74,6 +84,16 @@ function TrendChart({ data, currency = 'USD', timeRange = 'all' }) {
                     <Legend
                         wrapperStyle={{ paddingTop: '20px' }}
                         iconType="line"
+                    />
+                    {/* Forecast Line (Dashed) */}
+                    <Line
+                        type="monotone"
+                        dataKey="forecast"
+                        stroke="#A78BFA"
+                        strokeWidth={3}
+                        strokeDasharray="5 5"
+                        dot={{ fill: '#A78BFA', r: 3, strokeWidth: 0 }}
+                        name="Forecast"
                     />
                     <Line
                         type="monotone"

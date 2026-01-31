@@ -11,6 +11,7 @@ import {
   calculateHomeValue,
   calculateEquity,
 } from '../utils/mortgageCalculations';
+import { AmortizationChart, PaymentCompositionChart } from '../components/Charts/MortgageCharts';
 
 function Mortgage() {
   const { user } = db.useAuth();
@@ -19,10 +20,10 @@ function Mortgage() {
   const { data, isLoading } = db.useQuery(
     user
       ? {
-          households: {},
-          mortgage: {},
-          extraPayments: {},
-        }
+        households: {},
+        mortgage: {},
+        extraPayments: {},
+      }
       : null
   );
 
@@ -166,43 +167,61 @@ function Mortgage() {
             </div>
           </Card>
 
-          {/* Payoff Projections */}
+          {/* Payoff Analysis */}
           {projections && (
-            <Card>
-              <h2 className="text-lg font-display font-semibold text-gray-900 dark:text-white mb-4">
-                Payoff Projections
-              </h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div>
-                  <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Payoff Date</p>
-                  <p className="text-gray-900 dark:text-white font-medium">
-                    {formatDate(projections.payoffDate)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Total Interest</p>
-                  <p className="text-red-600 dark:text-red-400 font-medium">
-                    {formatCurrency(projections.totalInterest, currency)}
-                  </p>
-                </div>
-                {projections.interestSaved > 0 && (
-                  <>
-                    <div>
-                      <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Interest Saved</p>
-                      <p className="text-teal-600 dark:text-teal-400 font-medium">
-                        {formatCurrency(projections.interestSaved, currency)}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Months Saved</p>
-                      <p className="text-teal-600 dark:text-teal-400 font-medium">
-                        {projections.monthsSaved} months
-                      </p>
-                    </div>
-                  </>
-                )}
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card className="h-full">
+                  <h2 className="text-lg font-display font-semibold text-gray-900 dark:text-white mb-6">
+                    Amortization Schedule
+                  </h2>
+                  <AmortizationChart data={projections.schedule} currency={currency} />
+                </Card>
+
+                <Card className="h-full">
+                  <h2 className="text-lg font-display font-semibold text-gray-900 dark:text-white mb-6">
+                    Annual Payment Breakdown
+                  </h2>
+                  <PaymentCompositionChart data={projections.schedule} currency={currency} />
+                </Card>
               </div>
-            </Card>
+
+              <Card>
+                <h2 className="text-lg font-display font-semibold text-gray-900 dark:text-white mb-4">
+                  Payoff Projections
+                </h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div>
+                    <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Payoff Date</p>
+                    <p className="text-gray-900 dark:text-white font-medium">
+                      {formatDate(projections.payoffDate)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Total Interest</p>
+                    <p className="text-red-600 dark:text-red-400 font-medium">
+                      {formatCurrency(projections.totalInterest, currency)}
+                    </p>
+                  </div>
+                  {projections.interestSaved > 0 && (
+                    <>
+                      <div>
+                        <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Interest Saved</p>
+                        <p className="text-teal-600 dark:text-teal-400 font-medium">
+                          {formatCurrency(projections.interestSaved, currency)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Months Saved</p>
+                        <p className="text-teal-600 dark:text-teal-400 font-medium">
+                          {projections.monthsSaved} months
+                        </p>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </Card>
+            </div>
           )}
         </>
       ) : (

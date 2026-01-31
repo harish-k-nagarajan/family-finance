@@ -21,6 +21,7 @@ const _schema = i.schema({
       profilePicture: i.string(), // NEW: Base64 or URL
       householdId: i.string().indexed(),
       theme: i.string(), // 'dark' or 'light'
+      isDemo: i.boolean(), // Flag for demo data
       createdAt: i.number(),
       updatedAt: i.number(),
     }),
@@ -30,6 +31,7 @@ const _schema = i.schema({
       institution: i.string(),
       accountType: i.string(), // 'checking', 'savings', 'credit'
       balance: i.number(),
+      isDemo: i.boolean(), // Flag for demo data
       createdAt: i.number(),
       updatedAt: i.number(),
     }),
@@ -39,6 +41,7 @@ const _schema = i.schema({
       institution: i.string(),
       accountType: i.string(), // '401k', 'IRA', 'Roth IRA', 'Taxable'
       balance: i.number(),
+      isDemo: i.boolean(), // Flag for demo data
       createdAt: i.number(),
       updatedAt: i.number(),
     }),
@@ -48,6 +51,7 @@ const _schema = i.schema({
       shares: i.number(),
       costBasis: i.number(),
       currentPrice: i.number(),
+      isDemo: i.boolean(), // Flag for demo data
       createdAt: i.number(),
       updatedAt: i.number(),
     }),
@@ -60,6 +64,7 @@ const _schema = i.schema({
       termYears: i.number(),
       startDate: i.number(), // Unix timestamp
       monthlyPayment: i.number(),
+      isDemo: i.boolean(), // Flag for demo data
       createdAt: i.number(),
       updatedAt: i.number(),
     }),
@@ -68,6 +73,7 @@ const _schema = i.schema({
       amount: i.number(),
       frequency: i.string(), // 'monthly' or 'annual'
       startDate: i.number(),
+      isDemo: i.boolean(), // Flag for demo data
       createdAt: i.number(),
       updatedAt: i.number(),
     }),
@@ -79,6 +85,7 @@ const _schema = i.schema({
       homeValue: i.number(),
       mortgageBalance: i.number(),
       netWorth: i.number(),
+      isDemo: i.boolean(), // Flag for demo data
       createdAt: i.number(),
     }),
   },
