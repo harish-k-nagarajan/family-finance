@@ -158,23 +158,19 @@ function Home() {
     {
       label: 'Net Worth',
       value: netWorth,
-      gradient: 'from-teal-400 to-purple-400',
     },
     {
       label: 'Bank Accounts',
       value: totalBankBalance,
-      gradient: 'from-blue-400 to-teal-400',
     },
     {
       label: 'Investments',
       value: totalInvestments,
-      gradient: 'from-purple-400 to-pink-400',
     },
     ...(mortgageEnabled
       ? [{
         label: 'Home Equity',
         value: homeValue - totalLoanBalance,
-        gradient: 'from-orange-400 to-yellow-400',
       }]
       : []),
   ];
@@ -205,7 +201,6 @@ function Home() {
             key={stat.label}
             label={stat.label}
             value={stat.value}
-            gradient={stat.gradient}
             currency={currency}
             delay={index * 0.08}
           />

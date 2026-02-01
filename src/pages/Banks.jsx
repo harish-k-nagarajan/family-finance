@@ -7,7 +7,22 @@ import OwnerTabs from '../components/common/OwnerTabs';
 import SkeletonLoader from '../components/common/SkeletonLoader';
 import { formatCurrency } from '../utils/formatters';
 import { createSnapshot, calculateTotals } from '../utils/snapshots';
-import { fetchBankLogo } from '../utils/bankLogos';
+import { Landmark, PiggyBank, CreditCard, Wallet } from 'lucide-react';
+
+const getAccountTypeIcon = (accountType) => {
+  const iconProps = { className: "w-6 h-6 text-white", strokeWidth: 2 };
+  switch (accountType?.toLowerCase()) {
+    case 'checking':
+      return <Landmark {...iconProps} />;
+    case 'savings':
+      return <PiggyBank {...iconProps} />;
+    case 'credit':
+    case 'credit card':
+      return <CreditCard {...iconProps} />;
+    default:
+      return <Wallet {...iconProps} />;
+  }
+};
 
 function Banks() {
   const { user } = db.useAuth();
@@ -62,9 +77,6 @@ function Banks() {
   const handleAddAccount = async (formData) => {
     if (!householdId) return;
 
-    // Fetch bank logo before creating account
-    const logoUrl = await fetchBankLogo(formData.institution);
-
     const now = Date.now();
     await db.transact(
       db.tx.accounts[id()].update({
@@ -73,7 +85,7 @@ function Banks() {
         institution: formData.institution,
         accountType: formData.accountType,
         balance: parseFloat(formData.balance) || 0,
-        logoUrl: logoUrl || '',
+        logoUrl: formData.logoUrl || '',
         createdAt: now,
         updatedAt: now,
       })
@@ -94,18 +106,11 @@ function Banks() {
   const handleUpdateAccount = async (accountId, formData) => {
     const originalAccount = allAccounts.find((a) => a.id === accountId);
 
-    // Fetch new logo if institution name changed
-    let logoUrl = originalAccount?.logoUrl || '';
-    if (formData.institution !== originalAccount?.institution) {
-      const newLogoUrl = await fetchBankLogo(formData.institution);
-      logoUrl = newLogoUrl || '';
-    }
-
     await db.transact(
       db.tx.accounts[accountId].update({
         ...formData,
         balance: parseFloat(formData.balance) || 0,
-        logoUrl,
+        logoUrl: formData.logoUrl || '',
         updatedAt: Date.now(),
       })
     );
@@ -168,7 +173,7 @@ function Banks() {
       {/* Total Balance */}
       <Card>
         <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm mb-1">Total Balance</p>
-        <p className="text-3xl font-display font-bold gradient-text">
+        <p className="text-3xl font-display font-bold text-gray-900 dark:text-white tabular-nums">
           {formatCurrency(totalBalance, currency)}
         </p>
       </Card>
@@ -193,22 +198,26 @@ function Banks() {
               <Card className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   {/* Bank Logo */}
-                  {account.logoUrl ? (
-                    <img
-                      src={account.logoUrl}
-                      alt={account.institution}
-                      className="w-12 h-12 rounded-lg object-contain bg-white dark:bg-navy-800 p-2 border border-gray-200 dark:border-white/10"
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                      }}
-                    />
-                  ) : (
-                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-teal-400 to-purple-500 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                      </svg>
+                  <div className="relative">
+                    {account.logoUrl && (
+                      <img
+                        src={account.logoUrl}
+                        alt={account.institution}
+                        className="w-12 h-12 rounded-lg object-contain bg-white dark:bg-navy-800 p-2 border border-gray-200 dark:border-white/10"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          const fallback = e.target.parentElement.querySelector('.fallback-icon');
+                          if (fallback) fallback.style.display = 'flex';
+                        }}
+                      />
+                    )}
+                    <div
+                      className="fallback-icon w-12 h-12 rounded-lg bg-gradient-to-br from-teal-400 to-purple-500 flex items-center justify-center flex-shrink-0"
+                      style={{ display: account.logoUrl ? 'none' : 'flex' }}
+                    >
+                      {getAccountTypeIcon(account.accountType)}
                     </div>
-                  )}
+                  </div>
 
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -277,6 +286,7 @@ function AccountForm({ account, users, onSubmit, onCancel }) {
     accountType: account?.accountType || 'checking',
     balance: account?.balance?.toString() || '',
     ownerId: account?.ownerId || users[0]?.id || '',
+    logoUrl: account?.logoUrl || '',
   });
 
   const handleSubmit = (e) => {
@@ -344,6 +354,26 @@ function AccountForm({ account, users, onSubmit, onCancel }) {
                 </option>
               ))}
             </select>
+          </div>
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+              Logo URL (optional)
+            </label>
+            <input
+              type="url"
+              value={formData.logoUrl}
+              onChange={(e) => setFormData({ ...formData, logoUrl: e.target.value })}
+              placeholder="https://example.com/logo.png"
+              className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            />
+            {formData.logoUrl && (formData.logoUrl.startsWith('http://') || formData.logoUrl.startsWith('https://')) && (
+              <img
+                src={formData.logoUrl}
+                alt="Logo preview"
+                className="mt-2 w-6 h-6 rounded object-contain bg-white dark:bg-navy-800 p-1 border border-gray-200 dark:border-white/10"
+                onError={(e) => { e.target.style.display = 'none'; }}
+              />
+            )}
           </div>
         </div>
         <div className="flex justify-end gap-3">

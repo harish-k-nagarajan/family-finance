@@ -22,9 +22,9 @@
   --color-soft-white: #FAFBFC;
   --color-soft-gray: #F5F6F8;
 
-  /* Custom fonts - Plus Jakarta Sans for display, Inter for body */
-  --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
+  /* Custom fonts - Space Grotesk for display, Instrument Sans for body */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Instrument Sans', system-ui, sans-serif;
 
   /* Custom scale */
   --scale-102: 1.02;
@@ -61,21 +61,6 @@
     background-color: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.14);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4), 0 0 1px rgba(45, 212, 191, 0.1);
-  }
-
-  /* Gradient text */
-  .gradient-text {
-    background: linear-gradient(to right, var(--color-teal-600), var(--color-purple-600));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  body.dark .gradient-text {
-    background: linear-gradient(to right, var(--color-teal-400), var(--color-purple-400));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
   }
 }
 

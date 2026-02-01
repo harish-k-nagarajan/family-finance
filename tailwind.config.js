@@ -36,8 +36,9 @@ export default {
         },
       },
       fontFamily: {
-        display: ['Plus Jakarta Sans', 'Clash Display', 'system-ui', 'sans-serif'],
-        body: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Instrument Sans', 'system-ui', 'sans-serif'],
+        display: ['Space Grotesk', 'system-ui', 'sans-serif'],
+        body: ['Instrument Sans', 'system-ui', 'sans-serif'],
       },
       scale: {
         '102': '1.02',

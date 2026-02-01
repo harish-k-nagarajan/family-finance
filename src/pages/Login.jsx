@@ -49,10 +49,12 @@ function Login() {
         <div className="glass-card rounded-2xl p-8">
           {/* Logo */}
           <div className="flex items-center justify-center gap-3 mb-8">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-400 to-purple-500 flex items-center justify-center">
-              <span className="text-white font-bold text-2xl">F</span>
-            </div>
-            <span className="font-display font-bold text-2xl gradient-text">
+            <img
+              src="/Family Finance Logo.png"
+              alt="Family Finance logo"
+              className="w-12 h-12 rounded-xl object-contain"
+            />
+            <span className="font-display font-semibold text-2xl text-navy-900 dark:text-white tracking-wide">
               Family Finance
             </span>
           </div>

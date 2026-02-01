@@ -34,7 +34,7 @@ const _schema = i.schema({
       institution: i.string(),
       accountType: i.string(), // 'checking', 'savings', 'credit'
       balance: i.number(),
-      logoUrl: i.string(), // Bank logo URL from Clearbit
+      logoUrl: i.string(), // Optional user-provided logo URL
       isDemo: i.boolean(), // Flag for demo data
       createdAt: i.number(),
       updatedAt: i.number(),
@@ -45,7 +45,7 @@ const _schema = i.schema({
       institution: i.string(),
       accountType: i.string(), // '401k', 'IRA', 'Roth IRA', 'Taxable'
       balance: i.number(),
-      logoUrl: i.string(), // Institution logo URL from Clearbit
+      logoUrl: i.string(), // Optional user-provided logo URL
       isDemo: i.boolean(), // Flag for demo data
       createdAt: i.number(),
       updatedAt: i.number(),

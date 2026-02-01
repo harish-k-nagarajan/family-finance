@@ -3,7 +3,7 @@ import Card from '../common/Card';
 import AnimatedNumber from '../common/AnimatedNumber';
 import { formatCurrency } from '../../utils/formatters';
 
-function StatCard({ label, value, gradient, currency, delay = 0 }) {
+function StatCard({ label, value, currency, delay = 0 }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -16,8 +16,8 @@ function StatCard({ label, value, gradient, currency, delay = 0 }) {
           {label}
         </p>
 
-        {/* Value - large, gradient, tabular numerals */}
-        <p className={`text-3xl md:text-4xl font-display font-bold bg-gradient-to-r ${gradient} bg-clip-text text-transparent tabular-nums`}>
+        {/* Value - large, bold, tabular numerals */}
+        <p className="text-3xl md:text-4xl font-display font-bold text-gray-900 dark:text-white tabular-nums">
           <AnimatedNumber
             value={value}
             formatFn={(val) => formatCurrency(val, currency)}

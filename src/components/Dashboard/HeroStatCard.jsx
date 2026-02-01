@@ -3,7 +3,7 @@ import Card from '../common/Card';
 import AnimatedNumber from '../common/AnimatedNumber';
 import { formatCurrency } from '../../utils/formatters';
 
-function HeroStatCard({ label, value, gradient, currency, delay = 0 }) {
+function HeroStatCard({ label, value, currency, delay = 0 }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -14,7 +14,7 @@ function HeroStatCard({ label, value, gradient, currency, delay = 0 }) {
       <Card hover className="relative overflow-hidden">
         {/* Subtle glow effect in dark mode */}
         <div className="absolute inset-0 opacity-0 dark:opacity-30 pointer-events-none">
-          <div className={`absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br ${gradient} blur-3xl rounded-full`}></div>
+          <div className="absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br from-teal-400 to-purple-500 blur-3xl rounded-full"></div>
         </div>
 
         <div className="relative z-10">
@@ -23,8 +23,8 @@ function HeroStatCard({ label, value, gradient, currency, delay = 0 }) {
             {label}
           </p>
 
-          {/* Value - hero size with gradient */}
-          <p className={`text-5xl md:text-6xl font-display font-bold bg-gradient-to-r ${gradient} bg-clip-text text-transparent tabular-nums mb-2`}>
+          {/* Value - hero size, bold */}
+          <p className="text-5xl md:text-6xl font-display font-bold text-gray-900 dark:text-white tabular-nums mb-2">
             <AnimatedNumber
               value={value}
               formatFn={(val) => formatCurrency(val, currency)}

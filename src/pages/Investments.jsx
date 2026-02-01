@@ -7,7 +7,21 @@ import OwnerTabs from '../components/common/OwnerTabs';
 import SkeletonLoader from '../components/common/SkeletonLoader';
 import { formatCurrency } from '../utils/formatters';
 import { createSnapshot, calculateTotals } from '../utils/snapshots';
-import { fetchBankLogo } from '../utils/bankLogos';
+import { TrendingUp, LineChart, BarChart3, PieChart } from 'lucide-react';
+
+const getInvestmentTypeIcon = (investmentType) => {
+  const iconProps = { className: "w-6 h-6 text-white", strokeWidth: 2 };
+  switch (investmentType?.toLowerCase()) {
+    case '401k':
+      return <TrendingUp {...iconProps} />;
+    case 'ira':
+      return <LineChart {...iconProps} />;
+    case 'taxable':
+      return <BarChart3 {...iconProps} />;
+    default:
+      return <PieChart {...iconProps} />;
+  }
+};
 
 function Investments() {
   const { user } = db.useAuth();
@@ -62,9 +76,6 @@ function Investments() {
   const handleAddInvestment = async (formData) => {
     if (!householdId) return;
 
-    // Fetch institution logo before creating investment
-    const logoUrl = await fetchBankLogo(formData.institution);
-
     const now = Date.now();
     await db.transact(
       db.tx.investments[id()].update({
@@ -73,7 +84,7 @@ function Investments() {
         institution: formData.institution,
         accountType: formData.accountType,
         balance: parseFloat(formData.balance) || 0,
-        logoUrl: logoUrl || '',
+        logoUrl: formData.logoUrl || '',
         createdAt: now,
         updatedAt: now,
       })
@@ -94,18 +105,11 @@ function Investments() {
   const handleUpdateInvestment = async (investmentId, formData) => {
     const originalInvestment = allInvestments.find((i) => i.id === investmentId);
 
-    // Fetch new logo if institution name changed
-    let logoUrl = originalInvestment?.logoUrl || '';
-    if (formData.institution !== originalInvestment?.institution) {
-      const newLogoUrl = await fetchBankLogo(formData.institution);
-      logoUrl = newLogoUrl || '';
-    }
-
     await db.transact(
       db.tx.investments[investmentId].update({
         ...formData,
         balance: parseFloat(formData.balance) || 0,
-        logoUrl,
+        logoUrl: formData.logoUrl || '',
         updatedAt: Date.now(),
       })
     );
@@ -168,7 +172,7 @@ function Investments() {
       {/* Total Balance */}
       <Card>
         <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm mb-1">Total Investments</p>
-        <p className="text-3xl font-display font-bold gradient-text">
+        <p className="text-3xl font-display font-bold text-gray-900 dark:text-white tabular-nums">
           {formatCurrency(totalBalance, currency)}
         </p>
       </Card>
@@ -193,22 +197,26 @@ function Investments() {
               <Card className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   {/* Institution Logo */}
-                  {investment.logoUrl ? (
-                    <img
-                      src={investment.logoUrl}
-                      alt={investment.institution}
-                      className="w-12 h-12 rounded-lg object-contain bg-white dark:bg-navy-800 p-2 border border-gray-200 dark:border-white/10"
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                      }}
-                    />
-                  ) : (
-                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                      </svg>
+                  <div className="relative">
+                    {investment.logoUrl && (
+                      <img
+                        src={investment.logoUrl}
+                        alt={investment.institution}
+                        className="w-12 h-12 rounded-lg object-contain bg-white dark:bg-navy-800 p-2 border border-gray-200 dark:border-white/10"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          const fallback = e.target.parentElement.querySelector('.fallback-icon');
+                          if (fallback) fallback.style.display = 'flex';
+                        }}
+                      />
+                    )}
+                    <div
+                      className="fallback-icon w-12 h-12 rounded-lg bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center flex-shrink-0"
+                      style={{ display: investment.logoUrl ? 'none' : 'flex' }}
+                    >
+                      {getInvestmentTypeIcon(investment.accountType)}
                     </div>
-                  )}
+                  </div>
 
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -277,6 +285,7 @@ function InvestmentForm({ investment, users, onSubmit, onCancel }) {
     accountType: investment?.accountType || '401k',
     balance: investment?.balance?.toString() || '',
     ownerId: investment?.ownerId || users[0]?.id || '',
+    logoUrl: investment?.logoUrl || '',
   });
 
   const handleSubmit = (e) => {
@@ -347,6 +356,26 @@ function InvestmentForm({ investment, users, onSubmit, onCancel }) {
                 </option>
               ))}
             </select>
+          </div>
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+              Logo URL (optional)
+            </label>
+            <input
+              type="url"
+              value={formData.logoUrl}
+              onChange={(e) => setFormData({ ...formData, logoUrl: e.target.value })}
+              placeholder="https://example.com/logo.png"
+              className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            />
+            {formData.logoUrl && (formData.logoUrl.startsWith('http://') || formData.logoUrl.startsWith('https://')) && (
+              <img
+                src={formData.logoUrl}
+                alt="Logo preview"
+                className="mt-2 w-6 h-6 rounded object-contain bg-white dark:bg-navy-800 p-1 border border-gray-200 dark:border-white/10"
+                onError={(e) => { e.target.style.display = 'none'; }}
+              />
+            )}
           </div>
         </div>
         <div className="flex justify-end gap-3">
