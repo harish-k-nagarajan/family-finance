@@ -7,6 +7,10 @@ export default {
   // darkMode configured via @custom-variant in index.css (Tailwind v4)
   theme: {
     extend: {
+      screens: {
+        'laptop': '1280px',
+        'desktop': '1600px',
+      },
       colors: {
         // Dark mode colors
         navy: {

@@ -94,16 +94,16 @@ function DashboardTrendChart({ data, currency = 'USD', timeRange = 'all', lastHi
     const xDomainMax = lastHistoricalDate ? lastHistoricalDate + forecastMs : undefined;
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-3 laptop:space-y-4">
             {/* Chart */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1, duration: 0.4, ease: 'easeOut' }}
-                className="w-full h-80"
+                className="w-full h-64 laptop:h-80"
             >
                 <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                <ComposedChart data={data} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
                     <defs>
                         {/* Net Worth Area Fill - Gradient with subtle glow */}
                         <linearGradient id="netWorthFill" x1="0" y1="0" x2="0" y2="1">
@@ -163,10 +163,10 @@ function DashboardTrendChart({ data, currency = 'USD', timeRange = 'all', lastHi
                     <YAxis
                         tickFormatter={(value) => formatCurrency(value, currency, 0)}
                         stroke={document.body.classList.contains('dark') ? '#6B7280' : '#9CA3AF'}
-                        fontSize={11}
+                        fontSize={10}
                         tickLine={false}
                         axisLine={false}
-                        width={85}
+                        width={70}
                     />
 
                     <Tooltip content={<CustomTooltip />} />
@@ -269,7 +269,7 @@ function DashboardTrendChart({ data, currency = 'USD', timeRange = 'all', lastHi
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.3 }}
-                className="flex flex-wrap items-center gap-4 pt-2 border-t border-gray-200 dark:border-white/10"
+                className="flex flex-wrap items-center gap-2 laptop:gap-4 pt-2 border-t border-gray-200 dark:border-white/10"
             >
                 {seriesConfig.map((series) => (
                     <button
@@ -277,7 +277,7 @@ function DashboardTrendChart({ data, currency = 'USD', timeRange = 'all', lastHi
                         onClick={() => toggleSeries(series.key)}
                         disabled={series.locked}
                         className={`
-                            flex items-center gap-2 px-2 py-1 rounded text-xs font-medium font-body transition-all
+                            flex items-center gap-1.5 px-1.5 laptop:px-2 py-1 rounded text-xs font-medium font-body transition-all
                             ${visibleSeries[series.key]
                                 ? 'text-gray-700 dark:text-gray-300'
                                 : 'text-gray-400 dark:text-gray-600 line-through'

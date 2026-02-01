@@ -57,7 +57,7 @@ function Sidebar({ collapsed, onToggleCollapse, user, household }) {
   return (
     <motion.aside
       initial={false}
-      animate={{ width: collapsed ? 80 : 256 }}
+      animate={{ width: collapsed ? 80 : 240 }}
       transition={{ type: 'spring', damping: 20, stiffness: 300 }}
       className="fixed left-0 top-0 h-full glass-card border-r border-gray-200/60 dark:border-white/10 z-50"
     >

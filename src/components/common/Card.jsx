@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 
 function Card({ children, className = '', hover = false, ...props }) {
-  const baseClasses = 'glass-card rounded-xl p-6';
+  const baseClasses = 'glass-card rounded-xl p-4 laptop:p-6';
   const hoverClasses = hover ? 'hover-glow cursor-pointer' : '';
 
   return (

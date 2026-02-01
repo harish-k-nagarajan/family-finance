@@ -20,12 +20,12 @@ function Layout({ children, user, theme, household }) {
         household={household}
       />
       <main
-        className={`flex-1 transition-all duration-300 ${sidebarCollapsed ? 'ml-20' : 'ml-64'
+        className={`flex-1 transition-all duration-300 ${sidebarCollapsed ? 'ml-20' : 'ml-60'
           }`}
       >
         {/* Header with theme toggle and sign out */}
         <div className="sticky top-0 z-40 backdrop-blur-xl bg-white/50 dark:bg-navy-900/90 border-b border-gray-200/40 dark:border-white/5">
-          <div className="px-6 md:px-8 py-4 flex items-center justify-end gap-3">
+          <div className="px-4 laptop:px-6 desktop:px-8 py-3 laptop:py-4 flex items-center justify-end gap-3">
             <ThemeToggle user={user} currentTheme={theme} />
             <button
               onClick={handleSignOut}
@@ -51,7 +51,7 @@ function Layout({ children, user, theme, household }) {
         </div>
 
 
-        <div className="p-6 md:p-8">
+        <div className="p-4 laptop:p-6 desktop:p-8">
           {children}
         </div>
       </main>

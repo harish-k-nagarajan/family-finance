@@ -12,12 +12,12 @@ function StatCard({ label, value, currency, delay = 0 }) {
     >
       <Card hover>
         {/* Label - quiet, small, muted, uppercase */}
-        <p className="text-xs uppercase tracking-wider font-body font-medium text-gray-500 dark:text-gray-500 mb-3">
+        <p className="text-xs uppercase tracking-wider font-body font-medium text-gray-500 dark:text-gray-500 mb-2 laptop:mb-3">
           {label}
         </p>
 
         {/* Value - large, bold, tabular numerals */}
-        <p className="text-3xl md:text-4xl font-display font-bold text-gray-900 dark:text-white tabular-nums">
+        <p className="text-xl laptop:text-2xl desktop:text-3xl font-display font-bold text-gray-900 dark:text-white tabular-nums">
           <AnimatedNumber
             value={value}
             formatFn={(val) => formatCurrency(val, currency)}

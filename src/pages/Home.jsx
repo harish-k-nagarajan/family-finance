@@ -179,24 +179,24 @@ function Home() {
   const timeRanges = ['1M', '3M', '6M', '1Y', 'ALL'];
 
   return (
-    <div className="max-w-[1600px] mx-auto space-y-10">
+    <div className="max-w-[1400px] mx-auto space-y-8 laptop:space-y-10">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
-        className="mb-8"
+        className="mb-6 laptop:mb-8"
       >
-        <h1 className="text-4xl font-display font-bold text-gray-900 dark:text-white mb-3">
+        <h1 className="text-2xl laptop:text-3xl desktop:text-4xl font-display font-bold text-gray-900 dark:text-white mb-2 laptop:mb-3">
           Welcome back, {currentUser?.displayName || 'User'}
         </h1>
-        <p className="text-base font-body text-gray-600 dark:text-gray-400">
+        <p className="text-sm laptop:text-base font-body text-gray-600 dark:text-gray-400">
           Here's your financial overview
         </p>
       </motion.div>
 
-      {/* Stats Grid - Four Equal Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Stats Grid - Responsive Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 laptop:grid-cols-4 gap-4 laptop:gap-6">
         {allStats.map((stat, index) => (
           <StatCard
             key={stat.label}
@@ -209,18 +209,18 @@ function Home() {
       </div>
 
       {/* Charts Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-12">
+      <div className="grid grid-cols-1 laptop:grid-cols-3 gap-4 laptop:gap-6 mt-8 laptop:mt-12">
         {/* Trend Chart (2/3 width) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.3, ease: 'easeOut' }}
-          className="lg:col-span-2"
+          className="laptop:col-span-2"
         >
           <Card className="h-full">
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex flex-col laptop:flex-row items-start laptop:items-center justify-between mb-6 laptop:mb-8 gap-4">
               <div className="flex items-center gap-2">
-                <h2 className="text-lg font-display font-semibold text-gray-900 dark:text-white">
+                <h2 className="text-base laptop:text-lg font-display font-semibold text-gray-900 dark:text-white">
                   Net Worth Trend
                 </h2>
                 <div className="group relative">
@@ -228,16 +228,16 @@ function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <div className="absolute hidden group-hover:block bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-gray-800 text-white text-xs rounded shadow-lg z-10">
-                    Includes 6-month projection based on 5% annual growth
+                    Includes projection based on 5% annual growth
                   </div>
                 </div>
               </div>
-              <div className="flex gap-1.5">
+              <div className="flex gap-1 laptop:gap-1.5 flex-wrap">
                 {timeRanges.map((range) => (
                   <button
                     key={range}
                     onClick={() => setTimeRange(range)}
-                    className={`px-3.5 py-1.5 rounded-lg text-sm font-medium font-body transition-all focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 dark:focus:ring-offset-navy-900 ${
+                    className={`px-2.5 laptop:px-3.5 py-1.5 rounded-lg text-xs laptop:text-sm font-medium font-body transition-all focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 dark:focus:ring-offset-navy-900 ${
                       timeRange === range
                         ? 'bg-teal-500/20 text-teal-600 dark:text-teal-400 shadow-sm'
                         : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5'
@@ -263,10 +263,10 @@ function Home() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.3, ease: 'easeOut' }}
-          className="lg:col-span-1"
+          className="laptop:col-span-1"
         >
           <Card className="h-full flex flex-col">
-            <h2 className="text-lg font-display font-semibold text-gray-900 dark:text-white mb-8">
+            <h2 className="text-base laptop:text-lg font-display font-semibold text-gray-900 dark:text-white mb-6 laptop:mb-8">
               Asset Allocation
             </h2>
             <div className="flex-1 flex items-center justify-center">
@@ -286,13 +286,13 @@ function Home() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.3, ease: 'easeOut' }}
-        className="mt-12"
+        className="mt-8 laptop:mt-12"
       >
         <WealthRadarCard householdId={household?.id} />
       </motion.div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 laptop:gap-6 mt-8 laptop:mt-12">
         {/* Bank Accounts */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -300,7 +300,7 @@ function Home() {
           transition={{ delay: 0.3, duration: 0.3, ease: 'easeOut' }}
         >
           <Card>
-            <h2 className="text-lg font-display font-semibold text-gray-900 dark:text-white mb-6">
+            <h2 className="text-base laptop:text-lg font-display font-semibold text-gray-900 dark:text-white mb-4 laptop:mb-6">
               Bank Accounts
             </h2>
             {accounts.length > 0 ? (
@@ -339,7 +339,7 @@ function Home() {
           transition={{ delay: 0.4, duration: 0.3, ease: 'easeOut' }}
         >
           <Card>
-            <h2 className="text-lg font-display font-semibold text-gray-900 dark:text-white mb-6">
+            <h2 className="text-base laptop:text-lg font-display font-semibold text-gray-900 dark:text-white mb-4 laptop:mb-6">
               Investments
             </h2>
             {investments.length > 0 ? (
