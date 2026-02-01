@@ -6,6 +6,7 @@ import Card from './Card';
 import SkeletonLoader from './SkeletonLoader';
 import { useToast } from './Toast';
 import { formatDate } from '../../utils/formatters';
+import { parseInsights } from '../../utils/insightsParser';
 
 // Cache management constants
 const CACHE_TTL = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
@@ -330,9 +331,12 @@ function WealthRadarCard({ householdId }) {
 
   // LOADED STATE
   if (state === 'loaded' && insights) {
+    const parsed = parseInsights(insights.content);
+
     return (
       <Card>
         <div className="relative">
+          {/* Header */}
           <div className="flex items-start justify-between mb-6 pr-32">
             <div>
               <h3 className="text-lg font-display font-semibold text-gray-900 dark:text-white">
@@ -348,14 +352,62 @@ function WealthRadarCard({ householdId }) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: 'easeOut' }}
-            className="mb-6"
+            className="space-y-6"
           >
-            <div className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
-              {insights.content}
-            </div>
+            {/* Country Inference Summary */}
+            {parsed?.countryInference && (
+              <div className="p-4 rounded-xl bg-gradient-to-br from-teal-500/10 to-purple-500/10 border border-teal-500/20 dark:border-teal-500/30">
+                <div className="flex items-start gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-teal-500 dark:bg-teal-400 mt-2 flex-shrink-0" />
+                  <p className="text-sm font-medium text-gray-800 dark:text-gray-200 leading-relaxed">
+                    {parsed.countryInference}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Suggestions List */}
+            {parsed?.suggestions && parsed.suggestions.length > 0 && (
+              <div className="space-y-4">
+                {parsed.suggestions.map((suggestion, idx) => (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: idx * 0.1 }}
+                    className="flex gap-4"
+                  >
+                    {/* Number Badge */}
+                    <div className="flex-shrink-0 w-7 h-7 rounded-lg bg-gradient-to-br from-teal-500 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
+                      {suggestion.number}
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex-1 pt-0.5">
+                      <h4 className="text-sm font-semibold text-teal-600 dark:text-teal-400 mb-1">
+                        {suggestion.title}
+                      </h4>
+                      <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                        {suggestion.description}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+
+            {/* Disclaimer */}
+            {parsed?.disclaimer && (
+              <div className="pt-4 border-t border-gray-200 dark:border-white/10">
+                <p className="text-xs text-gray-500 dark:text-gray-400 italic">
+                  {parsed.disclaimer}
+                </p>
+              </div>
+            )}
           </motion.div>
 
-          <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-white/10">
+          {/* Footer */}
+          <div className="flex items-center justify-between pt-4 mt-6 border-t border-gray-200 dark:border-white/10">
             <span className="text-xs text-gray-500 dark:text-gray-400">
               Last generated: {formatDate(insights.generatedAt, 'short')}
             </span>
