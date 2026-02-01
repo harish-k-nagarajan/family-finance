@@ -7,6 +7,7 @@ import OwnerTabs from '../components/common/OwnerTabs';
 import SkeletonLoader from '../components/common/SkeletonLoader';
 import { formatCurrency } from '../utils/formatters';
 import { createSnapshot, calculateTotals } from '../utils/snapshots';
+import { fetchBankLogo } from '../utils/bankLogos';
 
 function Investments() {
   const { user } = db.useAuth();
@@ -17,20 +18,35 @@ function Investments() {
   const { data, isLoading } = db.useQuery(
     user
       ? {
-          users: {},
+          users: { $: { where: { id: user.id } } },
           households: {},
           accounts: {},
           investments: {},
-          mortgage: {},
+          loans: {
+            $: { where: { householdId: user.householdId, isDeleted: false } }
+          },
         }
       : null
   );
 
-  const users = data?.users || [];
+  const currentUser = data?.users?.[0];
   const household = data?.households?.[0];
   const accounts = data?.accounts || [];
   const allInvestments = data?.investments || [];
-  const mortgage = data?.mortgage?.[0];
+  const loans = data?.loans || [];
+
+  // Get household members
+  const { data: householdData } = db.useQuery(
+    household?.id
+      ? {
+          users: { $: { where: { householdId: household.id } } },
+        }
+      : null
+  );
+
+  const allHouseholdUsers = householdData?.users || [];
+  const hasDemoData = accounts.some((a) => a.isDemo) || allInvestments.some((i) => i.isDemo);
+  const users = allHouseholdUsers.filter((u) => !u.isDemo || hasDemoData);
 
   const currency = household?.currency || 'USD';
   const householdId = household?.id;
@@ -46,6 +62,9 @@ function Investments() {
   const handleAddInvestment = async (formData) => {
     if (!householdId) return;
 
+    // Fetch institution logo before creating investment
+    const logoUrl = await fetchBankLogo(formData.institution);
+
     const now = Date.now();
     await db.transact(
       db.tx.investments[id()].update({
@@ -54,6 +73,7 @@ function Investments() {
         institution: formData.institution,
         accountType: formData.accountType,
         balance: parseFloat(formData.balance) || 0,
+        logoUrl: logoUrl || '',
         createdAt: now,
         updatedAt: now,
       })
@@ -64,7 +84,7 @@ function Investments() {
       accounts,
       [...allInvestments, { balance: parseFloat(formData.balance) || 0 }],
       household,
-      mortgage
+      loans
     );
     await createSnapshot(householdId, totals);
 
@@ -72,10 +92,20 @@ function Investments() {
   };
 
   const handleUpdateInvestment = async (investmentId, formData) => {
+    const originalInvestment = allInvestments.find((i) => i.id === investmentId);
+
+    // Fetch new logo if institution name changed
+    let logoUrl = originalInvestment?.logoUrl || '';
+    if (formData.institution !== originalInvestment?.institution) {
+      const newLogoUrl = await fetchBankLogo(formData.institution);
+      logoUrl = newLogoUrl || '';
+    }
+
     await db.transact(
       db.tx.investments[investmentId].update({
         ...formData,
         balance: parseFloat(formData.balance) || 0,
+        logoUrl,
         updatedAt: Date.now(),
       })
     );
@@ -84,7 +114,7 @@ function Investments() {
     const updatedInvestments = allInvestments.map((i) =>
       i.id === investmentId ? { ...i, balance: parseFloat(formData.balance) || 0 } : i
     );
-    const totals = calculateTotals(accounts, updatedInvestments, household, mortgage);
+    const totals = calculateTotals(accounts, updatedInvestments, household, loans);
     await createSnapshot(householdId, totals);
 
     setEditingId(null);
@@ -95,7 +125,7 @@ function Investments() {
 
     // Create snapshot after balance change
     const updatedInvestments = allInvestments.filter((i) => i.id !== investmentId);
-    const totals = calculateTotals(accounts, updatedInvestments, household, mortgage);
+    const totals = calculateTotals(accounts, updatedInvestments, household, loans);
     await createSnapshot(householdId, totals);
   };
 
@@ -161,13 +191,33 @@ function Investments() {
               />
             ) : (
               <Card className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                    {investment.institution}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">
-                    {investment.accountType} • {users.find((u) => u.id === investment.ownerId)?.displayName || 'Unknown'}
-                  </p>
+                <div className="flex items-center gap-4">
+                  {/* Institution Logo */}
+                  {investment.logoUrl ? (
+                    <img
+                      src={investment.logoUrl}
+                      alt={investment.institution}
+                      className="w-12 h-12 rounded-lg object-contain bg-white dark:bg-navy-800 p-2 border border-gray-200 dark:border-white/10"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                      }}
+                    />
+                  ) : (
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                      </svg>
+                    </div>
+                  )}
+
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                      {investment.institution}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">
+                      {investment.accountType} • {users.find((u) => u.id === investment.ownerId)?.displayName || 'Unknown'}
+                    </p>
+                  </div>
                 </div>
                 <div className="flex items-center gap-4">
                   <span className="text-xl font-bold text-purple-600 dark:text-purple-400">

@@ -3,7 +3,6 @@ import { db } from '../lib/instant';
 import Card from '../components/common/Card';
 import SkeletonLoader from '../components/common/SkeletonLoader';
 import ToggleSwitch from '../components/common/ToggleSwitch';
-import CollapsibleSection from '../components/common/CollapsibleSection';
 import ProfilePictureUpload from '../components/Settings/ProfilePictureUpload';
 import DeleteAccountModal from '../components/Settings/DeleteAccountModal';
 import AddMemberModal from '../components/Settings/AddMemberModal';
@@ -198,6 +197,31 @@ function Settings() {
                   </div>
                 </div>
               </div>
+
+              {/* Base Currency */}
+              <div>
+                <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+                  Base Currency
+                </label>
+                <div className="relative">
+                  <select
+                    value={household.currency || 'USD'}
+                    onChange={(e) => updateHousehold({ currency: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 appearance-none transition-all cursor-pointer"
+                  >
+                    {currencies.map((c) => (
+                      <option key={c.code} value={c.code}>
+                        {c.code} - {c.name} ({c.symbol})
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </Card>
@@ -327,117 +351,25 @@ function Settings() {
           </div>
           Mortgages & Loans
         </h2>
-        <Card className="!p-0 overflow-hidden">
-          <CollapsibleSection
-            isOpen={household.mortgageEnabled}
-            title="Track Total Debt"
-            description="View your mortgage and loan details as a separate category in your portfolio."
-            rightElement={
+        <Card>
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div>
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                Track Total Debt
+              </h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                View your mortgage and loan details as a separate category in your portfolio. The mortgage or loan parameters must be managed there.
+              </p>
+            </div>
+
+            <div className="flex-shrink-0">
               <ToggleSwitch
                 enabled={household.mortgageEnabled}
                 onChange={(val) => updateHousehold({ mortgageEnabled: val })}
                 srLabel="Enable mortgage tracking"
               />
-            }
-          >
-            <div className="pt-2 space-y-6 border-t border-gray-100 dark:border-white/5 mt-4">
-              {/* Debt Type */}
-              <div>
-                <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
-                  Debt Type
-                </label>
-                <div className="relative">
-                  <select
-                    value={household.debtType || 'home'}
-                    onChange={(e) => updateHousehold({ debtType: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 appearance-none transition-all cursor-pointer"
-                  >
-                    <option value="home">Home Mortgage</option>
-                    <option value="car">Car Loan</option>
-                    <option value="student">Student Loan</option>
-                    <option value="personal">Personal Loan</option>
-                    <option value="other">Other</option>
-                  </select>
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-
-              {/* Currency */}
-              <div>
-                <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
-                  Currency
-                </label>
-                <div className="relative">
-                  <select
-                    value={household.currency || 'USD'}
-                    onChange={(e) => updateHousehold({ currency: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 appearance-none transition-all cursor-pointer"
-                  >
-                    {currencies.map((c) => (
-                      <option key={c.code} value={c.code}>
-                        {c.code} - {c.name} ({c.symbol})
-                      </option>
-                    ))}
-                  </select>
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Purchase Price */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
-                    Original Amount / Purchase Price
-                  </label>
-                  <input
-                    type="number"
-                    value={household.homePurchasePrice || ''}
-                    onChange={(e) => updateHousehold({ homePurchasePrice: parseFloat(e.target.value) || 0 })}
-                    placeholder="0.00"
-                    className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all"
-                  />
-                </div>
-
-                {/* Purchase Date */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
-                    Start Date
-                  </label>
-                  <input
-                    type="date"
-                    value={household.homePurchaseDate ? new Date(household.homePurchaseDate).toISOString().split('T')[0] : ''}
-                    onChange={(e) => updateHousehold({ homePurchaseDate: new Date(e.target.value).getTime() })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all"
-                  />
-                </div>
-              </div>
-
-              {/* Appreciation Rate (Only if debt type is Home) */}
-              {household.debtType === 'home' && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
-                    Annual Appreciation Rate (%)
-                  </label>
-                  <input
-                    type="number"
-                    step="0.1"
-                    value={household.appreciationRate || ''}
-                    onChange={(e) => updateHousehold({ appreciationRate: parseFloat(e.target.value) || 0 })}
-                    placeholder="3.0"
-                    className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all"
-                  />
-                </div>
-              )}
             </div>
-          </CollapsibleSection>
+          </div>
         </Card>
       </section>
 

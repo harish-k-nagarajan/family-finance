@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { id } from '@instantdb/react';
 import { db } from '../lib/instant';
 import Card from '../components/common/Card';
 import SkeletonLoader from '../components/common/SkeletonLoader';
+import LoanTabs from '../components/common/LoanTabs';
 import { formatCurrency, formatPercentage, formatDate } from '../utils/formatters';
 import {
   calculateMonthlyPayment,
@@ -15,24 +16,70 @@ import { AmortizationChart, PaymentCompositionChart } from '../components/Charts
 
 function Mortgage() {
   const { user } = db.useAuth();
-  const [isEditing, setIsEditing] = useState(false);
+  const [selectedLoanId, setSelectedLoanId] = useState('combined');
+  const [editingLoanId, setEditingLoanId] = useState(null); // null = closed, 'new' = adding, loanId = editing
 
   const { data, isLoading } = db.useQuery(
     user
       ? {
         households: {},
-        mortgage: {},
+        mortgage: {
+          $: { where: { householdId: user.householdId, isDeleted: false } }
+        },
         extraPayments: {},
       }
       : null
   );
 
   const household = data?.households?.[0];
-  const mortgage = data?.mortgage?.[0];
-  const extraPayments = data?.extraPayments || [];
+  const loans = data?.mortgage || [];
+  const allExtraPayments = data?.extraPayments || [];
 
   const currency = household?.currency || 'USD';
   const householdId = household?.id;
+
+  // Backward compatibility migration: Add loanName/loanType to existing loans
+  useEffect(() => {
+    const migrateExistingLoans = async () => {
+      const needsMigration = loans.filter(l => !l.loanName);
+      if (needsMigration.length > 0) {
+        for (const loan of needsMigration) {
+          await db.transact(
+            db.tx.mortgage[loan.id].update({
+              loanName: 'Home Mortgage',
+              loanType: 'home',
+              isDeleted: false,
+            })
+          );
+        }
+      }
+    };
+    if (loans.length > 0) migrateExistingLoans();
+  }, [loans]);
+
+  // Auto-select first loan if "combined" is selected but only one loan exists
+  useEffect(() => {
+    if (loans.length === 1 && selectedLoanId === 'combined') {
+      setSelectedLoanId(loans[0].id);
+    }
+  }, [loans, selectedLoanId]);
+
+  // Loan selection logic
+  const displayedLoan = selectedLoanId === 'combined'
+    ? null
+    : loans.find(l => l.id === selectedLoanId);
+
+  const extraPayments = displayedLoan
+    ? allExtraPayments.filter(ep => ep.mortgageId === displayedLoan.id)
+    : [];
+
+  // Combined view metrics
+  const combinedMetrics = selectedLoanId === 'combined' && loans.length > 0 ? {
+    totalBalance: loans.reduce((sum, l) => sum + (l.currentBalance || 0), 0),
+    totalOriginal: loans.reduce((sum, l) => sum + (l.originalAmount || 0), 0),
+    weightedRate: loans.reduce((sum, l) => sum + ((l.interestRate || 0) * (l.currentBalance || 0)), 0)
+                  / Math.max(loans.reduce((sum, l) => sum + (l.currentBalance || 0), 0), 1),
+  } : null;
 
   // Calculate home value and equity
   let homeValue = 0;
@@ -44,16 +91,19 @@ function Mortgage() {
     );
   }
 
-  const equity = mortgage ? calculateEquity(homeValue, mortgage.currentBalance) : homeValue;
+  // Calculate equity based on home loans
+  const homeLoans = loans.filter(l => l.loanType === 'home');
+  const totalHomeLoanBalance = homeLoans.reduce((sum, l) => sum + (l.currentBalance || 0), 0);
+  const equity = calculateEquity(homeValue, totalHomeLoanBalance);
 
-  // Calculate payoff projections
+  // Calculate payoff projections for displayed loan
   let projections = null;
-  if (mortgage) {
+  if (displayedLoan) {
     projections = calculateWithExtraPayments(
-      mortgage.originalAmount,
-      mortgage.interestRate,
-      mortgage.termYears,
-      mortgage.startDate,
+      displayedLoan.originalAmount,
+      displayedLoan.interestRate,
+      displayedLoan.termYears,
+      displayedLoan.startDate,
       extraPayments
     );
   }
@@ -73,61 +123,235 @@ function Mortgage() {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-display font-bold text-gray-900 dark:text-white">
-            Mortgage
+            Loans & Mortgages
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">
-            Track your home loan and equity
+          <p className="text-gray-600 dark:text-gray-400">
+            Track all your debt obligations
           </p>
         </div>
-        {mortgage && (
+        <div className="flex gap-3">
+          {selectedLoanId !== 'combined' && displayedLoan && (
+            <button
+              onClick={() => setEditingLoanId(displayedLoan.id)}
+              className="p-2 rounded-lg hover:bg-white/5 dark:hover:bg-white/5 hover:bg-gray-100 transition-colors"
+              title="Edit loan details"
+            >
+              <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+              </svg>
+            </button>
+          )}
           <button
-            onClick={() => setIsEditing(true)}
-            className="px-4 py-2 rounded-lg bg-gradient-to-r from-teal-500 to-purple-500 text-white font-medium hover:opacity-90 transition-opacity"
+            onClick={() => setEditingLoanId('new')}
+            className="p-2 rounded-lg bg-gradient-to-r from-teal-500 to-purple-500 text-white hover:opacity-90 transition-opacity"
+            title="Add new loan"
           >
-            Edit Details
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
           </button>
-        )}
+        </div>
       </div>
 
-      {/* Home Value & Equity */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card>
-          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm mb-1">Home Value</p>
-          <p className="text-2xl font-display font-bold text-orange-600 dark:text-orange-400">
-            {formatCurrency(homeValue, currency)}
-          </p>
-          {household?.appreciationRate && (
-            <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
-              {formatPercentage(household.appreciationRate)} annual appreciation
-            </p>
-          )}
-        </Card>
-        <Card>
-          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm mb-1">Mortgage Balance</p>
-          <p className="text-2xl font-display font-bold text-red-600 dark:text-red-400">
-            {formatCurrency(mortgage?.currentBalance || 0, currency)}
-          </p>
-          {mortgage && (
-            <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
-              {formatPercentage(mortgage.interestRate)} interest rate
-            </p>
-          )}
-        </Card>
-        <Card>
-          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm mb-1">Home Equity</p>
-          <p className="text-2xl font-display font-bold text-teal-600 dark:text-teal-400">
-            {formatCurrency(equity, currency)}
-          </p>
-          {homeValue > 0 && (
-            <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
-              {formatPercentage((equity / homeValue) * 100, 1)} of home value
-            </p>
-          )}
-        </Card>
-      </div>
+      {/* Loan Tabs */}
+      {loans.length > 1 && (
+        <LoanTabs
+          loans={loans}
+          selectedLoanId={selectedLoanId}
+          onSelect={setSelectedLoanId}
+        />
+      )}
 
-      {mortgage ? (
+      {/* Empty State */}
+      {loans.length === 0 ? (
+        <Card className="text-center py-12">
+          <div className="max-w-md mx-auto">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-teal-400 to-purple-500 flex items-center justify-center">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-2">
+              No loans added yet
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              Track mortgages, auto loans, student debt, and more in one place
+            </p>
+          </div>
+        </Card>
+      ) : selectedLoanId === 'combined' ? (
+        /* Combined View */
         <>
+          {/* Summary Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Total Loan Balance</p>
+              <p className="text-2xl font-display font-bold text-red-600 dark:text-red-400">
+                {formatCurrency(combinedMetrics?.totalBalance || 0, currency)}
+              </p>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                Across {loans.length} {loans.length === 1 ? 'loan' : 'loans'}
+              </p>
+            </Card>
+            <Card>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Total Borrowed</p>
+              <p className="text-2xl font-display font-bold text-gray-900 dark:text-white">
+                {formatCurrency(combinedMetrics?.totalOriginal || 0, currency)}
+              </p>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                Original amount
+              </p>
+            </Card>
+            <Card>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Avg. Interest Rate</p>
+              <p className="text-2xl font-display font-bold text-orange-600 dark:text-orange-400">
+                {formatPercentage(combinedMetrics?.weightedRate || 0)}
+              </p>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                Weighted by balance
+              </p>
+            </Card>
+          </div>
+
+          {/* Home Equity (if home loans exist) */}
+          {homeLoans.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card>
+                <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Home Value</p>
+                <p className="text-2xl font-display font-bold text-orange-600 dark:text-orange-400">
+                  {formatCurrency(homeValue, currency)}
+                </p>
+                {household?.appreciationRate && (
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                    {formatPercentage(household.appreciationRate)} annual appreciation
+                  </p>
+                )}
+              </Card>
+              <Card>
+                <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Home Loan Balance</p>
+                <p className="text-2xl font-display font-bold text-red-600 dark:text-red-400">
+                  {formatCurrency(totalHomeLoanBalance, currency)}
+                </p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                  {homeLoans.length} {homeLoans.length === 1 ? 'loan' : 'loans'}
+                </p>
+              </Card>
+              <Card>
+                <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Home Equity</p>
+                <p className="text-2xl font-display font-bold text-teal-600 dark:text-teal-400">
+                  {formatCurrency(equity, currency)}
+                </p>
+                {homeValue > 0 && (
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                    {formatPercentage((equity / homeValue) * 100, 1)} of home value
+                  </p>
+                )}
+              </Card>
+            </div>
+          )}
+
+          {/* List of all loans */}
+          <Card>
+            <h2 className="text-lg font-display font-semibold text-gray-900 dark:text-white mb-4">
+              All Loans
+            </h2>
+            <div className="space-y-3">
+              {loans.map((loan) => (
+                <div
+                  key={loan.id}
+                  onClick={() => setSelectedLoanId(loan.id)}
+                  className="p-4 rounded-lg bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 cursor-pointer transition-colors"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-teal-400 to-purple-500 flex items-center justify-center">
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 dark:text-white">{loan.loanName}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">{loan.lender}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-medium text-gray-900 dark:text-white">
+                        {formatCurrency(loan.currentBalance, currency)}
+                      </p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {formatPercentage(loan.interestRate)} APR
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </>
+      ) : displayedLoan ? (
+        /* Single Loan View */
+        <>
+          {/* Summary Cards for Home Loans */}
+          {displayedLoan.loanType === 'home' && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card>
+                <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Home Value</p>
+                <p className="text-2xl font-display font-bold text-orange-600 dark:text-orange-400">
+                  {formatCurrency(homeValue, currency)}
+                </p>
+                {household?.appreciationRate && (
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                    {formatPercentage(household.appreciationRate)} annual appreciation
+                  </p>
+                )}
+              </Card>
+              <Card>
+                <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Loan Balance</p>
+                <p className="text-2xl font-display font-bold text-red-600 dark:text-red-400">
+                  {formatCurrency(displayedLoan.currentBalance, currency)}
+                </p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                  {formatPercentage(displayedLoan.interestRate)} interest rate
+                </p>
+              </Card>
+              <Card>
+                <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Home Equity</p>
+                <p className="text-2xl font-display font-bold text-teal-600 dark:text-teal-400">
+                  {formatCurrency(equity, currency)}
+                </p>
+                {homeValue > 0 && (
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                    {formatPercentage((equity / homeValue) * 100, 1)} of home value
+                  </p>
+                )}
+              </Card>
+            </div>
+          )}
+
+          {/* Summary Card for Non-Home Loans */}
+          {displayedLoan.loanType !== 'home' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card>
+                <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Current Balance</p>
+                <p className="text-2xl font-display font-bold text-red-600 dark:text-red-400">
+                  {formatCurrency(displayedLoan.currentBalance, currency)}
+                </p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                  {formatPercentage(displayedLoan.interestRate)} interest rate
+                </p>
+              </Card>
+              <Card>
+                <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Original Amount</p>
+                <p className="text-2xl font-display font-bold text-gray-900 dark:text-white">
+                  {formatCurrency(displayedLoan.originalAmount, currency)}
+                </p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                  {formatPercentage((displayedLoan.currentBalance / displayedLoan.originalAmount) * 100, 1)} remaining
+                </p>
+              </Card>
+            </div>
+          )}
+
           {/* Loan Details */}
           <Card>
             <h2 className="text-lg font-display font-semibold text-gray-900 dark:text-white mb-4">
@@ -135,33 +359,33 @@ function Mortgage() {
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Lender</p>
-                <p className="text-gray-900 dark:text-white font-medium">{mortgage.lender}</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">Lender</p>
+                <p className="text-gray-900 dark:text-white font-medium">{displayedLoan.lender}</p>
               </div>
               <div>
-                <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Original Amount</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">Original Amount</p>
                 <p className="text-gray-900 dark:text-white font-medium">
-                  {formatCurrency(mortgage.originalAmount, currency)}
+                  {formatCurrency(displayedLoan.originalAmount, currency)}
                 </p>
               </div>
               <div>
-                <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Term</p>
-                <p className="text-gray-900 dark:text-white font-medium">{mortgage.termYears} years</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">Term</p>
+                <p className="text-gray-900 dark:text-white font-medium">{displayedLoan.termYears} years</p>
               </div>
               <div>
-                <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Start Date</p>
-                <p className="text-gray-900 dark:text-white font-medium">{formatDate(mortgage.startDate)}</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">Start Date</p>
+                <p className="text-gray-900 dark:text-white font-medium">{formatDate(displayedLoan.startDate)}</p>
               </div>
               <div>
-                <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Monthly Payment</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">Monthly Payment</p>
                 <p className="text-gray-900 dark:text-white font-medium">
-                  {formatCurrency(mortgage.monthlyPayment, currency)}
+                  {formatCurrency(displayedLoan.monthlyPayment, currency)}
                 </p>
               </div>
               <div>
-                <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Interest Rate</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">Interest Rate</p>
                 <p className="text-gray-900 dark:text-white font-medium">
-                  {formatPercentage(mortgage.interestRate)}
+                  {formatPercentage(displayedLoan.interestRate)}
                 </p>
               </div>
             </div>
@@ -224,40 +448,31 @@ function Mortgage() {
             </div>
           )}
         </>
-      ) : (
-        <Card className="text-center py-8">
-          <p className="text-gray-600 dark:text-gray-400 mb-4">No mortgage information added yet</p>
-          <button
-            onClick={() => setIsEditing(true)}
-            className="px-4 py-2 rounded-lg bg-gradient-to-r from-teal-500 to-purple-500 text-white font-medium hover:opacity-90 transition-opacity"
-          >
-            Add Mortgage Details
-          </button>
-        </Card>
-      )}
+      ) : null}
 
       {/* Edit Modal */}
-      {isEditing && (
+      {editingLoanId && (
         <MortgageForm
-          mortgage={mortgage}
-          household={household}
+          loan={editingLoanId === 'new' ? null : loans.find(l => l.id === editingLoanId)}
           householdId={householdId}
-          onClose={() => setIsEditing(false)}
+          onClose={() => setEditingLoanId(null)}
         />
       )}
     </div>
   );
 }
 
-function MortgageForm({ mortgage, household, householdId, onClose }) {
+function MortgageForm({ loan, householdId, onClose }) {
   const [formData, setFormData] = useState({
-    lender: mortgage?.lender || '',
-    originalAmount: mortgage?.originalAmount?.toString() || '',
-    currentBalance: mortgage?.currentBalance?.toString() || '',
-    interestRate: mortgage?.interestRate?.toString() || '',
-    termYears: mortgage?.termYears?.toString() || '30',
-    startDate: mortgage?.startDate
-      ? new Date(mortgage.startDate).toISOString().split('T')[0]
+    loanName: loan?.loanName || '',
+    loanType: loan?.loanType || 'home',
+    lender: loan?.lender || '',
+    originalAmount: loan?.originalAmount?.toString() || '',
+    currentBalance: loan?.currentBalance?.toString() || '',
+    interestRate: loan?.interestRate?.toString() || '',
+    termYears: loan?.termYears?.toString() || '30',
+    startDate: loan?.startDate
+      ? new Date(loan.startDate).toISOString().split('T')[0]
       : '',
   });
 
@@ -272,8 +487,10 @@ function MortgageForm({ mortgage, household, householdId, onClose }) {
       parseInt(formData.termYears)
     );
 
-    const mortgageData = {
+    const loanData = {
       householdId,
+      loanName: formData.loanName,
+      loanType: formData.loanType,
       lender: formData.lender,
       originalAmount: parseFloat(formData.originalAmount),
       currentBalance: parseFloat(formData.currentBalance),
@@ -281,15 +498,16 @@ function MortgageForm({ mortgage, household, householdId, onClose }) {
       termYears: parseInt(formData.termYears),
       startDate,
       monthlyPayment,
+      isDeleted: false,
       updatedAt: now,
     };
 
-    if (mortgage) {
-      await db.transact(db.tx.mortgage[mortgage.id].update(mortgageData));
+    if (loan) {
+      await db.transact(db.tx.mortgage[loan.id].update(loanData));
     } else {
       await db.transact(
         db.tx.mortgage[id()].update({
-          ...mortgageData,
+          ...loanData,
           createdAt: now,
         })
       );
@@ -312,9 +530,50 @@ function MortgageForm({ mortgage, household, householdId, onClose }) {
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-6">
-          {mortgage ? 'Edit' : 'Add'} Mortgage Details
+          {loan ? 'Edit' : 'Add'} Loan Details
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+              Loan Name
+            </label>
+            <input
+              type="text"
+              value={formData.loanName}
+              onChange={(e) => setFormData({ ...formData, loanName: e.target.value })}
+              placeholder="e.g., Primary Home, Honda Civic, Student Loan"
+              required
+              className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+              Loan Type
+            </label>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+              {[
+                { value: 'home', label: 'Home', icon: '🏠' },
+                { value: 'car', label: 'Auto', icon: '🚗' },
+                { value: 'student', label: 'Student', icon: '🎓' },
+                { value: 'personal', label: 'Personal', icon: '💳' },
+                { value: 'other', label: 'Other', icon: '📋' },
+              ].map((type) => (
+                <button
+                  key={type.value}
+                  type="button"
+                  onClick={() => setFormData({ ...formData, loanType: type.value })}
+                  className={`p-3 rounded-lg border-2 transition-all ${
+                    formData.loanType === type.value
+                      ? 'border-teal-500 bg-teal-500/10'
+                      : 'border-gray-200 dark:border-white/10 hover:border-teal-500/50'
+                  }`}
+                >
+                  <div className="text-2xl mb-1">{type.icon}</div>
+                  <div className="text-sm font-medium text-gray-900 dark:text-white">{type.label}</div>
+                </button>
+              ))}
+            </div>
+          </div>
           <div>
             <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
               Lender
@@ -323,7 +582,7 @@ function MortgageForm({ mortgage, household, householdId, onClose }) {
               type="text"
               value={formData.lender}
               onChange={(e) => setFormData({ ...formData, lender: e.target.value })}
-              placeholder="e.g., Wells Fargo, Chase"
+              placeholder="e.g., Wells Fargo, Chase, Sallie Mae"
               required
               className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
@@ -374,15 +633,17 @@ function MortgageForm({ mortgage, household, householdId, onClose }) {
               <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
                 Term (Years)
               </label>
-              <select
+              <input
+                type="number"
+                min="1"
+                max="50"
+                step="1"
                 value={formData.termYears}
                 onChange={(e) => setFormData({ ...formData, termYears: e.target.value })}
-                className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
-              >
-                <option value="15" className="bg-white dark:bg-navy-800">15 years</option>
-                <option value="20" className="bg-white dark:bg-navy-800">20 years</option>
-                <option value="30" className="bg-white dark:bg-navy-800">30 years</option>
-              </select>
+                placeholder="e.g., 5, 15, 30"
+                required
+                className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              />
             </div>
           </div>
           <div>

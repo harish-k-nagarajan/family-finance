@@ -1,15 +1,24 @@
 import { motion } from 'framer-motion';
+import Avatar from './Avatar';
 
 function OwnerTabs({ owners, selectedOwner, onSelect }) {
-  // owners should be an array like [{ id: '1', name: 'User 1' }, { id: '2', name: 'User 2' }]
-  // 'combined' is a special value for showing both
-
+  // owners are already filtered by parent component (Banks/Investments)
+  // Build tabs with avatars
   const tabs = [
     ...owners.map((owner) => ({
       id: owner.id,
       label: owner.displayName || owner.name || 'User',
+      avatar: owner.profilePicture,
+      initials: (owner.displayName || owner.name || 'U')[0].toUpperCase(),
     })),
-    { id: 'combined', label: 'Combined' },
+    {
+      id: 'combined',
+      label: 'Combined',
+      avatars: owners.map((u) => ({
+        src: u.profilePicture,
+        initials: (u.displayName || u.name || 'U')[0].toUpperCase(),
+      })),
+    },
   ];
 
   return (
@@ -18,7 +27,7 @@ function OwnerTabs({ owners, selectedOwner, onSelect }) {
         <button
           key={tab.id}
           onClick={() => onSelect(tab.id)}
-          className={`relative px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+          className={`relative px-4 py-2.5 text-sm font-medium rounded-md transition-colors flex items-center gap-2 ${
             selectedOwner === tab.id
               ? 'text-gray-900 dark:text-white'
               : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white'
@@ -31,6 +40,20 @@ function OwnerTabs({ owners, selectedOwner, onSelect }) {
               transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
             />
           )}
+
+          {/* Avatar rendering */}
+          {tab.id === 'combined' ? (
+            <div className="relative z-10 flex -space-x-2">
+              {tab.avatars.map((avatar, i) => (
+                <Avatar key={i} src={avatar.src} initials={avatar.initials} size="sm" />
+              ))}
+            </div>
+          ) : (
+            <div className="relative z-10">
+              <Avatar src={tab.avatar} initials={tab.initials} size="sm" />
+            </div>
+          )}
+
           <span className="relative z-10">{tab.label}</span>
         </button>
       ))}

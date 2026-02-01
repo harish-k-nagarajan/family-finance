@@ -82,6 +82,7 @@ Household (auto-created on first signup)
 - Account details: institution (free text), account name, current balance
 - Total per person and combined total
 - Historical balance chart
+- **Institution Logo:** Automatically resolved via fuzzy company name search (Clearbit Autocomplete API). Works with typos, abbreviations, and local bank names. Falls back to a hardcoded domain map for offline use, then to a gradient placeholder icon. Logos cached in localStorage for 7 days. Same logic applies to investment institution logos.
 
 ### 3. Investments View
 - Organized by brokerage (free text entry)

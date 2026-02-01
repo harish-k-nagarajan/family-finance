@@ -7,6 +7,7 @@ import OwnerTabs from '../components/common/OwnerTabs';
 import SkeletonLoader from '../components/common/SkeletonLoader';
 import { formatCurrency } from '../utils/formatters';
 import { createSnapshot, calculateTotals } from '../utils/snapshots';
+import { fetchBankLogo } from '../utils/bankLogos';
 
 function Banks() {
   const { user } = db.useAuth();
@@ -17,20 +18,35 @@ function Banks() {
   const { data, isLoading } = db.useQuery(
     user
       ? {
-          users: {},
+          users: { $: { where: { id: user.id } } },
           households: {},
           accounts: {},
           investments: {},
-          mortgage: {},
+          loans: {
+            $: { where: { householdId: user.householdId, isDeleted: false } }
+          },
         }
       : null
   );
 
-  const users = data?.users || [];
+  const currentUser = data?.users?.[0];
   const household = data?.households?.[0];
   const allAccounts = data?.accounts || [];
   const investments = data?.investments || [];
-  const mortgage = data?.mortgage?.[0];
+  const loans = data?.loans || [];
+
+  // Get household members
+  const { data: householdData } = db.useQuery(
+    household?.id
+      ? {
+          users: { $: { where: { householdId: household.id } } },
+        }
+      : null
+  );
+
+  const allHouseholdUsers = householdData?.users || [];
+  const hasDemoData = allAccounts.some((a) => a.isDemo) || investments.some((i) => i.isDemo);
+  const users = allHouseholdUsers.filter((u) => !u.isDemo || hasDemoData);
 
   const currency = household?.currency || 'USD';
   const householdId = household?.id;
@@ -46,6 +62,9 @@ function Banks() {
   const handleAddAccount = async (formData) => {
     if (!householdId) return;
 
+    // Fetch bank logo before creating account
+    const logoUrl = await fetchBankLogo(formData.institution);
+
     const now = Date.now();
     await db.transact(
       db.tx.accounts[id()].update({
@@ -54,6 +73,7 @@ function Banks() {
         institution: formData.institution,
         accountType: formData.accountType,
         balance: parseFloat(formData.balance) || 0,
+        logoUrl: logoUrl || '',
         createdAt: now,
         updatedAt: now,
       })
@@ -64,7 +84,7 @@ function Banks() {
       [...allAccounts, { balance: parseFloat(formData.balance) || 0 }],
       investments,
       household,
-      mortgage
+      loans
     );
     await createSnapshot(householdId, totals);
 
@@ -72,10 +92,20 @@ function Banks() {
   };
 
   const handleUpdateAccount = async (accountId, formData) => {
+    const originalAccount = allAccounts.find((a) => a.id === accountId);
+
+    // Fetch new logo if institution name changed
+    let logoUrl = originalAccount?.logoUrl || '';
+    if (formData.institution !== originalAccount?.institution) {
+      const newLogoUrl = await fetchBankLogo(formData.institution);
+      logoUrl = newLogoUrl || '';
+    }
+
     await db.transact(
       db.tx.accounts[accountId].update({
         ...formData,
         balance: parseFloat(formData.balance) || 0,
+        logoUrl,
         updatedAt: Date.now(),
       })
     );
@@ -84,7 +114,7 @@ function Banks() {
     const updatedAccounts = allAccounts.map((a) =>
       a.id === accountId ? { ...a, balance: parseFloat(formData.balance) || 0 } : a
     );
-    const totals = calculateTotals(updatedAccounts, investments, household, mortgage);
+    const totals = calculateTotals(updatedAccounts, investments, household, loans);
     await createSnapshot(householdId, totals);
 
     setEditingId(null);
@@ -95,7 +125,7 @@ function Banks() {
 
     // Create snapshot after balance change
     const updatedAccounts = allAccounts.filter((a) => a.id !== accountId);
-    const totals = calculateTotals(updatedAccounts, investments, household, mortgage);
+    const totals = calculateTotals(updatedAccounts, investments, household, loans);
     await createSnapshot(householdId, totals);
   };
 
@@ -161,13 +191,33 @@ function Banks() {
               />
             ) : (
               <Card className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                    {account.institution}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">
-                    {account.accountType} • {users.find((u) => u.id === account.ownerId)?.displayName || 'Unknown'}
-                  </p>
+                <div className="flex items-center gap-4">
+                  {/* Bank Logo */}
+                  {account.logoUrl ? (
+                    <img
+                      src={account.logoUrl}
+                      alt={account.institution}
+                      className="w-12 h-12 rounded-lg object-contain bg-white dark:bg-navy-800 p-2 border border-gray-200 dark:border-white/10"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                      }}
+                    />
+                  ) : (
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-teal-400 to-purple-500 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                      </svg>
+                    </div>
+                  )}
+
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                      {account.institution}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">
+                      {account.accountType} • {users.find((u) => u.id === account.ownerId)?.displayName || 'Unknown'}
+                    </p>
+                  </div>
                 </div>
                 <div className="flex items-center gap-4">
                   <span className="text-xl font-bold text-teal-600 dark:text-teal-400">

@@ -34,6 +34,7 @@ const _schema = i.schema({
       institution: i.string(),
       accountType: i.string(), // 'checking', 'savings', 'credit'
       balance: i.number(),
+      logoUrl: i.string(), // Bank logo URL from Clearbit
       isDemo: i.boolean(), // Flag for demo data
       createdAt: i.number(),
       updatedAt: i.number(),
@@ -44,6 +45,7 @@ const _schema = i.schema({
       institution: i.string(),
       accountType: i.string(), // '401k', 'IRA', 'Roth IRA', 'Taxable'
       balance: i.number(),
+      logoUrl: i.string(), // Institution logo URL from Clearbit
       isDemo: i.boolean(), // Flag for demo data
       createdAt: i.number(),
       updatedAt: i.number(),
@@ -60,6 +62,8 @@ const _schema = i.schema({
     }),
     mortgage: i.entity({
       householdId: i.string().indexed(),
+      loanName: i.string(), // User-defined label (e.g., "Primary Home", "Honda Civic")
+      loanType: i.string(), // 'home', 'car', 'student', 'personal', 'other'
       lender: i.string(),
       originalAmount: i.number(),
       currentBalance: i.number(),
@@ -67,6 +71,7 @@ const _schema = i.schema({
       termYears: i.number(),
       startDate: i.number(), // Unix timestamp
       monthlyPayment: i.number(),
+      isDeleted: i.boolean(), // Soft delete flag
       isDemo: i.boolean(), // Flag for demo data
       createdAt: i.number(),
       updatedAt: i.number(),

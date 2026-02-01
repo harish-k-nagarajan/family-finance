@@ -91,10 +91,10 @@ export async function getSnapshots(householdId, startDate, endDate = Date.now())
  * @param {Array} accounts - Bank accounts
  * @param {Array} investments - Investment accounts
  * @param {object} household - Household data with home info
- * @param {object} mortgage - Mortgage data
+ * @param {Array} loans - Array of loan/mortgage data (supports multiple loans)
  * @returns {object} Totals for snapshot
  */
-export function calculateTotals(accounts, investments, household, mortgage) {
+export function calculateTotals(accounts, investments, household, loans) {
   const totalBankBalance = accounts?.reduce((sum, a) => sum + (a.balance || 0), 0) || 0;
   const totalInvestments = investments?.reduce((sum, i) => sum + (i.balance || 0), 0) || 0;
 
@@ -105,13 +105,14 @@ export function calculateTotals(accounts, investments, household, mortgage) {
     homeValue = Math.round(household.homePurchasePrice * Math.pow(1 + appreciationRate / 100, yearsOwned));
   }
 
-  const mortgageBalance = mortgage?.currentBalance || 0;
+  // Sum all loan balances (supports multiple loans)
+  const mortgageBalance = loans?.reduce((sum, loan) => sum + (loan.currentBalance || 0), 0) || 0;
 
   return {
     totalBankBalance,
     totalInvestments,
     homeValue,
-    mortgageBalance,
+    mortgageBalance, // Keep field name for backward compatibility with historical snapshots
   };
 }
 

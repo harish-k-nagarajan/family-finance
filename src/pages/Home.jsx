@@ -20,7 +20,9 @@ function Home() {
         households: {},
         accounts: {},
         investments: {},
-        mortgage: {},
+        mortgage: {
+          $: { where: { householdId: user.householdId, isDeleted: false } }
+        },
         snapshots: {},
       }
       : null
@@ -30,7 +32,7 @@ function Home() {
   const household = data?.households?.[0];
   const accounts = data?.accounts || [];
   const investments = data?.investments || [];
-  const mortgage = data?.mortgage?.[0];
+  const loans = data?.mortgage || [];
   const snapshots = data?.snapshots || [];
 
   const currency = household?.currency || 'USD';
@@ -50,8 +52,10 @@ function Home() {
     );
   }
 
-  const mortgageBalance = mortgageEnabled ? (mortgage?.currentBalance || 0) : 0;
-  const netWorth = totalBankBalance + totalInvestments + homeValue - mortgageBalance;
+  const totalLoanBalance = mortgageEnabled
+    ? loans.reduce((sum, l) => sum + (l.currentBalance || 0), 0)
+    : 0;
+  const netWorth = totalBankBalance + totalInvestments + homeValue - totalLoanBalance;
 
   // Filter snapshots by time range
   const getTimeRangeDate = () => {
@@ -74,7 +78,7 @@ function Home() {
       netWorth: s.netWorth,
       totalBanks: s.totalBankBalance,
       totalInvestments: s.totalInvestments,
-      homeEquity: s.homeValue - s.mortgageBalance,
+      homeEquity: s.homeValue - s.totalLoanBalance,
       forecast: null,
     }));
 
@@ -89,7 +93,7 @@ function Home() {
       netWorth: netWorth,
       totalBanks: totalBankBalance,
       totalInvestments: totalInvestments,
-      homeEquity: homeValue - mortgageBalance,
+      homeEquity: homeValue - totalLoanBalance,
       forecast: null, // Will optionally set overlap below
     });
   }
@@ -152,7 +156,7 @@ function Home() {
     ...(mortgageEnabled
       ? [{
         label: 'Home Equity',
-        value: homeValue - mortgageBalance,
+        value: homeValue - totalLoanBalance,
         gradient: 'from-orange-400 to-yellow-400',
       }]
       : []),
@@ -245,7 +249,7 @@ function Home() {
               <AssetAllocationChart
                 cash={totalBankBalance}
                 investments={totalInvestments}
-                homeEquity={homeValue - mortgageBalance}
+                homeEquity={homeValue - totalLoanBalance}
                 currency={currency}
               />
             </div>
