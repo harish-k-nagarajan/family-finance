@@ -13,11 +13,13 @@ import {
   calculateEquity,
 } from '../utils/mortgageCalculations';
 import { AmortizationChart, PaymentCompositionChart } from '../components/Charts/MortgageCharts';
+import ConfirmationModal from '../components/common/ConfirmationModal';
 
 function Mortgage() {
   const { user } = db.useAuth();
   const [selectedLoanId, setSelectedLoanId] = useState('combined');
   const [editingLoanId, setEditingLoanId] = useState(null); // null = closed, 'new' = adding, loanId = editing
+  const [loanToDelete, setLoanToDelete] = useState(null); // Stores loan to delete
 
   const { data, isLoading } = db.useQuery(
     user
@@ -64,6 +66,29 @@ function Mortgage() {
     }
   }, [loans, selectedLoanId]);
 
+  // Handle loan deletion
+  const handleDeleteLoan = async () => {
+    if (!loanToDelete) return;
+
+    const loanId = loanToDelete.id;
+    setLoanToDelete(null); // Close modal immediately
+
+    try {
+      await db.transact(
+        db.tx.mortgage[loanId].update({
+          isDeleted: true,
+          updatedAt: Date.now(),
+        })
+      );
+
+      // Redirect to combined view after deletion
+      setSelectedLoanId('combined');
+    } catch (error) {
+      console.error('Failed to delete loan:', error);
+      alert('Failed to delete loan. Please try again.');
+    }
+  };
+
   // Loan selection logic
   const displayedLoan = selectedLoanId === 'combined'
     ? null
@@ -78,7 +103,7 @@ function Mortgage() {
     totalBalance: loans.reduce((sum, l) => sum + (l.currentBalance || 0), 0),
     totalOriginal: loans.reduce((sum, l) => sum + (l.originalAmount || 0), 0),
     weightedRate: loans.reduce((sum, l) => sum + ((l.interestRate || 0) * (l.currentBalance || 0)), 0)
-                  / Math.max(loans.reduce((sum, l) => sum + (l.currentBalance || 0), 0), 1),
+      / Math.max(loans.reduce((sum, l) => sum + (l.currentBalance || 0), 0), 1),
   } : null;
 
   // Calculate home value and equity
@@ -131,15 +156,26 @@ function Mortgage() {
         </div>
         <div className="flex gap-3">
           {selectedLoanId !== 'combined' && displayedLoan && (
-            <button
-              onClick={() => setEditingLoanId(displayedLoan.id)}
-              className="p-2 rounded-lg hover:bg-white/5 dark:hover:bg-white/5 hover:bg-gray-100 transition-colors"
-              title="Edit loan details"
-            >
-              <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-              </svg>
-            </button>
+            <>
+              <button
+                onClick={() => setEditingLoanId(displayedLoan.id)}
+                className="p-2 rounded-lg hover:bg-white/5 dark:hover:bg-white/5 hover:bg-gray-100 transition-colors"
+                title="Edit loan details"
+              >
+                <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                </svg>
+              </button>
+              <button
+                onClick={() => setLoanToDelete(displayedLoan)}
+                className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
+                title="Delete loan"
+              >
+                <svg className="w-5 h-5 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+            </>
           )}
           <button
             onClick={() => setEditingLoanId('new')}
@@ -238,7 +274,7 @@ function Mortgage() {
               </Card>
               <Card>
                 <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Home Equity</p>
-                <p className="text-2xl font-display font-bold text-teal-600 dark:text-teal-400">
+                <p className={`text-2xl font-display font-bold ${equity >= 0 ? 'text-teal-600 dark:text-teal-400' : 'text-red-600 dark:text-red-400'}`}>
                   {formatCurrency(equity, currency)}
                 </p>
                 {homeValue > 0 && (
@@ -316,7 +352,7 @@ function Mortgage() {
               </Card>
               <Card>
                 <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Home Equity</p>
-                <p className="text-2xl font-display font-bold text-teal-600 dark:text-teal-400">
+                <p className={`text-2xl font-display font-bold ${equity >= 0 ? 'text-teal-600 dark:text-teal-400' : 'text-red-600 dark:text-red-400'}`}>
                   {formatCurrency(equity, currency)}
                 </p>
                 {homeValue > 0 && (
@@ -458,6 +494,16 @@ function Mortgage() {
           onClose={() => setEditingLoanId(null)}
         />
       )}
+
+      <ConfirmationModal
+        isOpen={!!loanToDelete}
+        onClose={() => setLoanToDelete(null)}
+        onConfirm={handleDeleteLoan}
+        isLoading={false}
+        title={`Delete "${loanToDelete?.loanName}"?`}
+        description="This will permanently delete this loan. This action cannot be undone."
+        confirmText="Delete Loan"
+      />
     </div>
   );
 }
@@ -562,11 +608,10 @@ function MortgageForm({ loan, householdId, onClose }) {
                   key={type.value}
                   type="button"
                   onClick={() => setFormData({ ...formData, loanType: type.value })}
-                  className={`p-3 rounded-lg border-2 transition-all ${
-                    formData.loanType === type.value
-                      ? 'border-teal-500 bg-teal-500/10'
-                      : 'border-gray-200 dark:border-white/10 hover:border-teal-500/50'
-                  }`}
+                  className={`p-3 rounded-lg border-2 transition-all ${formData.loanType === type.value
+                    ? 'border-teal-500 bg-teal-500/10'
+                    : 'border-gray-200 dark:border-white/10 hover:border-teal-500/50'
+                    }`}
                 >
                   <div className="text-2xl mb-1">{type.icon}</div>
                   <div className="text-sm font-medium text-gray-900 dark:text-white">{type.label}</div>

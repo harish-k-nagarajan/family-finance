@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { db } from '../../lib/instant';
 import Card from '../common/Card';
 import { seedDemoData } from '../../utils/demoData';
+import ConfirmationModal from '../common/ConfirmationModal';
 
 function DemoDataSection({ household, currentUser }) {
     const [isLoading, setIsLoading] = useState(false);
+    const [showClearModal, setShowClearModal] = useState(false);
 
     // Query all potential demo data to see if we have any, and to be able to delete it
-    const { data } = db.useQuery({
+    const { data, isLoading: isQueryLoading } = db.useQuery({
         users: { $: { where: { householdId: household.id } } },
         accounts: { $: { where: { householdId: household.id } } },
         investments: { $: { where: { householdId: household.id } } },
@@ -21,7 +23,7 @@ function DemoDataSection({ household, currentUser }) {
     const demoMortgage = data?.mortgage?.filter(x => x.isDemo) || [];
     const demoSnapshots = data?.snapshots?.filter(x => x.isDemo) || [];
 
-    const hasDemoData = demoUsers.length > 0 || demoAccounts.length > 0 || demoInvestments.length > 0 || demoMortgage.length > 0 || demoSnapshots.length > 0;
+    const hasDemoData = !isQueryLoading && (demoUsers.length > 0 || demoAccounts.length > 0 || demoInvestments.length > 0 || demoMortgage.length > 0 || demoSnapshots.length > 0);
 
     const handleLoadDemo = async () => {
         setIsLoading(true);
@@ -37,7 +39,7 @@ function DemoDataSection({ household, currentUser }) {
     };
 
     const handleClearDemo = async () => {
-        if (!window.confirm("Are you sure? This will delete all demo accounts, users, and investments.")) return;
+        setShowClearModal(false); // Close modal immediately
 
         setIsLoading(true);
         try {
@@ -96,15 +98,15 @@ function DemoDataSection({ household, currentUser }) {
                     <div className="flex gap-3">
                         <button
                             onClick={handleLoadDemo}
-                            disabled={isLoading || hasDemoData}
+                            disabled={isLoading || hasDemoData || isQueryLoading}
                             className="px-5 py-2.5 rounded-xl bg-teal-50 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-100 dark:border-teal-500/20 font-medium hover:bg-teal-100 dark:hover:bg-teal-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {isLoading && !hasDemoData ? 'Loading...' : 'Load Demo Data'}
                         </button>
 
                         <button
-                            onClick={handleClearDemo}
-                            disabled={isLoading || !hasDemoData}
+                            onClick={() => setShowClearModal(true)}
+                            disabled={isLoading || !hasDemoData || isQueryLoading}
                             className="px-5 py-2.5 rounded-xl bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border border-red-100 dark:border-red-500/20 font-medium hover:bg-red-100 dark:hover:bg-red-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {isLoading && hasDemoData ? 'Clearing...' : 'Clear Demo Data'}
@@ -112,6 +114,16 @@ function DemoDataSection({ household, currentUser }) {
                     </div>
                 </div>
             </Card>
+
+            <ConfirmationModal
+                isOpen={showClearModal}
+                onClose={() => setShowClearModal(false)}
+                onConfirm={handleClearDemo}
+                isLoading={isLoading}
+                title="Clear Demo Data?"
+                description="This will permanently delete all demo accounts, investments, loans, and snapshots. This action cannot be undone."
+                confirmText="Clear Demo Data"
+            />
         </section>
     );
 }

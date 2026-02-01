@@ -32,14 +32,14 @@ function Investments() {
   const { data, isLoading } = db.useQuery(
     user
       ? {
-          users: { $: { where: { id: user.id } } },
-          households: {},
-          accounts: {},
-          investments: {},
-          loans: {
-            $: { where: { householdId: user.householdId, isDeleted: false } }
-          },
-        }
+        users: { $: { where: { id: user.id } } },
+        households: {},
+        accounts: {},
+        investments: {},
+        loans: {
+          $: { where: { householdId: user.householdId, isDeleted: false } }
+        },
+      }
       : null
   );
 
@@ -53,8 +53,8 @@ function Investments() {
   const { data: householdData } = db.useQuery(
     household?.id
       ? {
-          users: { $: { where: { householdId: household.id } } },
-        }
+        users: { $: { where: { householdId: household.id } } },
+      }
       : null
   );
 
@@ -359,23 +359,58 @@ function InvestmentForm({ investment, users, onSubmit, onCancel }) {
           </div>
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
-              Logo URL (optional)
+              Institution Logo (optional)
             </label>
-            <input
-              type="url"
-              value={formData.logoUrl}
-              onChange={(e) => setFormData({ ...formData, logoUrl: e.target.value })}
-              placeholder="https://example.com/logo.png"
-              className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
-            />
-            {formData.logoUrl && (formData.logoUrl.startsWith('http://') || formData.logoUrl.startsWith('https://')) && (
-              <img
-                src={formData.logoUrl}
-                alt="Logo preview"
-                className="mt-2 w-6 h-6 rounded object-contain bg-white dark:bg-navy-800 p-1 border border-gray-200 dark:border-white/10"
-                onError={(e) => { e.target.style.display = 'none'; }}
-              />
-            )}
+            <div className="flex items-center gap-4">
+              {formData.logoUrl && (
+                <div className="relative">
+                  <img
+                    src={formData.logoUrl}
+                    alt="Logo preview"
+                    className="w-16 h-16 rounded-lg object-contain bg-white dark:bg-navy-800 p-2 border border-gray-200 dark:border-white/10"
+                    onError={(e) => { e.target.style.display = 'none'; }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, logoUrl: '' })}
+                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+                    title="Remove logo"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              )}
+              <div className="flex-1">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      // Check file size (max 500KB)
+                      if (file.size > 500 * 1024) {
+                        alert('Image size should be less than 500KB');
+                        e.target.value = '';
+                        return;
+                      }
+
+                      // Convert to base64
+                      const reader = new FileReader();
+                      reader.onloadend = () => {
+                        setFormData({ ...formData, logoUrl: reader.result });
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                  className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-teal-50 dark:file:bg-teal-500/10 file:text-teal-600 dark:file:text-teal-400 hover:file:bg-teal-100 dark:hover:file:bg-teal-500/20 file:cursor-pointer"
+                />
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  PNG, JPG, or SVG. Max 500KB.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
         <div className="flex justify-end gap-3">
