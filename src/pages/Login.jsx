@@ -52,7 +52,7 @@ function Login() {
             <img
               src="/Family Finance Logo.png"
               alt="Family Finance logo"
-              className="w-12 h-12 rounded-xl object-contain"
+              className="w-16 h-16 rounded-xl object-contain"
             />
             <span className="font-display font-semibold text-2xl text-navy-900 dark:text-white tracking-wide">
               Family Finance

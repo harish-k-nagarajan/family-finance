@@ -68,7 +68,7 @@ function Sidebar({ collapsed, onToggleCollapse, user, household }) {
             <img
               src="/Family Finance Logo.png"
               alt="Family Finance logo"
-              className="w-10 h-10 rounded-lg object-contain"
+              className="w-14 h-14 rounded-lg object-contain"
             />
             <AnimatePresence>
               {!collapsed && (
@@ -94,10 +94,9 @@ function Sidebar({ collapsed, onToggleCollapse, user, household }) {
                 <NavLink
                   to={item.path}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 hover-glow ${
-                      isActive
-                        ? 'bg-teal-500/20 text-teal-600 dark:text-teal-400 border-l-2 border-teal-500 pl-[10px]'
-                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 border-l-2 border-transparent'
+                    `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 hover-glow ${isActive
+                      ? 'bg-teal-500/20 text-teal-600 dark:text-teal-400 border-l-2 border-teal-500 pl-[10px]'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 border-l-2 border-transparent'
                     }`
                   }
                 >
