@@ -6,6 +6,7 @@ import SkeletonLoader from '../components/common/SkeletonLoader';
 import AssetAllocationChart from '../components/Charts/AssetAllocationChart';
 import StatCard from '../components/Dashboard/StatCard';
 import DashboardTrendChart from '../components/Dashboard/DashboardTrendChart';
+import WealthRadarCard from '../components/common/WealthRadarCard';
 import { formatCurrency } from '../utils/formatters';
 import { calculateHomeValue } from '../utils/mortgageCalculations';
 
@@ -279,6 +280,16 @@ function Home() {
           </Card>
         </motion.div>
       </div>
+
+      {/* Wealth Radar Widget */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5, duration: 0.3, ease: 'easeOut' }}
+        className="mt-12"
+      >
+        <WealthRadarCard householdId={household?.id} />
+      </motion.div>
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
