@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { id } from '@instantdb/react';
 import { db } from '../lib/instant';
 import Card from '../components/common/Card';
 import OwnerTabs from '../components/common/OwnerTabs';
@@ -8,6 +7,7 @@ import SkeletonLoader from '../components/common/SkeletonLoader';
 import { formatCurrency } from '../utils/formatters';
 import { createSnapshot, calculateTotals } from '../utils/snapshots';
 import { Landmark, PiggyBank, CreditCard, Wallet } from 'lucide-react';
+import BankAccountModal from '../components/BankAccounts/BankAccountModal';
 
 const getAccountTypeIcon = (accountType) => {
   const iconProps = { className: "w-6 h-6 text-white", strokeWidth: 2 };
@@ -27,8 +27,7 @@ const getAccountTypeIcon = (accountType) => {
 function Banks() {
   const { user } = db.useAuth();
   const [selectedOwner, setSelectedOwner] = useState('combined');
-  const [isAdding, setIsAdding] = useState(false);
-  const [editingId, setEditingId] = useState(null);
+  const [editingAccount, setEditingAccount] = useState(null);
 
   const { data, isLoading } = db.useQuery(
     user
@@ -74,57 +73,6 @@ function Banks() {
 
   const totalBalance = accounts.reduce((sum, a) => sum + (a.balance || 0), 0);
 
-  const handleAddAccount = async (formData) => {
-    if (!householdId) return;
-
-    const now = Date.now();
-    await db.transact(
-      db.tx.accounts[id()].update({
-        householdId,
-        ownerId: formData.ownerId || user.id,
-        institution: formData.institution,
-        accountType: formData.accountType,
-        balance: parseFloat(formData.balance) || 0,
-        logoUrl: formData.logoUrl || '',
-        createdAt: now,
-        updatedAt: now,
-      })
-    );
-
-    // Create snapshot after balance change
-    const totals = calculateTotals(
-      [...allAccounts, { balance: parseFloat(formData.balance) || 0 }],
-      investments,
-      household,
-      loans
-    );
-    await createSnapshot(householdId, totals);
-
-    setIsAdding(false);
-  };
-
-  const handleUpdateAccount = async (accountId, formData) => {
-    const originalAccount = allAccounts.find((a) => a.id === accountId);
-
-    await db.transact(
-      db.tx.accounts[accountId].update({
-        ...formData,
-        balance: parseFloat(formData.balance) || 0,
-        logoUrl: formData.logoUrl || '',
-        updatedAt: Date.now(),
-      })
-    );
-
-    // Create snapshot after balance change
-    const updatedAccounts = allAccounts.map((a) =>
-      a.id === accountId ? { ...a, balance: parseFloat(formData.balance) || 0 } : a
-    );
-    const totals = calculateTotals(updatedAccounts, investments, household, loans);
-    await createSnapshot(householdId, totals);
-
-    setEditingId(null);
-  };
-
   const handleDeleteAccount = async (accountId) => {
     await db.transact(db.tx.accounts[accountId].delete());
 
@@ -156,7 +104,7 @@ function Banks() {
           </p>
         </div>
         <button
-          onClick={() => setIsAdding(true)}
+          onClick={() => setEditingAccount('new')}
           className="px-4 py-2 rounded-lg bg-gradient-to-r from-teal-500 to-purple-500 text-white font-medium hover:opacity-90 transition-opacity"
         >
           Add Account
@@ -187,15 +135,7 @@ function Banks() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            {editingId === account.id ? (
-              <AccountForm
-                account={account}
-                users={users}
-                onSubmit={(data) => handleUpdateAccount(account.id, data)}
-                onCancel={() => setEditingId(null)}
-              />
-            ) : (
-              <Card className="flex items-center justify-between">
+            <Card className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   {/* Bank Logo */}
                   <div className="relative">
@@ -234,7 +174,7 @@ function Banks() {
                   </span>
                   <div className="flex gap-2">
                     <button
-                      onClick={() => setEditingId(account.id)}
+                      onClick={() => setEditingAccount(account)}
                       className="p-2 text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -252,182 +192,32 @@ function Banks() {
                   </div>
                 </div>
               </Card>
-            )}
           </motion.div>
         ))}
 
-        {accounts.length === 0 && !isAdding && (
+        {accounts.length === 0 && (
           <Card className="text-center py-8">
             <p className="text-gray-600 dark:text-gray-400">No accounts found</p>
             <button
-              onClick={() => setIsAdding(true)}
+              onClick={() => setEditingAccount('new')}
               className="mt-4 text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 transition-colors"
             >
               Add your first account
             </button>
           </Card>
         )}
-
-        {isAdding && (
-          <AccountForm
-            users={users}
-            onSubmit={handleAddAccount}
-            onCancel={() => setIsAdding(false)}
-          />
-        )}
       </div>
+
+      {/* Add/Edit Modal */}
+      {editingAccount && (
+        <BankAccountModal
+          account={editingAccount === 'new' ? null : editingAccount}
+          users={users}
+          householdId={householdId}
+          onClose={() => setEditingAccount(null)}
+        />
+      )}
     </div>
-  );
-}
-
-function AccountForm({ account, users, onSubmit, onCancel }) {
-  const [formData, setFormData] = useState({
-    institution: account?.institution || '',
-    accountType: account?.accountType || 'checking',
-    balance: account?.balance?.toString() || '',
-    ownerId: account?.ownerId || users[0]?.id || '',
-    logoUrl: account?.logoUrl || '',
-  });
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(formData);
-  };
-
-  return (
-    <Card>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
-              Institution
-            </label>
-            <input
-              type="text"
-              value={formData.institution}
-              onChange={(e) => setFormData({ ...formData, institution: e.target.value })}
-              placeholder="e.g., Chase, Bank of America"
-              required
-              className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
-              Account Type
-            </label>
-            <select
-              value={formData.accountType}
-              onChange={(e) => setFormData({ ...formData, accountType: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
-            >
-              <option value="checking" className="bg-white dark:bg-navy-800">Checking</option>
-              <option value="savings" className="bg-white dark:bg-navy-800">Savings</option>
-              <option value="credit" className="bg-white dark:bg-navy-800">Credit Card</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
-              Balance
-            </label>
-            <input
-              type="number"
-              step="0.01"
-              value={formData.balance}
-              onChange={(e) => setFormData({ ...formData, balance: e.target.value })}
-              placeholder="0.00"
-              required
-              className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
-              Owner
-            </label>
-            <select
-              value={formData.ownerId}
-              onChange={(e) => setFormData({ ...formData, ownerId: e.target.value })}
-              className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
-            >
-              {users.map((u) => (
-                <option key={u.id} value={u.id} className="bg-white dark:bg-navy-800">
-                  {u.displayName || u.email}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
-              Bank Logo (optional)
-            </label>
-            <div className="flex items-center gap-4">
-              {formData.logoUrl && (
-                <div className="relative">
-                  <img
-                    src={formData.logoUrl}
-                    alt="Logo preview"
-                    className="w-16 h-16 rounded-lg object-contain bg-white dark:bg-navy-800 p-2 border border-gray-200 dark:border-white/10"
-                    onError={(e) => { e.target.style.display = 'none'; }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setFormData({ ...formData, logoUrl: '' })}
-                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
-                    title="Remove logo"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-              )}
-              <div className="flex-1">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      // Check file size (max 500KB)
-                      if (file.size > 500 * 1024) {
-                        alert('Image size should be less than 500KB');
-                        e.target.value = '';
-                        return;
-                      }
-
-                      // Convert to base64
-                      const reader = new FileReader();
-                      reader.onloadend = () => {
-                        setFormData({ ...formData, logoUrl: reader.result });
-                      };
-                      reader.readAsDataURL(file);
-                    }
-                  }}
-                  className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-teal-50 dark:file:bg-teal-500/10 file:text-teal-600 dark:file:text-teal-400 hover:file:bg-teal-100 dark:hover:file:bg-teal-500/20 file:cursor-pointer"
-                />
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  PNG, JPG, or SVG. Max 500KB.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="flex justify-end gap-3">
-          <button
-            type="button"
-            onClick={onCancel}
-            className="px-4 py-2 rounded-lg text-gray-600 dark:text-gray-400 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="px-4 py-2 rounded-lg bg-gradient-to-r from-teal-500 to-purple-500 text-white font-medium hover:opacity-90 transition-opacity"
-          >
-            {account ? 'Update' : 'Add'} Account
-          </button>
-        </div>
-      </form>
-    </Card>
   );
 }
 
