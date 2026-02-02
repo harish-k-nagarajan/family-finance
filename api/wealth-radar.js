@@ -129,21 +129,23 @@ const buildPrompt = (data) => {
   }));
 
   // Build exact prompt from user's template
-  const prompt = `You are a global finance coach. Analyze this user's data to infer their likely tax country from currency, bank names, and context (e.g. CZK + Raiffeisen/CSOB = Czech Republic).
+  const prompt = `You are a concise financial insights engine for a personal finance app. Analyze this user's portfolio and current markets.
 
-Data:
+User Data:
 Currency: ${currency} (${currencySymbol})
 Accounts: ${accountsList}
 Mortgage: ${mortgageDetails}
 Recent net worth trend (12 months): ${JSON.stringify(recentSnapshots)}
 
-Give 4 concise, actionable suggestions (1 sentence each):
-1. Portfolio growth idea (low-risk, based on detected brokers like Trading212/Revolut).
-2. Tax optimization if applicable (infer rules from detected country; mortgage/pension if present).
-3. Income/savings optimization.
-4. Risk/diversification check.
+Respond with EXACTLY 5 lines, one per insight. No numbering, no bullet markers, no markdown, no bold, no links, no citations. Just plain sentences.
 
-Cite sources. End with "Not financial advice—consult local expert."`;
+Line 1: US markets — mention S&P 500, Nasdaq, or Dow with a specific number or percentage and what it means for this user.
+Line 2: EU & Asian markets — one key development from STOXX 600, FTSE, Nikkei, Hang Seng, or Sensex relevant to this user.
+Line 3: Gold & Silver — current trend with a price or percentage and whether this user should adjust allocation.
+Line 4: Global events — one geopolitical or macro event (rate decision, trade policy, conflict) impacting this user's holdings.
+Line 5: Recommended action — one specific step this user should take this week.
+
+Keep each line to 1-2 sentences max. Use specific numbers. No disclaimers, no sources, no extra text.`;
 
   return prompt;
 };
@@ -204,7 +206,7 @@ export default async function handler(req, res) {
 
     // Call Perplexity API with timeout
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    const timeout = setTimeout(() => controller.abort(), 30000); // 30 second timeout
 
     let response;
     try {
@@ -227,7 +229,10 @@ export default async function handler(req, res) {
             }
           ],
           temperature: 0.3,
-          max_tokens: 1000
+          max_tokens: 1500,
+          web_search_options: {
+            search_recency_filter: 'week'
+          }
         }),
         signal: controller.signal
       });
@@ -286,16 +291,18 @@ export default async function handler(req, res) {
     }
 
     const content = perplexityData.choices[0].message.content;
+    const citations = perplexityData.citations || [];
 
     if (!content || content.trim().length === 0) {
       throw new Error('No insights generated. Please try again.');
     }
 
-    // Return success response with plain text content
+    // Return success response with plain text content and citations
     return sendJSON(res, 200, {
       success: true,
       data: {
         content: content.trim(),
+        citations,
         inferredCountry,
         generatedAt: Date.now()
       }

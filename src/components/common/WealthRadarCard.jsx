@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Loader2, AlertCircle, Info } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Sparkles, Loader2, AlertCircle } from 'lucide-react';
 import { db } from '../../lib/instant';
 import Card from './Card';
 import SkeletonLoader from './SkeletonLoader';
@@ -55,66 +55,22 @@ const setCachedData = (householdId, data) => {
   }
 };
 
-// Perplexity badge component
+// Perplexity badge component - full logo (icon + wordmark)
 const PerplexityBadge = () => (
   <div className="absolute top-4 right-4 flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500">
     <span className="uppercase tracking-wider font-medium">Powered by</span>
-    <img
-      src="/perplexity.svg"
-      alt="Perplexity"
-      className="h-4 opacity-70"
-    />
+    <div className="flex items-center gap-1">
+      <img
+        src="/perplexity.svg"
+        alt="Perplexity"
+        className="h-4 opacity-70"
+      />
+      <span className="font-semibold text-gray-600 dark:text-gray-400 tracking-tight" style={{ fontFamily: "'Inter', sans-serif" }}>
+        perplexity
+      </span>
+    </div>
   </div>
 );
-
-// Citations tooltip component
-const CitationsTooltip = ({ citations }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  if (!citations || citations.length === 0) return null;
-
-  return (
-    <div className="relative">
-      <button
-        onMouseEnter={() => setIsOpen(true)}
-        onMouseLeave={() => setIsOpen(false)}
-        className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
-      >
-        <Info className="w-3.5 h-3.5" />
-        <span>{citations.length} source{citations.length > 1 ? 's' : ''} cited</span>
-      </button>
-
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 4 }}
-            transition={{ duration: 0.15 }}
-            className="absolute bottom-full left-0 mb-2 w-72 p-3 glass-card shadow-xl border border-gray-200 dark:border-white/10 rounded-xl z-10"
-          >
-            <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Sources
-            </p>
-            <div className="space-y-2">
-              {citations.map((cite, idx) => (
-                <a
-                  key={idx}
-                  href={cite.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-xs text-teal-600 dark:text-teal-400 hover:underline break-words"
-                >
-                  {cite.title || cite.url}
-                </a>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-};
 
 // Main Wealth Radar Card component
 function WealthRadarCard({ householdId }) {
@@ -136,17 +92,23 @@ function WealthRadarCard({ householdId }) {
     } : null
   );
 
-  // Check cache on mount
+  // Check cache on mount — invalidate if from old prompt format (no 5-item structure)
   useEffect(() => {
     if (!householdId) return;
 
     const cached = getCachedData(householdId);
-    if (cached) {
-      setInsights(cached);
-      setState('loaded');
-    } else {
-      setState('empty');
+    if (cached && cached.content) {
+      // Validate cached content has numbered items
+      const hasNumberedItems = /\d+[\.\)]\s/.test(cached.content);
+      if (hasNumberedItems) {
+        setInsights(cached);
+        setState('loaded');
+        return;
+      }
+      // Stale format — clear it
+      localStorage.removeItem(`wealthRadar:${householdId}`);
     }
+    setState('empty');
   }, [householdId]);
 
   // Generate insights function
@@ -219,6 +181,9 @@ function WealthRadarCard({ householdId }) {
       if (!result.success) {
         throw new Error(result.error || 'Failed to generate insights');
       }
+
+      // Debug: log raw content to help diagnose parsing
+      console.log('Wealth Radar raw content:', result.data.content);
 
       // Update state and cache
       setInsights(result.data);
@@ -337,71 +302,41 @@ function WealthRadarCard({ householdId }) {
       <Card>
         <div className="relative">
           {/* Header */}
-          <div className="flex items-start justify-between mb-6 pr-32">
-            <div>
-              <h3 className="text-lg font-display font-semibold text-gray-900 dark:text-white">
-                Wealth Radar
-              </h3>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                Personalized for {insights.inferredCountry}
-              </p>
-            </div>
+          <div className="flex items-start justify-between mb-2 pr-32">
+            <h3 className="text-lg font-display font-semibold text-gray-900 dark:text-white">
+              Wealth Radar
+            </h3>
           </div>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mb-6">
+            Based on your accounts, investments, and tax residency
+          </p>
 
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: 'easeOut' }}
-            className="space-y-6"
           >
-            {/* Country Inference Summary */}
-            {parsed?.countryInference && (
-              <div className="p-4 rounded-xl bg-gradient-to-br from-teal-500/10 to-purple-500/10 border border-teal-500/20 dark:border-teal-500/30">
-                <div className="flex items-start gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-teal-500 dark:bg-teal-400 mt-2 flex-shrink-0" />
-                  <p className="text-sm font-medium text-gray-800 dark:text-gray-200 leading-relaxed">
-                    {parsed.countryInference}
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {/* Suggestions List */}
             {parsed?.suggestions && parsed.suggestions.length > 0 && (
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {parsed.suggestions.map((suggestion, idx) => (
                   <motion.div
                     key={idx}
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: idx * 0.1 }}
-                    className="flex gap-4"
+                    transition={{ duration: 0.3, delay: idx * 0.08 }}
+                    className="flex gap-3 items-start"
                   >
-                    {/* Number Badge */}
-                    <div className="flex-shrink-0 w-7 h-7 rounded-lg bg-gradient-to-br from-teal-500 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
-                      {suggestion.number}
-                    </div>
-
-                    {/* Content */}
-                    <div className="flex-1 pt-0.5">
-                      <h4 className="text-sm font-semibold text-teal-600 dark:text-teal-400 mb-1">
+                    <div className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-teal-500 dark:bg-teal-400 mt-2" />
+                    <div className="flex-1">
+                      <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
                         {suggestion.title}
-                      </h4>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                        {suggestion.description}
-                      </p>
+                      </span>
+                      <span className="text-sm text-gray-600 dark:text-gray-400">
+                        {' — '}{suggestion.description}
+                      </span>
                     </div>
                   </motion.div>
                 ))}
-              </div>
-            )}
-
-            {/* Disclaimer */}
-            {parsed?.disclaimer && (
-              <div className="pt-4 border-t border-gray-200 dark:border-white/10">
-                <p className="text-xs text-gray-500 dark:text-gray-400 italic">
-                  {parsed.disclaimer}
-                </p>
               </div>
             )}
           </motion.div>
