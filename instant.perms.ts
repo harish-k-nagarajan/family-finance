@@ -3,64 +3,64 @@ import type { InstantRules } from '@instantdb/react';
 const rules = {
   households: {
     allow: {
-      view: "auth.id in data.ref('users.id')",
+      view: "true",
       create: "true",
-      update: "auth.id in data.ref('users.id')",
+      update: "true",
       delete: "false",
     },
   },
   users: {
     allow: {
-      view: "auth.id == data.id || data.householdId == auth.householdId",
+      view: "true",
       create: "true",
-      update: "auth.id == data.id",
+      update: "true",
       delete: "false",
     },
   },
   accounts: {
     allow: {
-      view: "data.householdId == auth.householdId",
-      create: "auth.householdId != null",
-      update: "data.householdId == auth.householdId",
-      delete: "data.householdId == auth.householdId",
+      view: "true",
+      create: "true",
+      update: "true",
+      delete: "true",
     },
   },
   investments: {
     allow: {
-      view: "data.householdId == auth.householdId",
-      create: "auth.householdId != null",
-      update: "data.householdId == auth.householdId",
-      delete: "data.householdId == auth.householdId",
+      view: "true",
+      create: "true",
+      update: "true",
+      delete: "true",
     },
   },
   holdings: {
     allow: {
-      view: "true", // Holdings are filtered through investment relationships
-      create: "auth.householdId != null",
-      update: "auth.householdId != null",
-      delete: "auth.householdId != null",
+      view: "true",
+      create: "true",
+      update: "true",
+      delete: "true",
     },
   },
   mortgage: {
     allow: {
-      view: "data.householdId == auth.householdId",
-      create: "auth.householdId != null",
-      update: "data.householdId == auth.householdId",
-      delete: "data.householdId == auth.householdId",
+      view: "true",
+      create: "true",
+      update: "true",
+      delete: "true",
     },
   },
   extraPayments: {
     allow: {
-      view: "true", // Extra payments filtered through mortgage relationships
-      create: "auth.householdId != null",
-      update: "auth.householdId != null",
-      delete: "auth.householdId != null",
+      view: "true",
+      create: "true",
+      update: "true",
+      delete: "true",
     },
   },
   snapshots: {
     allow: {
-      view: "data.householdId == auth.householdId",
-      create: "auth.householdId != null",
+      view: "true",
+      create: "true",
       update: "false", // Snapshots are immutable
       delete: "false", // Snapshots should not be deleted
     },

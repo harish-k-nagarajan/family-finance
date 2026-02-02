@@ -3,28 +3,28 @@ import { i } from '@instantdb/react';
 const _schema = i.schema({
   entities: {
     households: i.entity({
-      name: i.string(), // NEW: Household name
-      ownerId: i.string(), // NEW: ID of the user who owns the household
+      name: i.string().optional(), // NEW: Household name
+      ownerId: i.string().optional(), // NEW: ID of the user who owns the household
       currency: i.string(),
-      country: i.string(), // NEW: Country code (e.g. 'US', 'GB')
-      relationshipStatus: i.string(), // NEW: Household-level status (Married, Domestic Partnership, etc.)
+      country: i.string().optional(), // NEW: Country code (e.g. 'US', 'GB')
+      relationshipStatus: i.string().optional(), // NEW: Household-level status (Married, Domestic Partnership, etc.)
       appreciationRate: i.number(),
       homePurchasePrice: i.number(),
       homePurchaseDate: i.number(), // Unix timestamp
       mortgageEnabled: i.boolean(), // Show/hide mortgage section
-      debtType: i.string(), // NEW: 'home', 'car', 'student', 'personal', 'other'
+      debtType: i.string().optional(), // NEW: 'home', 'car', 'student', 'personal', 'other'
       createdAt: i.number(),
       updatedAt: i.number(),
     }),
     users: i.entity({
       email: i.string().unique(),
-      name: i.string(), // NEW: Full name
-      displayName: i.string(),
+      name: i.string().optional(), // NEW: Full name
+      displayName: i.string().optional(),
       // relationshipStatus removed from here
-      profilePicture: i.string(), // NEW: Base64 or URL
-      householdId: i.string().indexed(),
-      theme: i.string(), // 'dark' or 'light'
-      isDemo: i.boolean(), // Flag for demo data
+      profilePicture: i.string().optional(), // NEW: Base64 or URL
+      householdId: i.string().indexed().optional(),
+      theme: i.string().optional(), // 'dark' or 'light'
+      isDemo: i.boolean().optional(), // Flag for demo data
       createdAt: i.number(),
       updatedAt: i.number(),
     }),
@@ -34,8 +34,8 @@ const _schema = i.schema({
       institution: i.string(),
       accountType: i.string(), // 'checking', 'savings', 'credit'
       balance: i.number(),
-      logoUrl: i.string(), // Optional user-provided logo URL
-      isDemo: i.boolean(), // Flag for demo data
+      logoUrl: i.string().optional(), // Optional user-provided logo URL
+      isDemo: i.boolean().optional(), // Flag for demo data
       createdAt: i.number(),
       updatedAt: i.number(),
     }),
@@ -45,8 +45,8 @@ const _schema = i.schema({
       institution: i.string(),
       accountType: i.string(), // '401k', 'IRA', 'Roth IRA', 'Taxable'
       balance: i.number(),
-      logoUrl: i.string(), // Optional user-provided logo URL
-      isDemo: i.boolean(), // Flag for demo data
+      logoUrl: i.string().optional(), // Optional user-provided logo URL
+      isDemo: i.boolean().optional(), // Flag for demo data
       createdAt: i.number(),
       updatedAt: i.number(),
     }),
@@ -56,14 +56,14 @@ const _schema = i.schema({
       shares: i.number(),
       costBasis: i.number(),
       currentPrice: i.number(),
-      isDemo: i.boolean(), // Flag for demo data
+      isDemo: i.boolean().optional(), // Flag for demo data
       createdAt: i.number(),
       updatedAt: i.number(),
     }),
     mortgage: i.entity({
       householdId: i.string().indexed(),
-      loanName: i.string(), // User-defined label (e.g., "Primary Home", "Honda Civic")
-      loanType: i.string(), // 'home', 'car', 'student', 'personal', 'other'
+      loanName: i.string().optional(), // User-defined label (e.g., "Primary Home", "Honda Civic")
+      loanType: i.string().optional(), // 'home', 'car', 'student', 'personal', 'other'
       lender: i.string(),
       originalAmount: i.number(),
       currentBalance: i.number(),
@@ -71,8 +71,8 @@ const _schema = i.schema({
       termYears: i.number(),
       startDate: i.number(), // Unix timestamp
       monthlyPayment: i.number(),
-      isDeleted: i.boolean(), // Soft delete flag
-      isDemo: i.boolean(), // Flag for demo data
+      isDeleted: i.boolean().optional(), // Soft delete flag
+      isDemo: i.boolean().optional(), // Flag for demo data
       createdAt: i.number(),
       updatedAt: i.number(),
     }),
@@ -81,7 +81,7 @@ const _schema = i.schema({
       amount: i.number(),
       frequency: i.string(), // 'monthly' or 'annual'
       startDate: i.number(),
-      isDemo: i.boolean(), // Flag for demo data
+      isDemo: i.boolean().optional(), // Flag for demo data
       createdAt: i.number(),
       updatedAt: i.number(),
     }),
@@ -93,7 +93,7 @@ const _schema = i.schema({
       homeValue: i.number(),
       mortgageBalance: i.number(),
       netWorth: i.number(),
-      isDemo: i.boolean(), // Flag for demo data
+      isDemo: i.boolean().optional(), // Flag for demo data
       createdAt: i.number(),
     }),
   },
