@@ -85,6 +85,18 @@ const _schema = i.schema({
       createdAt: i.number(),
       updatedAt: i.number(),
     }),
+    payments: i.entity({
+      mortgageId: i.string().indexed(),
+      date: i.number(), // Unix timestamp of payment date
+      amount: i.number(), // Total payment amount
+      paymentType: i.string(), // 'regular' or 'extra'
+      principalPaid: i.number(), // Calculated principal portion
+      interestPaid: i.number(), // Calculated interest portion (0 for extra)
+      note: i.string().optional(), // Optional user note
+      isDemo: i.boolean().optional(), // Flag for demo data
+      createdAt: i.number(),
+      updatedAt: i.number(),
+    }),
     snapshots: i.entity({
       householdId: i.string().indexed(),
       date: i.number(), // Unix timestamp

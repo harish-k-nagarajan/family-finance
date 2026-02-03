@@ -57,6 +57,13 @@ const rules = {
       delete: "true",
     },
   },
+  payments: {
+    allow: {
+      view: "true",
+      create: "true",
+      delete: "true",
+    },
+  },
   snapshots: {
     allow: {
       view: "true",

@@ -182,3 +182,31 @@ export function calculateHomeValue(purchasePrice, purchaseDate, appreciationRate
 export function calculateEquity(homeValue, mortgageBalance) {
   return homeValue - mortgageBalance;
 }
+
+/**
+ * Calculate interest and principal portions for a payment
+ * @param {number} currentBalance - Current loan balance before this payment
+ * @param {number} annualRate - Annual interest rate as percentage (e.g., 3.5 for 3.5%)
+ * @param {number} paymentAmount - Amount being paid
+ * @param {string} paymentType - 'regular' or 'extra'
+ * @returns {object} { principalPaid, interestPaid }
+ */
+export function calculatePaymentBreakdown(currentBalance, annualRate, paymentAmount, paymentType) {
+  if (paymentType === 'extra') {
+    // Extra payments go 100% to principal
+    return {
+      principalPaid: Math.min(paymentAmount, currentBalance),
+      interestPaid: 0,
+    };
+  }
+
+  // Regular payment: calculate interest for this month first
+  const monthlyRate = annualRate / 100 / 12;
+  const interestPaid = currentBalance * monthlyRate;
+  const principalPaid = Math.max(0, Math.min(paymentAmount - interestPaid, currentBalance));
+
+  return {
+    principalPaid: Math.round(principalPaid * 100) / 100,
+    interestPaid: Math.round(interestPaid * 100) / 100,
+  };
+}

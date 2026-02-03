@@ -14,6 +14,7 @@ import {
 } from '../utils/mortgageCalculations';
 import { AmortizationChart, PaymentCompositionChart } from '../components/Charts/MortgageCharts';
 import ConfirmationModal from '../components/common/ConfirmationModal';
+import PaymentHistory from '../components/Mortgage/PaymentHistory';
 import { getInstitutionLogoUrl } from '../utils/logoFetcher';
 import { useToast } from '../components/common/Toast';
 import { Home, Car, GraduationCap, CreditCard, FileText } from 'lucide-react';
@@ -49,6 +50,7 @@ function Mortgage() {
           $: { where: { householdId: user.householdId, isDeleted: false } }
         },
         extraPayments: {},
+        payments: {},
       }
       : null
   );
@@ -56,6 +58,7 @@ function Mortgage() {
   const household = data?.households?.[0];
   const loans = data?.mortgage || [];
   const allExtraPayments = data?.extraPayments || [];
+  const allPayments = data?.payments || [];
 
   const currency = household?.currency || 'USD';
   const householdId = household?.id;
@@ -116,6 +119,10 @@ function Mortgage() {
 
   const extraPayments = displayedLoan
     ? allExtraPayments.filter(ep => ep.mortgageId === displayedLoan.id)
+    : [];
+
+  const payments = displayedLoan
+    ? allPayments.filter(p => p.mortgageId === displayedLoan.id).sort((a, b) => b.date - a.date)
     : [];
 
   // Combined view metrics
@@ -540,6 +547,14 @@ function Mortgage() {
                   )}
                 </div>
               </Card>
+
+              {/* Payment History Section */}
+              <PaymentHistory
+                loan={displayedLoan}
+                payments={payments}
+                currency={currency}
+                householdId={householdId}
+              />
             </div>
           )}
         </>
