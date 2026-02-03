@@ -209,13 +209,13 @@ function Home() {
       </div>
 
       {/* Charts Grid */}
-      <div className="grid grid-cols-1 laptop:grid-cols-3 gap-4 laptop:gap-6 mt-8 laptop:mt-12">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 laptop:gap-6 mt-8 laptop:mt-12">
         {/* Trend Chart (2/3 width) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.3, ease: 'easeOut' }}
-          className="laptop:col-span-2"
+          className="lg:col-span-2"
         >
           <Card className="h-full">
             <div className="flex flex-col laptop:flex-row items-start laptop:items-center justify-between mb-6 laptop:mb-8 gap-4">
@@ -263,7 +263,7 @@ function Home() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.3, ease: 'easeOut' }}
-          className="laptop:col-span-1"
+          className="lg:col-span-1"
         >
           <Card className="h-full flex flex-col">
             <h2 className="text-base laptop:text-lg font-display font-semibold text-gray-900 dark:text-white mb-6 laptop:mb-8">
