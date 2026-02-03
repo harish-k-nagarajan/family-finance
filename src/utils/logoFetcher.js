@@ -122,6 +122,58 @@ const INSTITUTION_DOMAIN_MAP = {
   'klarna': 'klarna.com',
   'affirm': 'affirm.com',
   'chime': 'chime.com',
+
+  // Mortgage & Loan Lenders
+  'quicken loans': 'quickenloans.com',
+  'rocket mortgage': 'rocketmortgage.com',
+  'better.com': 'better.com',
+  'better': 'better.com',
+  'loanDepot': 'loandepot.com',
+  'guaranteed rate': 'guaranteedrate.com',
+  'united wholesale mortgage': 'uwm.com',
+  'newrez': 'newrez.com',
+  'pennymac': 'pennymac.com',
+  'caliber home loans': 'caliberhomeloans.com',
+  'freedom mortgage': 'freedommortgage.com',
+  'mr. cooper': 'mrcooper.com',
+  'flagstar bank': 'flagstar.com',
+
+  // Student Loan Lenders
+  'sallie mae': 'salliemae.com',
+  'navient': 'navient.com',
+  'nelnet': 'nelnet.com',
+  'great lakes': 'mygreatlakes.org',
+  'fedloan': 'myfedloan.org',
+  'mohela': 'mohela.com',
+  'earnest': 'earnest.com',
+  'commonbond': 'commonbond.co',
+  'laurel road': 'laurelroad.com',
+
+  // Auto Loan Lenders
+  'toyota financial': 'toyotafinancial.com',
+  'honda financial': 'hondafinancialservices.com',
+  'ford credit': 'credit.ford.com',
+  'gm financial': 'gmfinancial.com',
+  'carmax': 'carmax.com',
+  'carvana': 'carvana.com',
+  'lightstream': 'lightstream.com',
+
+  // Personal Loan Lenders
+  'sofi': 'sofi.com',
+  'marcus': 'marcus.com',
+  'upstart': 'upstart.com',
+  'prosper': 'prosper.com',
+  'lending club': 'lendingclub.com',
+  'best egg': 'bestegg.com',
+  'avant': 'avant.com',
+  'upgrade': 'upgrade.com',
+  'onemain': 'onemainfinancial.com',
+  'onemain financial': 'onemainfinancial.com',
+
+  // Czech Lenders
+  'ceska sporitelna': 'csas.cz',
+  'komercni banka': 'kb.cz',
+  'erste': 'erstegroup.com',
 };
 
 const LOGO_DEV_TOKEN = import.meta.env.VITE_LOGO_DEV_API_KEY;

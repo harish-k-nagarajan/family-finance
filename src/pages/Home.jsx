@@ -9,6 +9,36 @@ import DashboardTrendChart from '../components/Dashboard/DashboardTrendChart';
 import WealthRadarCard from '../components/common/WealthRadarCard';
 import { formatCurrency } from '../utils/formatters';
 import { calculateHomeValue } from '../utils/mortgageCalculations';
+import { Landmark, PiggyBank, CreditCard, Wallet, TrendingUp, LineChart, BarChart3, PieChart } from 'lucide-react';
+
+const getAccountTypeIcon = (accountType) => {
+  const iconProps = { className: "w-5 h-5 text-white", strokeWidth: 2 };
+  switch (accountType?.toLowerCase()) {
+    case 'checking':
+      return <Landmark {...iconProps} />;
+    case 'savings':
+      return <PiggyBank {...iconProps} />;
+    case 'credit':
+    case 'credit card':
+      return <CreditCard {...iconProps} />;
+    default:
+      return <Wallet {...iconProps} />;
+  }
+};
+
+const getInvestmentTypeIcon = (investmentType) => {
+  const iconProps = { className: "w-5 h-5 text-white", strokeWidth: 2 };
+  switch (investmentType?.toLowerCase()) {
+    case '401k':
+      return <TrendingUp {...iconProps} />;
+    case 'ira':
+      return <LineChart {...iconProps} />;
+    case 'taxable':
+      return <BarChart3 {...iconProps} />;
+    default:
+      return <PieChart {...iconProps} />;
+  }
+};
 
 function Home() {
   const { user } = db.useAuth();
@@ -310,9 +340,32 @@ function Home() {
                     key={account.id}
                     className="flex items-center justify-between p-3.5 rounded-lg bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/8 transition-colors"
                   >
-                    <span className="text-sm font-body text-gray-700 dark:text-gray-300">
-                      {account.institution}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      {/* Bank Logo */}
+                      <div className="relative">
+                        {account.logoUrl && (
+                          <img
+                            src={account.logoUrl}
+                            alt={account.institution}
+                            className="w-10 h-10 rounded-lg object-contain bg-white dark:bg-navy-800 p-1.5 border border-gray-200 dark:border-white/10"
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                              const fallback = e.target.parentElement.querySelector('.fallback-icon');
+                              if (fallback) fallback.style.display = 'flex';
+                            }}
+                          />
+                        )}
+                        <div
+                          className="fallback-icon w-10 h-10 rounded-lg bg-gradient-to-br from-teal-400 to-purple-500 flex items-center justify-center flex-shrink-0"
+                          style={{ display: account.logoUrl ? 'none' : 'flex' }}
+                        >
+                          {getAccountTypeIcon(account.accountType)}
+                        </div>
+                      </div>
+                      <span className="text-sm font-body text-gray-700 dark:text-gray-300">
+                        {account.institution}
+                      </span>
+                    </div>
                     <span className="text-base font-body font-medium text-teal-600 dark:text-teal-400 tabular-nums">
                       {formatCurrency(account.balance, currency)}
                     </span>
@@ -349,13 +402,36 @@ function Home() {
                     key={investment.id}
                     className="flex items-center justify-between p-3.5 rounded-lg bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/8 transition-colors"
                   >
-                    <div>
-                      <span className="text-sm font-body text-gray-700 dark:text-gray-300">
-                        {investment.institution}
-                      </span>
-                      <span className="text-xs font-body text-gray-600 dark:text-gray-400 ml-2">
-                        ({investment.accountType})
-                      </span>
+                    <div className="flex items-center gap-3">
+                      {/* Institution Logo */}
+                      <div className="relative">
+                        {investment.logoUrl && (
+                          <img
+                            src={investment.logoUrl}
+                            alt={investment.institution}
+                            className="w-10 h-10 rounded-lg object-contain bg-white dark:bg-navy-800 p-1.5 border border-gray-200 dark:border-white/10"
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                              const fallback = e.target.parentElement.querySelector('.fallback-icon');
+                              if (fallback) fallback.style.display = 'flex';
+                            }}
+                          />
+                        )}
+                        <div
+                          className="fallback-icon w-10 h-10 rounded-lg bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center flex-shrink-0"
+                          style={{ display: investment.logoUrl ? 'none' : 'flex' }}
+                        >
+                          {getInvestmentTypeIcon(investment.accountType)}
+                        </div>
+                      </div>
+                      <div>
+                        <span className="text-sm font-body text-gray-700 dark:text-gray-300">
+                          {investment.institution}
+                        </span>
+                        <span className="text-xs font-body text-gray-600 dark:text-gray-400 ml-2">
+                          ({investment.accountType})
+                        </span>
+                      </div>
                     </div>
                     <span className="text-base font-body font-medium text-purple-600 dark:text-purple-400 tabular-nums">
                       {formatCurrency(investment.balance, currency)}

@@ -14,6 +14,26 @@ import {
 } from '../utils/mortgageCalculations';
 import { AmortizationChart, PaymentCompositionChart } from '../components/Charts/MortgageCharts';
 import ConfirmationModal from '../components/common/ConfirmationModal';
+import { getInstitutionLogoUrl } from '../utils/logoFetcher';
+import { useToast } from '../components/common/Toast';
+import { Home, Car, GraduationCap, CreditCard, FileText } from 'lucide-react';
+
+const getLoanTypeIcon = (loanType) => {
+  const iconProps = { className: "w-5 h-5 text-white", strokeWidth: 2 };
+  switch (loanType?.toLowerCase()) {
+    case 'home':
+      return <Home {...iconProps} />;
+    case 'car':
+    case 'auto':
+      return <Car {...iconProps} />;
+    case 'student':
+      return <GraduationCap {...iconProps} />;
+    case 'personal':
+      return <CreditCard {...iconProps} />;
+    default:
+      return <FileText {...iconProps} />;
+  }
+};
 
 function Mortgage() {
   const { user } = db.useAuth();
@@ -300,10 +320,26 @@ function Mortgage() {
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-teal-400 to-purple-500 flex items-center justify-center">
-                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                        </svg>
+                      {/* Lender Logo */}
+                      <div className="relative">
+                        {loan.logoUrl && (
+                          <img
+                            src={loan.logoUrl}
+                            alt={loan.lender}
+                            className="w-10 h-10 rounded-lg object-contain bg-white dark:bg-navy-800 p-1.5 border border-gray-200 dark:border-white/10"
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                              const fallback = e.target.parentElement.querySelector('.fallback-icon');
+                              if (fallback) fallback.style.display = 'flex';
+                            }}
+                          />
+                        )}
+                        <div
+                          className="fallback-icon w-10 h-10 rounded-lg bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center flex-shrink-0"
+                          style={{ display: loan.logoUrl ? 'none' : 'flex' }}
+                        >
+                          {getLoanTypeIcon(loan.loanType)}
+                        </div>
                       </div>
                       <div>
                         <p className="font-medium text-gray-900 dark:text-white">{loan.loanName}</p>
@@ -395,8 +431,31 @@ function Mortgage() {
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                <p className="text-gray-600 dark:text-gray-400 text-sm">Lender</p>
-                <p className="text-gray-900 dark:text-white font-medium">{displayedLoan.lender}</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Lender</p>
+                <div className="flex items-center gap-2">
+                  {/* Lender Logo */}
+                  <div className="relative">
+                    {displayedLoan.logoUrl && (
+                      <img
+                        src={displayedLoan.logoUrl}
+                        alt={displayedLoan.lender}
+                        className="w-8 h-8 rounded object-contain bg-white dark:bg-navy-800 p-1 border border-gray-200 dark:border-white/10"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          const fallback = e.target.parentElement.querySelector('.fallback-icon');
+                          if (fallback) fallback.style.display = 'flex';
+                        }}
+                      />
+                    )}
+                    <div
+                      className="fallback-icon w-8 h-8 rounded bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center flex-shrink-0"
+                      style={{ display: displayedLoan.logoUrl ? 'none' : 'flex' }}
+                    >
+                      {getLoanTypeIcon(displayedLoan.loanType)}
+                    </div>
+                  </div>
+                  <p className="text-gray-900 dark:text-white font-medium">{displayedLoan.lender}</p>
+                </div>
               </div>
               <div>
                 <p className="text-gray-600 dark:text-gray-400 text-sm">Original Amount</p>
@@ -509,6 +568,7 @@ function Mortgage() {
 }
 
 function MortgageForm({ loan, householdId, onClose }) {
+  const { showToast } = useToast();
   const [formData, setFormData] = useState({
     loanName: loan?.loanName || '',
     loanType: loan?.loanType || 'home',
@@ -520,7 +580,46 @@ function MortgageForm({ loan, householdId, onClose }) {
     startDate: loan?.startDate
       ? new Date(loan.startDate).toISOString().split('T')[0]
       : '',
+    logoUrl: loan?.logoUrl || '',
   });
+  const [autoFetchedLogoUrl, setAutoFetchedLogoUrl] = useState('');
+
+  // Real-time logo fetching with debounce
+  useEffect(() => {
+    // Don't fetch if lender empty or manual logo already uploaded
+    if (!formData.lender.trim() || formData.logoUrl) {
+      setAutoFetchedLogoUrl('');
+      return;
+    }
+
+    // Debounce: Wait 300ms after user stops typing
+    const timer = setTimeout(() => {
+      const logoUrl = getInstitutionLogoUrl(formData.lender);
+      setAutoFetchedLogoUrl(logoUrl || '');
+    }, 300);
+
+    // Cleanup: Cancel timer if user keeps typing
+    return () => clearTimeout(timer);
+  }, [formData.lender, formData.logoUrl]);
+
+  const handleLogoUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Check file size (max 500KB)
+      if (file.size > 500 * 1024) {
+        showToast('Image size should be less than 500KB', 'error');
+        e.target.value = '';
+        return;
+      }
+
+      // Convert to base64
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData({ ...formData, logoUrl: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -533,6 +632,24 @@ function MortgageForm({ loan, householdId, onClose }) {
       parseInt(formData.termYears)
     );
 
+    // If no manual logo but auto-fetched logo exists, convert URL to base64
+    let logoToSave = formData.logoUrl;
+    if (!logoToSave && autoFetchedLogoUrl) {
+      try {
+        const response = await fetch(autoFetchedLogoUrl);
+        const blob = await response.blob();
+        logoToSave = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.readAsDataURL(blob);
+        });
+      } catch (error) {
+        console.error('Failed to convert auto-fetched logo to base64:', error);
+        // Continue without logo if conversion fails
+        logoToSave = '';
+      }
+    }
+
     const loanData = {
       householdId,
       loanName: formData.loanName,
@@ -544,6 +661,7 @@ function MortgageForm({ loan, householdId, onClose }) {
       termYears: parseInt(formData.termYears),
       startDate,
       monthlyPayment,
+      logoUrl: logoToSave || '',
       isDeleted: false,
       updatedAt: now,
     };
@@ -631,6 +749,64 @@ function MortgageForm({ loan, householdId, onClose }) {
               required
               className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+              Lender Logo (optional)
+            </label>
+            <div className="flex items-center gap-4">
+              {/* Show logo preview: Manual upload takes priority, then auto-fetched, then nothing */}
+              {(formData.logoUrl || autoFetchedLogoUrl) && (
+                <div className="relative">
+                  <img
+                    src={formData.logoUrl || autoFetchedLogoUrl}
+                    alt="Logo preview"
+                    className="w-16 h-16 rounded-lg object-contain bg-white dark:bg-navy-800 p-2 border border-gray-200 dark:border-white/10"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                    }}
+                  />
+                  {formData.logoUrl && (
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, logoUrl: '' })}
+                      className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+                      title="Remove logo"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </button>
+                  )}
+                  {!formData.logoUrl && autoFetchedLogoUrl && (
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 absolute -bottom-5 left-0 whitespace-nowrap">
+                      Auto-fetched
+                    </p>
+                  )}
+                </div>
+              )}
+              <div className="flex-1">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleLogoUpload}
+                  className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-teal-50 dark:file:bg-teal-500/10 file:text-teal-600 dark:file:text-teal-400 hover:file:bg-teal-100 dark:hover:file:bg-teal-500/20 file:cursor-pointer"
+                />
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  PNG, JPG, or SVG. Max 500KB.
+                </p>
+              </div>
+            </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
