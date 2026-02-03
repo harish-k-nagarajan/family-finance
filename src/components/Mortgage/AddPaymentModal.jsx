@@ -177,8 +177,8 @@ function AddPaymentModal({ loan, householdId, onClose, currency }) {
               Payment Amount
             </label>
             <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
-                {currency === 'USD' ? '$' : currency === 'EUR' ? '€' : currency === 'GBP' ? '£' : currency}
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 font-medium text-sm">
+                {currency}
               </span>
               <input
                 type="number"
@@ -190,11 +190,7 @@ function AddPaymentModal({ loan, householdId, onClose, currency }) {
                 }}
                 placeholder="0.00"
                 disabled={isLoading}
-                className={`w-full pl-10 pr-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border ${
-                  errors.amount
-                    ? 'border-red-500 dark:border-red-500'
-                    : 'border-gray-200 dark:border-white/10'
-                } text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 disabled:opacity-60 disabled:cursor-not-allowed`}
+                className="w-full pl-16 pr-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 disabled:opacity-60 disabled:cursor-not-allowed"
               />
             </div>
             {errors.amount && (

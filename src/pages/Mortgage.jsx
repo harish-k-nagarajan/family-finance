@@ -11,6 +11,7 @@ import {
   calculateWithExtraPayments,
   calculateHomeValue,
   calculateEquity,
+  calculateTimeRemaining,
 } from '../utils/mortgageCalculations';
 import { AmortizationChart, PaymentCompositionChart } from '../components/Charts/MortgageCharts';
 import ConfirmationModal from '../components/common/ConfirmationModal';
@@ -150,12 +151,21 @@ function Mortgage() {
 
   // Calculate payoff projections for displayed loan
   let projections = null;
+  let timeRemaining = null;
   if (displayedLoan) {
     projections = calculateWithExtraPayments(
       displayedLoan.originalAmount,
       displayedLoan.interestRate,
       displayedLoan.termYears,
       displayedLoan.startDate,
+      extraPayments
+    );
+
+    // Calculate time remaining until payoff
+    timeRemaining = calculateTimeRemaining(
+      displayedLoan.currentBalance,
+      displayedLoan.interestRate,
+      displayedLoan.monthlyPayment,
       extraPayments
     );
   }
@@ -420,12 +430,21 @@ function Mortgage() {
                 </p>
               </Card>
               <Card>
-                <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Original Amount</p>
-                <p className="text-2xl font-display font-bold text-gray-900 dark:text-white">
-                  {formatCurrency(displayedLoan.originalAmount, currency)}
+                <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Time Left</p>
+                <p className="text-2xl font-display font-bold text-teal-600 dark:text-teal-400">
+                  {timeRemaining?.formattedTime || 'Calculating...'}
                 </p>
                 <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
-                  {formatPercentage((displayedLoan.currentBalance / displayedLoan.originalAmount) * 100, 1)} remaining
+                  {timeRemaining ? (() => {
+                    const date = new Date(timeRemaining.payoffDate);
+                    const day = date.getDate();
+                    const month = date.toLocaleString('en-US', { month: 'short' });
+                    const year = date.getFullYear();
+                    const suffix = day === 1 || day === 21 || day === 31 ? 'st' :
+                                   day === 2 || day === 22 ? 'nd' :
+                                   day === 3 || day === 23 ? 'rd' : 'th';
+                    return `Payoff by ${day}${suffix} ${month} ${year}`;
+                  })() : 'Calculating...'}
                 </p>
               </Card>
             </div>
@@ -731,11 +750,11 @@ function MortgageForm({ loan, householdId, onClose }) {
             </label>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
               {[
-                { value: 'home', label: 'Home', icon: '🏠' },
-                { value: 'car', label: 'Auto', icon: '🚗' },
-                { value: 'student', label: 'Student', icon: '🎓' },
-                { value: 'personal', label: 'Personal', icon: '💳' },
-                { value: 'other', label: 'Other', icon: '📋' },
+                { value: 'home', label: 'Home', Icon: Home },
+                { value: 'car', label: 'Auto', Icon: Car },
+                { value: 'student', label: 'Student', Icon: GraduationCap },
+                { value: 'personal', label: 'Personal', Icon: CreditCard },
+                { value: 'other', label: 'Other', Icon: FileText },
               ].map((type) => (
                 <button
                   key={type.value}
@@ -746,7 +765,7 @@ function MortgageForm({ loan, householdId, onClose }) {
                     : 'border-gray-200 dark:border-white/10 hover:border-teal-500/50'
                     }`}
                 >
-                  <div className="text-2xl mb-1">{type.icon}</div>
+                  <type.Icon className="w-6 h-6 mx-auto mb-2 text-gray-700 dark:text-gray-300" strokeWidth={2} />
                   <div className="text-sm font-medium text-gray-900 dark:text-white">{type.label}</div>
                 </button>
               ))}

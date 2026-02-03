@@ -74,8 +74,12 @@ function Home() {
 
   const mortgageEnabled = household?.mortgageEnabled;
 
+  // Filter for home loans only
+  const homeLoans = loans.filter(l => l.loanType === 'home');
+
+  // Only calculate home value if there are actual home loans
   let homeValue = 0;
-  if (mortgageEnabled && household?.homePurchasePrice && household?.homePurchaseDate) {
+  if (mortgageEnabled && homeLoans.length > 0 && household?.homePurchasePrice && household?.homePurchaseDate) {
     homeValue = calculateHomeValue(
       household.homePurchasePrice,
       household.homePurchaseDate,
@@ -83,8 +87,9 @@ function Home() {
     );
   }
 
-  const totalLoanBalance = mortgageEnabled
-    ? loans.reduce((sum, l) => sum + (l.currentBalance || 0), 0)
+  // Calculate loan balance from home loans only
+  const totalLoanBalance = mortgageEnabled && homeLoans.length > 0
+    ? homeLoans.reduce((sum, l) => sum + (l.currentBalance || 0), 0)
     : 0;
   const netWorth = totalBankBalance + totalInvestments + homeValue - totalLoanBalance;
 
@@ -198,7 +203,7 @@ function Home() {
       label: 'Investments',
       value: totalInvestments,
     },
-    ...(mortgageEnabled
+    ...(mortgageEnabled && homeLoans.length > 0
       ? [{
         label: 'Home Equity',
         value: homeValue - totalLoanBalance,

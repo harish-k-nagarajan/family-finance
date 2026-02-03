@@ -210,3 +210,78 @@ export function calculatePaymentBreakdown(currentBalance, annualRate, paymentAmo
     interestPaid: Math.round(interestPaid * 100) / 100,
   };
 }
+
+/**
+ * Calculate time remaining until loan is paid off
+ * @param {number} currentBalance - Current loan balance
+ * @param {number} annualRate - Annual interest rate as percentage
+ * @param {number} monthlyPayment - Regular monthly payment amount
+ * @param {Array} extraPayments - Array of extra payment objects {amount, frequency, startDate}
+ * @returns {Object} { monthsRemaining, payoffDate, formattedTime }
+ */
+export function calculateTimeRemaining(currentBalance, annualRate, monthlyPayment, extraPayments = []) {
+  if (currentBalance <= 0) {
+    return {
+      monthsRemaining: 0,
+      payoffDate: Date.now(),
+      formattedTime: 'Paid off',
+    };
+  }
+
+  const monthlyRate = annualRate / 100 / 12;
+  let balance = currentBalance;
+  let date = new Date();
+  let monthsRemaining = 0;
+
+  // Simulate payments until balance reaches 0
+  while (balance > 0 && monthsRemaining < 600) { // Safety limit of 50 years
+    monthsRemaining++;
+    const currentDate = date.getTime();
+
+    // Calculate extra payment for this month
+    let extraAmount = 0;
+    extraPayments.forEach(ep => {
+      if (currentDate >= ep.startDate) {
+        if (ep.frequency === 'monthly') {
+          extraAmount += ep.amount;
+        } else if (ep.frequency === 'annual') {
+          // Check if this is the anniversary month
+          const epStart = new Date(ep.startDate);
+          if (date.getMonth() === epStart.getMonth()) {
+            extraAmount += ep.amount;
+          }
+        }
+      }
+    });
+
+    const interestPayment = balance * monthlyRate;
+    const basePrincipalPayment = monthlyPayment - interestPayment;
+    const totalPrincipalPayment = Math.min(basePrincipalPayment + extraAmount, balance);
+
+    balance = Math.max(0, balance - totalPrincipalPayment);
+
+    date = new Date(date);
+    date.setMonth(date.getMonth() + 1);
+  }
+
+  const payoffDate = date.getTime();
+
+  // Format time remaining as "X years Y months" or "X months"
+  const years = Math.floor(monthsRemaining / 12);
+  const months = monthsRemaining % 12;
+
+  let formattedTime;
+  if (years > 0 && months > 0) {
+    formattedTime = `${years} ${years === 1 ? 'year' : 'years'} ${months} ${months === 1 ? 'month' : 'months'}`;
+  } else if (years > 0) {
+    formattedTime = `${years} ${years === 1 ? 'year' : 'years'}`;
+  } else {
+    formattedTime = `${months} ${months === 1 ? 'month' : 'months'}`;
+  }
+
+  return {
+    monthsRemaining,
+    payoffDate,
+    formattedTime,
+  };
+}
