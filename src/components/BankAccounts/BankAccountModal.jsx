@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { id } from '@instantdb/react';
 import { db } from '../../lib/instant';
 import { createSnapshot, calculateTotals } from '../../utils/snapshots';
 import { useToast } from '../common/Toast';
+import { getInstitutionLogoUrl } from '../../utils/logoFetcher';
 
 function BankAccountModal({ account, users, householdId, onClose }) {
   const { showToast } = useToast();
@@ -16,6 +17,7 @@ function BankAccountModal({ account, users, householdId, onClose }) {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [autoFetchedLogoUrl, setAutoFetchedLogoUrl] = useState('');
 
   const validateForm = () => {
     const newErrors = {};
@@ -42,14 +44,14 @@ function BankAccountModal({ account, users, householdId, onClose }) {
       accounts: { $: { where: { householdId } } },
       investments: { $: { where: { householdId } } },
       households: { $: { where: { id: householdId } } },
-      loans: { $: { where: { householdId, isDeleted: false } } },
+      mortgage: { $: { where: { householdId, isDeleted: false } } },
     });
 
     const totals = calculateTotals(
       data.accounts || [],
       data.investments || [],
       data.households?.[0],
-      data.loans || []
+      data.mortgage || []
     );
 
     await createSnapshot(householdId, totals);
@@ -66,6 +68,24 @@ function BankAccountModal({ account, users, householdId, onClose }) {
       const now = Date.now();
       const balanceValue = parseFloat(formData.balance) || 0;
 
+      // If no manual logo but auto-fetched logo exists, convert URL to base64
+      let logoToSave = formData.logoUrl;
+      if (!logoToSave && autoFetchedLogoUrl) {
+        try {
+          const response = await fetch(autoFetchedLogoUrl);
+          const blob = await response.blob();
+          logoToSave = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.readAsDataURL(blob);
+          });
+        } catch (error) {
+          console.error('Failed to convert auto-fetched logo to base64:', error);
+          // Continue without logo if conversion fails
+          logoToSave = '';
+        }
+      }
+
       if (account) {
         // UPDATE existing account
         await db.transact(
@@ -74,7 +94,7 @@ function BankAccountModal({ account, users, householdId, onClose }) {
             accountType: formData.accountType,
             balance: balanceValue,
             ownerId: formData.ownerId,
-            logoUrl: formData.logoUrl || '',
+            logoUrl: logoToSave || '',
             updatedAt: now,
           })
         );
@@ -87,21 +107,26 @@ function BankAccountModal({ account, users, householdId, onClose }) {
             accountType: formData.accountType,
             balance: balanceValue,
             ownerId: formData.ownerId,
-            logoUrl: formData.logoUrl || '',
+            logoUrl: logoToSave || '',
             createdAt: now,
             updatedAt: now,
           })
         );
       }
 
-      // Wait for snapshot to complete before closing
-      await createSnapshotAfterUpdate(householdId);
-
-      // Show success toast
+      // Show success toast immediately (account creation succeeded)
       showToast(`Account ${account ? 'updated' : 'added'} successfully`, 'success');
 
       // Close modal
       onClose();
+
+      // Create snapshot in background (don't block on errors)
+      try {
+        await createSnapshotAfterUpdate(householdId);
+      } catch (snapshotError) {
+        console.error('Failed to create snapshot (non-critical):', snapshotError);
+        // Don't show error to user - account creation was successful
+      }
     } catch (error) {
       console.error('Failed to save account:', error);
       showToast(`Failed to ${account ? 'update' : 'add'} account. Please try again.`, 'error');
@@ -128,6 +153,24 @@ function BankAccountModal({ account, users, householdId, onClose }) {
       reader.readAsDataURL(file);
     }
   };
+
+  // Real-time logo fetching with debounce
+  useEffect(() => {
+    // Don't fetch if institution empty or manual logo already uploaded
+    if (!formData.institution.trim() || formData.logoUrl) {
+      setAutoFetchedLogoUrl('');
+      return;
+    }
+
+    // Debounce: Wait 300ms after user stops typing
+    const timer = setTimeout(() => {
+      const logoUrl = getInstitutionLogoUrl(formData.institution);
+      setAutoFetchedLogoUrl(logoUrl || '');
+    }, 300);
+
+    // Cleanup: Cancel timer if user keeps typing
+    return () => clearTimeout(timer);
+  }, [formData.institution, formData.logoUrl]);
 
   return (
     <motion.div
@@ -254,37 +297,45 @@ function BankAccountModal({ account, users, householdId, onClose }) {
                 Bank Logo (optional)
               </label>
               <div className="flex items-center gap-4">
-                {formData.logoUrl && (
+                {/* Show logo preview: Manual upload takes priority, then auto-fetched, then nothing */}
+                {(formData.logoUrl || autoFetchedLogoUrl) && (
                   <div className="relative">
                     <img
-                      src={formData.logoUrl}
+                      src={formData.logoUrl || autoFetchedLogoUrl}
                       alt="Logo preview"
                       className="w-16 h-16 rounded-lg object-contain bg-white dark:bg-navy-800 p-2 border border-gray-200 dark:border-white/10"
                       onError={(e) => {
                         e.target.style.display = 'none';
                       }}
                     />
-                    <button
-                      type="button"
-                      onClick={() => setFormData({ ...formData, logoUrl: '' })}
-                      disabled={isLoading}
-                      className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-                      title="Remove logo"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                    {formData.logoUrl && (
+                      <button
+                        type="button"
+                        onClick={() => setFormData({ ...formData, logoUrl: '' })}
+                        disabled={isLoading}
+                        className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                        title="Remove logo"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </button>
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
+                    )}
+                    {!formData.logoUrl && autoFetchedLogoUrl && (
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        Auto-fetched from logo.dev
+                      </p>
+                    )}
                   </div>
                 )}
                 <div className="flex-1">
@@ -296,7 +347,7 @@ function BankAccountModal({ account, users, householdId, onClose }) {
                     className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-teal-50 dark:file:bg-teal-500/10 file:text-teal-600 dark:file:text-teal-400 hover:file:bg-teal-100 dark:hover:file:bg-teal-500/20 file:cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                   />
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    PNG, JPG, or SVG. Max 500KB.
+                    PNG, JPG, or SVG. Max 500KB. {autoFetchedLogoUrl && !formData.logoUrl && 'Or use auto-fetched logo.'}
                   </p>
                 </div>
               </div>

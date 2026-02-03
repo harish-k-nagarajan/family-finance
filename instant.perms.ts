@@ -61,7 +61,7 @@ const rules = {
     allow: {
       view: "true",
       create: "true",
-      update: "false", // Snapshots are immutable
+      update: "true", // Allow updates to same-day snapshots when balances change
       delete: "false", // Snapshots should not be deleted
     },
   },

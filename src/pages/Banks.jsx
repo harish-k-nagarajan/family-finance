@@ -36,7 +36,7 @@ function Banks() {
         households: {},
         accounts: {},
         investments: {},
-        loans: {
+        mortgage: {
           $: { where: { householdId: user.householdId, isDeleted: false } }
         },
       }
@@ -47,7 +47,7 @@ function Banks() {
   const household = data?.households?.[0];
   const allAccounts = data?.accounts || [];
   const investments = data?.investments || [];
-  const loans = data?.loans || [];
+  const loans = data?.mortgage || [];
 
   // Get household members
   const { data: householdData } = db.useQuery(
