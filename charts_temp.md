@@ -3,8 +3,8 @@
 ## Status Tracker
 
 - [x] **Task 4**: Replace Emojis with Professional Icons ✅ COMPLETED
-- [ ] **Task 1**: Intelligent X-Axis Formatting
-- [ ] **Task 2**: Upward Trending Demo Data
+- [x] **Task 2**: Upward Trending Demo Data ✅ COMPLETED
+- [x] **Task 1**: Intelligent X-Axis Formatting ✅ COMPLETED
 - [ ] **Task 3**: Trend Charts for Banks & Investments Pages
 
 ---
@@ -12,7 +12,7 @@
 ## Overview
 This plan implements four improvements to the personal finance dashboard:
 1. Intelligent X-axis labels based on time window selection
-2. Realistic upward-trending demo data with natural fluctuations
+2. Realistic upward-trending demo data with natural fluctuations ✅ **DONE**
 3. Beautiful trend charts on Banks and Investments pages (teal gradient)
 4. Professional icon replacements for loan type selector ✅ **DONE**
 
@@ -56,7 +56,7 @@ Replace with lucide-react icons (already imported and used throughout app).
 
 ---
 
-## Task 1: Intelligent X-Axis Formatting
+## Task 1: Intelligent X-Axis Formatting ✅ COMPLETED
 
 ### Problem
 Dashboard chart currently shows DD/MM labels for all time ranges. For 1-month view, week-based labels would be clearer. For 3+ months, month names would be more meaningful.
@@ -86,14 +86,14 @@ Create smart date formatter that adapts to time range:
   ```
 
 **Verification:**
-- [ ] Switch to 1M view → verify week labels (W1, W2, W3, W4)
-- [ ] Switch to 3M view → verify month labels (Jan, Feb, Mar)
-- [ ] Switch to 1Y view → verify month + year (Jan '26, Feb '26)
-- [ ] Hover over chart → verify tooltip still shows full date (DD/MM/YYYY)
+- [x] Switch to 1M view → verify week labels (W1, W2, W3, W4)
+- [x] Switch to 3M view → verify month labels (Jan, Feb, Mar)
+- [x] Switch to 1Y view → verify month + year (Jan '26, Feb '26)
+- [x] Hover over chart → verify tooltip still shows full date (DD/MM/YYYY)
 
 ---
 
-## Task 2: Upward Trending Demo Data
+## Task 2: Upward Trending Demo Data ✅ COMPLETED
 
 ### Problem
 Current demo data uses exponential **decay** (`Math.pow(0.992, monthsAgo)`), creating declining values instead of growth.
@@ -123,10 +123,10 @@ Replace decay with **growth calculations** working backward from current values:
   ```
 
 **Verification:**
-- [ ] Seed demo data from onboarding
-- [ ] Dashboard chart shows clear upward trend over 12 months
-- [ ] Natural fluctuations visible (not flat line)
-- [ ] Net worth higher at present than 12 months ago
+- [x] Seed demo data from onboarding
+- [x] Dashboard chart shows clear upward trend over 12 months
+- [x] Natural fluctuations visible (not flat line)
+- [x] Net worth higher at present than 12 months ago
 
 ---
 
@@ -197,9 +197,9 @@ Replace decay with **growth calculations** working backward from current values:
 ## Critical Files to Modify
 
 1. ✅ [src/pages/Mortgage.jsx](src/pages/Mortgage.jsx:753-772) - Replace emojis with icons **COMPLETED**
-2. [ ] [src/utils/formatters.js](src/utils/formatters.js) - Add `formatChartAxisDate` function
-3. [ ] [src/components/Dashboard/DashboardTrendChart.jsx](src/components/Dashboard/DashboardTrendChart.jsx:157) - Update XAxis tickFormatter
-4. [ ] [src/utils/demoData.js](src/utils/demoData.js:119-127) - Fix growth calculations
+2. ✅ [src/utils/demoData.js](src/utils/demoData.js:119-127) - Fix growth calculations **COMPLETED**
+3. ✅ [src/utils/formatters.js](src/utils/formatters.js) - Add `formatChartAxisDate` function **COMPLETED**
+4. ✅ [src/components/Dashboard/DashboardTrendChart.jsx](src/components/Dashboard/DashboardTrendChart.jsx:157) - Update XAxis tickFormatter **COMPLETED**
 5. [ ] [src/components/Charts/SimpleTrendChart.jsx](src/components/Charts/SimpleTrendChart.jsx) - Create new reusable chart component
 6. [ ] [src/pages/Banks.jsx](src/pages/Banks.jsx:127) - Add trend chart
 7. [ ] [src/pages/Investments.jsx](src/pages/Investments.jsx:126) - Add trend chart
@@ -228,6 +228,7 @@ Replace decay with **growth calculations** working backward from current values:
 - Total estimated time: 2-3 hours
 - Most complex: Task 3 (new chart component + 2 page updates)
 - Least complex: Task 4 (simple icon replacement) ✅ **COMPLETED**
+- Second least: Task 2 (demo data calculations) ✅ **COMPLETED**
 
 ---
 
@@ -241,3 +242,25 @@ Replace decay with **growth calculations** working backward from current values:
 - Icons used: `Home`, `Car`, `GraduationCap`, `CreditCard`, `FileText` from lucide-react
 - Styling: `w-6 h-6 mx-auto mb-2 text-gray-700 dark:text-gray-300` with `strokeWidth={2}`
 - Result: Clean, professional icons that match the app's theme and render consistently across all browsers/OS
+
+### Task 2 Completion Details
+**Date**: 2026-02-03
+**Changes Made**:
+- Updated [src/utils/demoData.js](src/utils/demoData.js) lines 110-120 to use growth-based calculations
+- Replaced exponential decay (Math.pow(0.992, monthsAgo)) with growth formulas
+- Investments: 8% annual growth (Math.pow(1.08, 1/12) per month)
+- Banks: 2% annual growth (Math.pow(1.02, 1/12) per month)
+- Volatility: Increased from ±2% to ±4% for more natural fluctuations
+- Result: Demo data now shows clear upward trend over 12 months with realistic market-like fluctuations instead of flat/declining values
+
+### Task 1 Completion Details
+**Date**: 2026-02-03
+**Changes Made**:
+- Added `formatChartAxisDate(timestamp, timeRange, rangeStartDate)` function to [src/utils/formatters.js](src/utils/formatters.js) after line 19
+- Function logic:
+  - 1M view: Calculates weeks since range start → W1, W2, W3, W4
+  - 3M/6M views: Returns abbreviated month name → Jan, Feb, Mar
+  - 1Y/ALL views: Returns month + short year → Jan '26, Feb '26
+- Updated [src/components/Dashboard/DashboardTrendChart.jsx](src/components/Dashboard/DashboardTrendChart.jsx) line 4 to import `formatChartAxisDate`
+- Updated line 157 XAxis tickFormatter to use `formatChartAxisDate(date, timeRange, data[0]?.date)`
+- Result: Dashboard chart now shows intelligent x-axis labels that adapt to the selected time window, making charts more readable and meaningful at different time scales

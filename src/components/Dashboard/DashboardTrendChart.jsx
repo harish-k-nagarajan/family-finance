@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ComposedChart, Area, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceArea } from 'recharts';
 import { motion } from 'framer-motion';
-import { formatCurrency, formatDate } from '../../utils/formatters';
+import { formatCurrency, formatDate, formatChartAxisDate } from '../../utils/formatters';
 
 function DashboardTrendChart({ data, currency = 'USD', timeRange = 'all', lastHistoricalDate, forecastMs }) {
     // Series visibility state - Net Worth always visible
@@ -154,7 +154,7 @@ function DashboardTrendChart({ data, currency = 'USD', timeRange = 'all', lastHi
                         dataKey="date"
                         type="number"
                         domain={['dataMin', xDomainMax || 'dataMax']}
-                        tickFormatter={(date) => formatDate(date, 'short')}
+                        tickFormatter={(date) => formatChartAxisDate(date, timeRange, data[0]?.date)}
                         stroke={document.body.classList.contains('dark') ? '#6B7280' : '#9CA3AF'}
                         fontSize={11}
                         tickLine={false}

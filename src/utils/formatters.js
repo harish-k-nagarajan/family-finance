@@ -19,6 +19,43 @@ export function formatDate(timestamp, format = 'full') {
 }
 
 /**
+ * Format a date for chart x-axis based on time range
+ * @param {number} timestamp - Unix timestamp in milliseconds
+ * @param {string} timeRange - Time range filter ('1M', '3M', '6M', '1Y', 'ALL')
+ * @param {number} rangeStartDate - Start date of the range (for week calculations)
+ * @returns {string} Formatted label for x-axis
+ */
+export function formatChartAxisDate(timestamp, timeRange, rangeStartDate) {
+  if (!timestamp) return '';
+
+  const date = new Date(timestamp);
+
+  // For 1-month view, show weeks (W1, W2, W3, W4)
+  if (timeRange === '1M' && rangeStartDate) {
+    const diffInMs = timestamp - rangeStartDate;
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+    const weekNumber = Math.floor(diffInDays / 7) + 1;
+    return `W${weekNumber}`;
+  }
+
+  // For 3-month and 6-month views, show abbreviated month name
+  if (timeRange === '3M' || timeRange === '6M') {
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return monthNames[date.getMonth()];
+  }
+
+  // For 1-year and ALL views, show month + short year
+  if (timeRange === '1Y' || timeRange === 'ALL') {
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const shortYear = String(date.getFullYear()).slice(2); // Get last 2 digits
+    return `${monthNames[date.getMonth()]} '${shortYear}`;
+  }
+
+  // Fallback to short date format
+  return formatDate(timestamp, 'short');
+}
+
+/**
  * Parse a DD/MM/YYYY string to Unix timestamp
  * @param {string} dateString - Date in DD/MM/YYYY format
  * @returns {number} Unix timestamp in milliseconds

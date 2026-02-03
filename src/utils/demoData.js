@@ -113,11 +113,20 @@ export const seedDemoData = async (householdId, currentUserId) => {
         // Mortgage: ~342k now. Was HIGHER before.
         // Home: ~500k+. Was lower before (appreciation).
 
-        // Use slight randomness to make chart look organic
-        const randomFactor = 1 + ((Math.random() - 0.5) * 0.02);
+        // Current ending values (at month 0)
+        const currentInvestments = 136600;
+        const currentBanks = 42740;
 
-        const investmentTotal = (136600 * Math.pow(0.992, monthsAgo)) * randomFactor;
-        const bankTotal = (42740 * Math.pow(0.995, monthsAgo)) * randomFactor;
+        // Define growth rates - working backward to show realistic upward trend
+        const monthlyInvestmentGrowth = Math.pow(1.08, 1/12);  // 8% annual growth
+        const monthlyBankGrowth = Math.pow(1.02, 1/12);        // 2% annual growth
+
+        // Add volatility (±4% swing month-to-month for natural appearance)
+        const volatility = 1 + ((Math.random() - 0.5) * 0.08);
+
+        // Calculate historical values (working backward in time)
+        const investmentTotal = (currentInvestments / Math.pow(monthlyInvestmentGrowth, 12 - monthsAgo)) * volatility;
+        const bankTotal = (currentBanks / Math.pow(monthlyBankGrowth, 12 - monthsAgo)) * volatility;
         const mortgageBal = 342000 + (monthsAgo * 600); // Principal paydown ~600/mo
         const homeVal = 500000 * Math.pow(1.0025, (60 - monthsAgo)); // 5 years appreciation, calculate backwards? 
         // Actually, let's just assume home value grows 3% per year.
