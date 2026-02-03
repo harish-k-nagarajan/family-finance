@@ -684,7 +684,7 @@ function MortgageForm({ loan, householdId, onClose }) {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4"
       onClick={onClose}
     >
       <motion.div
@@ -737,74 +737,71 @@ function MortgageForm({ loan, householdId, onClose }) {
               ))}
             </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
-              Lender
-            </label>
-            <input
-              type="text"
-              value={formData.lender}
-              onChange={(e) => setFormData({ ...formData, lender: e.target.value })}
-              placeholder="e.g., Wells Fargo, Chase, Sallie Mae"
-              required
-              className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
-              Lender Logo (optional)
-            </label>
-            <div className="flex items-center gap-4">
-              {/* Show logo preview: Manual upload takes priority, then auto-fetched, then nothing */}
-              {(formData.logoUrl || autoFetchedLogoUrl) && (
-                <div className="relative">
-                  <img
-                    src={formData.logoUrl || autoFetchedLogoUrl}
-                    alt="Logo preview"
-                    className="w-16 h-16 rounded-lg object-contain bg-white dark:bg-navy-800 p-2 border border-gray-200 dark:border-white/10"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                    }}
-                  />
-                  {formData.logoUrl && (
-                    <button
-                      type="button"
-                      onClick={() => setFormData({ ...formData, logoUrl: '' })}
-                      className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
-                      title="Remove logo"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+                Lender
+              </label>
+              <input
+                type="text"
+                value={formData.lender}
+                onChange={(e) => setFormData({ ...formData, lender: e.target.value })}
+                placeholder="e.g., Wells Fargo, Chase, Sallie Mae"
+                required
+                className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+                Lender Logo (optional)
+              </label>
+              <div className="flex items-center gap-2">
+                {/* Show logo preview: Manual upload takes priority, then auto-fetched, then nothing */}
+                {(formData.logoUrl || autoFetchedLogoUrl) && (
+                  <div className="relative flex-shrink-0">
+                    <img
+                      src={formData.logoUrl || autoFetchedLogoUrl}
+                      alt="Logo preview"
+                      className="w-10 h-10 rounded-lg object-contain bg-white dark:bg-navy-800 p-1.5 border border-gray-200 dark:border-white/10"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                      }}
+                    />
+                    {formData.logoUrl && (
+                      <button
+                        type="button"
+                        onClick={() => setFormData({ ...formData, logoUrl: '' })}
+                        className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+                        title="Remove logo"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </button>
-                  )}
-                  {!formData.logoUrl && autoFetchedLogoUrl && (
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 absolute -bottom-5 left-0 whitespace-nowrap">
-                      Auto-fetched
-                    </p>
-                  )}
+                        <svg
+                          className="w-3 h-3"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+                )}
+                <div className="flex-1">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleLogoUpload}
+                    className="w-full text-sm px-3 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-medium file:bg-teal-50 dark:file:bg-teal-500/10 file:text-teal-600 dark:file:text-teal-400 hover:file:bg-teal-100 dark:hover:file:bg-teal-500/20 file:cursor-pointer"
+                  />
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    {autoFetchedLogoUrl && !formData.logoUrl ? 'Auto-fetched. ' : ''}PNG, JPG, or SVG. Max 500KB.
+                  </p>
                 </div>
-              )}
-              <div className="flex-1">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleLogoUpload}
-                  className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-teal-50 dark:file:bg-teal-500/10 file:text-teal-600 dark:file:text-teal-400 hover:file:bg-teal-100 dark:hover:file:bg-teal-500/20 file:cursor-pointer"
-                />
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  PNG, JPG, or SVG. Max 500KB.
-                </p>
               </div>
             </div>
           </div>
