@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Sparkles, Loader2, AlertCircle } from 'lucide-react';
 import { db } from '../../lib/instant';
 import Card from './Card';
+import Button from './Button';
 import SkeletonLoader from './SkeletonLoader';
 import { useToast } from './Toast';
 import { formatDate } from '../../utils/formatters';
@@ -231,12 +232,12 @@ function WealthRadarCard({ householdId }) {
             <p className="text-sm text-gray-700 dark:text-gray-400 mb-6 text-center max-w-md">
               Get personalized financial insights based on your household data and current market conditions
             </p>
-            <button
+            <Button
               onClick={generateInsights}
-              className="px-6 py-2.5 rounded-lg bg-gradient-to-r from-teal-500 to-purple-500 text-white font-medium hover:opacity-90 transition-opacity"
+              variant="hero"
             >
               Generate Insights
-            </button>
+            </Button>
           </div>
           <PerplexityBadge />
         </div>
@@ -281,12 +282,12 @@ function WealthRadarCard({ householdId }) {
             <p className="text-sm text-gray-700 dark:text-gray-400 mb-6 text-center max-w-md">
               {error || 'An unexpected error occurred. Please try again.'}
             </p>
-            <button
+            <Button
               onClick={generateInsights}
-              className="px-6 py-2.5 rounded-lg bg-gradient-to-r from-teal-500 to-purple-500 text-white font-medium hover:opacity-90 transition-opacity"
+              variant="hero"
             >
               Try Again
-            </button>
+            </Button>
           </div>
           <PerplexityBadge />
         </div>

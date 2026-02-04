@@ -4,6 +4,7 @@ import { id } from '@instantdb/react';
 import { db } from '../../lib/instant';
 import { currencies } from '../../utils/currencies';
 import SearchableSelect from '../common/SearchableSelect';
+import Button from '../common/Button';
 
 
 const steps = [
@@ -116,20 +117,21 @@ function OnboardingWizard({ user }) {
             )}
 
             {step.id === 'done' ? (
-              <button
+              <Button
                 onClick={() => window.location.reload()}
-                className="px-6 py-2.5 rounded-lg bg-gradient-to-r from-teal-500 to-purple-500 text-white font-medium hover:opacity-90 transition-opacity"
+                variant="hero"
               >
                 Go to Dashboard
-              </button>
+              </Button>
             ) : (
-              <button
+              <Button
                 onClick={handleNext}
                 disabled={!canProceed() || isSubmitting}
-                className="px-6 py-2.5 rounded-lg bg-gradient-to-r from-teal-500 to-purple-500 text-white font-medium hover:opacity-90 disabled:opacity-50 transition-opacity"
+                isLoading={isSubmitting}
+                variant="hero"
               >
-                {isSubmitting ? 'Setting up...' : 'Continue'}
-              </button>
+                Continue
+              </Button>
             )}
           </div>
         </div>

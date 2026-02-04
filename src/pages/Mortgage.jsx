@@ -4,6 +4,7 @@ import { id } from '@instantdb/react';
 import { db } from '../lib/instant';
 import Card from '../components/common/Card';
 import SkeletonLoader from '../components/common/SkeletonLoader';
+import Button from '../components/common/Button';
 import LoanTabs from '../components/common/LoanTabs';
 import { formatCurrency, formatPercentage, formatDate } from '../utils/formatters';
 import {
@@ -214,15 +215,16 @@ function Mortgage() {
               </button>
             </>
           )}
-          <button
+          <Button
             onClick={() => setEditingLoanId('new')}
-            className="p-2 rounded-lg bg-gradient-to-r from-teal-500 to-purple-500 text-white hover:opacity-90 transition-opacity"
+            variant="hero"
             title="Add new loan"
+            className="p-2"
           >
             <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -911,19 +913,19 @@ function MortgageForm({ loan, householdId, onClose }) {
             />
           </div>
           <div className="flex justify-end gap-3 pt-4">
-            <button
+            <Button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-lg text-gray-700 dark:text-gray-400 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors"
+              variant="secondary"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
-              className="px-4 py-2 rounded-lg bg-gradient-to-r from-teal-500 to-purple-500 text-white font-medium hover:opacity-90 transition-opacity"
+              variant="hero"
             >
               Save
-            </button>
+            </Button>
           </div>
         </form>
       </motion.div>

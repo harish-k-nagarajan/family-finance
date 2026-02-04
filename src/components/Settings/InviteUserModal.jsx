@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Button from '../common/Button';
 
 function InviteUserModal({ isOpen, onClose, onInvite, isInviting }) {
     const [email, setEmail] = useState('');
@@ -62,21 +63,24 @@ function InviteUserModal({ isOpen, onClose, onInvite, isInviting }) {
                             </div>
 
                             <div className="flex gap-3 w-full">
-                                <button
+                                <Button
                                     type="button"
                                     onClick={onClose}
-                                    className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+                                    variant="secondary"
                                     disabled={isInviting}
+                                    className="flex-1 rounded-xl"
                                 >
                                     Cancel
-                                </button>
-                                <button
+                                </Button>
+                                <Button
                                     type="submit"
                                     disabled={!email || isInviting}
-                                    className="flex-1 px-4 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-purple-600 text-white font-medium hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity shadow-lg shadow-teal-500/20"
+                                    isLoading={isInviting}
+                                    variant="hero"
+                                    className="flex-1 rounded-xl"
                                 >
-                                    {isInviting ? 'Sending...' : 'Send Invite'}
-                                </button>
+                                    Send Invite
+                                </Button>
                             </div>
                         </form>
                     </div>

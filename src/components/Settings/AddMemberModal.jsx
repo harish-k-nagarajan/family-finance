@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ProfilePictureUpload from './ProfilePictureUpload';
+import Button from '../common/Button';
 
 function AddMemberModal({ isOpen, onClose, onAdd, isAdding }) {
     const [formData, setFormData] = useState({
@@ -101,21 +102,24 @@ function AddMemberModal({ isOpen, onClose, onAdd, isAdding }) {
                             </div>
 
                             <div className="flex gap-3 w-full pt-2">
-                                <button
+                                <Button
                                     type="button"
                                     onClick={onClose}
-                                    className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+                                    variant="secondary"
                                     disabled={isAdding}
+                                    className="flex-1 rounded-xl"
                                 >
                                     Cancel
-                                </button>
-                                <button
+                                </Button>
+                                <Button
                                     type="submit"
                                     disabled={!formData.email || !formData.displayName || isAdding}
-                                    className="flex-1 px-4 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-purple-600 text-white font-medium hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity shadow-lg shadow-teal-500/20"
+                                    isLoading={isAdding}
+                                    variant="hero"
+                                    className="flex-1 rounded-xl"
                                 >
-                                    {isAdding ? 'Adding...' : 'Add Member'}
-                                </button>
+                                    Add Member
+                                </Button>
                             </div>
                         </form>
                     </div>

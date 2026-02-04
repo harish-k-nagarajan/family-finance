@@ -4,6 +4,7 @@ import { db } from '../../lib/instant';
 import { createSnapshot, calculateTotals } from '../../utils/snapshots';
 import { useToast } from '../common/Toast';
 import Card from '../common/Card';
+import Button from '../common/Button';
 import ConfirmationModal from '../common/ConfirmationModal';
 import AddPaymentModal from './AddPaymentModal';
 import { formatCurrency, formatDate } from '../../utils/formatters';
@@ -83,13 +84,14 @@ function PaymentHistory({ loan, payments, currency, householdId }) {
             <h2 className="text-xl font-display font-semibold text-gray-900 dark:text-white">
               Payment History
             </h2>
-            <button
+            <Button
               onClick={() => setShowAddModal(true)}
-              className="px-4 py-2 rounded-lg bg-gradient-to-r from-teal-500 to-purple-500 text-white font-medium hover:opacity-90 transition-opacity flex items-center gap-2"
+              variant="hero"
+              className="flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
               Add Payment
-            </button>
+            </Button>
           </div>
 
           {/* Summary Stats */}

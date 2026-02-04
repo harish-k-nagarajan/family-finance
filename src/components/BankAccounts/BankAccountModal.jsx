@@ -5,6 +5,7 @@ import { db } from '../../lib/instant';
 import { createSnapshot, calculateTotals } from '../../utils/snapshots';
 import { useToast } from '../common/Toast';
 import { getInstitutionLogoUrl } from '../../utils/logoFetcher';
+import Button from '../common/Button';
 
 function BankAccountModal({ account, users, householdId, onClose }) {
   const { showToast } = useToast();
@@ -355,21 +356,23 @@ function BankAccountModal({ account, users, householdId, onClose }) {
           </div>
 
           <div className="flex justify-end gap-4 pt-4">
-            <button
+            <Button
               type="button"
               onClick={onClose}
               disabled={isLoading}
-              className="px-4 py-2 rounded-lg text-gray-700 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              variant="secondary"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
               disabled={isLoading}
-              className="px-6 py-2 rounded-lg bg-gradient-to-r from-teal-500 to-purple-500 text-white font-medium hover:opacity-90 transition-opacity disabled:opacity-60 disabled:cursor-not-allowed min-w-[120px]"
+              isLoading={isLoading}
+              variant="hero"
+              className="min-w-[120px]"
             >
-              {isLoading ? 'Saving...' : account ? 'Update Account' : 'Add Account'}
-            </button>
+              {account ? 'Update Account' : 'Add Account'}
+            </Button>
           </div>
         </form>
       </motion.div>

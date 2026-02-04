@@ -4,6 +4,7 @@ import { db } from '../lib/instant';
 import Card from '../components/common/Card';
 import OwnerTabs from '../components/common/OwnerTabs';
 import SkeletonLoader from '../components/common/SkeletonLoader';
+import Button from '../components/common/Button';
 import { formatCurrency } from '../utils/formatters';
 import { createSnapshot, calculateTotals } from '../utils/snapshots';
 import { TrendingUp, LineChart, BarChart3, PieChart } from 'lucide-react';
@@ -127,12 +128,12 @@ function Investments() {
             Track your 401(k), IRA, and brokerage accounts
           </p>
         </div>
-        <button
+        <Button
           onClick={() => setEditingInvestment('new')}
-          className="px-4 py-2 rounded-lg bg-gradient-to-r from-teal-500 to-purple-500 text-white font-medium hover:opacity-90 transition-opacity"
+          variant="hero"
         >
           Add Investment
-        </button>
+        </Button>
       </div>
 
       {/* Owner Tabs */}

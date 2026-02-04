@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Button from '../common/Button';
 
 function DeleteAccountModal({
     isOpen,
@@ -62,20 +63,23 @@ function DeleteAccountModal({
                         </div>
 
                         <div className="flex gap-3 w-full">
-                            <button
+                            <Button
                                 onClick={onClose}
-                                className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+                                variant="secondary"
                                 disabled={isDeleting}
+                                className="flex-1"
                             >
                                 Cancel
-                            </button>
-                            <button
+                            </Button>
+                            <Button
                                 onClick={onConfirm}
                                 disabled={confirmationText !== CONFIRM_KEYWORD || isDeleting}
-                                className="flex-1 px-4 py-2.5 rounded-xl bg-red-600 text-white font-medium hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg shadow-red-500/20"
+                                isLoading={isDeleting}
+                                variant="destructive"
+                                className="flex-1 rounded-xl"
                             >
-                                {isDeleting ? 'Deleting...' : 'Delete Account'}
-                            </button>
+                                Delete Account
+                            </Button>
                         </div>
                     </div>
                 </motion.div>

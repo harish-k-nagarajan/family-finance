@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import Button from './Button';
 
 function ConfirmationModal({
     isOpen,
@@ -8,7 +9,7 @@ function ConfirmationModal({
     title = "Are you sure?",
     description = "This action cannot be undone.",
     confirmText = "Confirm",
-    confirmButtonClass = "bg-red-600 hover:bg-red-700 shadow-red-500/20"
+    confirmVariant = "destructive"
 }) {
     if (!isOpen) return null;
 
@@ -47,20 +48,23 @@ function ConfirmationModal({
                         </p>
 
                         <div className="flex gap-3 w-full">
-                            <button
+                            <Button
                                 onClick={onClose}
-                                className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+                                variant="secondary"
                                 disabled={isLoading}
+                                className="flex-1 rounded-xl"
                             >
                                 Cancel
-                            </button>
-                            <button
+                            </Button>
+                            <Button
                                 onClick={onConfirm}
                                 disabled={isLoading}
-                                className={`flex-1 px-4 py-2.5 rounded-xl text-white font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg ${confirmButtonClass}`}
+                                isLoading={isLoading}
+                                variant={confirmVariant}
+                                className="flex-1 rounded-xl"
                             >
-                                {isLoading ? 'Processing...' : confirmText}
-                            </button>
+                                {confirmText}
+                            </Button>
                         </div>
                     </div>
                 </motion.div>

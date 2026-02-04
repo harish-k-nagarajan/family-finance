@@ -6,6 +6,7 @@ import { createSnapshot, calculateTotals } from '../../utils/snapshots';
 import { useToast } from '../common/Toast';
 import { calculatePaymentBreakdown } from '../../utils/mortgageCalculations';
 import { formatDate } from '../../utils/formatters';
+import Button from '../common/Button';
 
 function AddPaymentModal({ loan, householdId, onClose, currency }) {
   const { showToast } = useToast();
@@ -246,21 +247,24 @@ function AddPaymentModal({ loan, householdId, onClose, currency }) {
 
           {/* Buttons */}
           <div className="flex gap-3 pt-4">
-            <button
+            <Button
               type="button"
               onClick={onClose}
               disabled={isLoading}
-              className="flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              variant="secondary"
+              className="flex-1"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
               disabled={isLoading}
-              className="flex-1 px-4 py-2 rounded-lg bg-gradient-to-r from-teal-500 to-purple-500 text-white font-medium hover:opacity-90 transition-opacity disabled:opacity-60 disabled:cursor-not-allowed"
+              isLoading={isLoading}
+              variant="hero"
+              className="flex-1"
             >
-              {isLoading ? 'Adding...' : 'Add Payment'}
-            </button>
+              Add Payment
+            </Button>
           </div>
         </form>
       </motion.div>

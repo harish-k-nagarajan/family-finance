@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { db } from '../lib/instant';
+import Button from '../components/common/Button';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -90,13 +91,16 @@ function Login() {
                   <p className="text-red-500 dark:text-red-400 text-sm">{error}</p>
                 )}
 
-                <button
+                <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-3 rounded-lg bg-gradient-to-r from-teal-500 to-purple-500 text-white font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity"
+                  isLoading={isLoading}
+                  variant="hero"
+                  fullWidth
+                  size="lg"
                 >
-                  {isLoading ? 'Sending...' : 'Send Magic Link'}
-                </button>
+                  Send Magic Link
+                </Button>
               </div>
             </form>
           ) : (
@@ -136,25 +140,30 @@ function Login() {
                   <p className="text-red-500 dark:text-red-400 text-sm">{error}</p>
                 )}
 
-                <button
+                <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-3 rounded-lg bg-gradient-to-r from-teal-500 to-purple-500 text-white font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity"
+                  isLoading={isLoading}
+                  variant="hero"
+                  fullWidth
+                  size="lg"
                 >
-                  {isLoading ? 'Verifying...' : 'Verify Code'}
-                </button>
+                  Verify Code
+                </Button>
 
-                <button
+                <Button
                   type="button"
                   onClick={() => {
                     setSentEmail('');
                     setCode('');
                     setError('');
                   }}
-                  className="w-full py-2 text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-sm transition-colors"
+                  variant="ghost"
+                  fullWidth
+                  size="sm"
                 >
                   Use a different email
-                </button>
+                </Button>
               </div>
             </form>
           )}
