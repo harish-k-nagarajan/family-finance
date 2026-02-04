@@ -210,6 +210,298 @@ Never leave a blank gray box.
 
 ---
 
+### Advanced Component Patterns
+
+**Profile Picture Upload**
+
+Drag-and-drop zone with visual feedback.
+
+Dashed border on hover. Icon and helper text centered.
+
+File validation shows inline (5MB max, images only).
+
+Preview renders immediately after selection.
+
+Circular crop indicator on hover over existing photo.
+
+**Country Select**
+
+Searchable dropdown with flag emoji prefixes.
+
+Search input filters by country name.
+
+Scroll list shows flags first, then country name.
+
+Selected value displays flag + name in collapsed state.
+
+Keyboard navigation supported (arrow keys, enter to select).
+
+**Loan Type Icons**
+
+Visual indicators using Lucide React icons.
+
+Home icon for mortgages. Car icon for auto loans.
+
+Graduation cap for student loans. Credit card for personal loans.
+
+Document icon for "other" loan types.
+
+Icons appear in tabs, cards, and lists for quick identification.
+
+**Avatar Component**
+
+Circular profile display with border.
+
+Shows profile picture if uploaded.
+
+Falls back to user initials if no photo (first letter of display name).
+
+Gradient background generated from user ID for consistency.
+
+Hover state shows subtle scale effect.
+
+**Toggle Switch**
+
+Smooth animated switch with theme-aware colors.
+
+Track changes from gray to accent color on enable.
+
+Knob slides with spring animation (not linear).
+
+Label positioned to left or right of switch.
+
+Disabled state shows reduced opacity.
+
+---
+
+### Modal Design Patterns
+
+**Confirmation Modal**
+
+Centered overlay with glassmorphic backdrop blur.
+
+Modal card floats above with shadow (light) or glow (dark).
+
+Title in bold, description in regular weight.
+
+Two-button layout: Cancel (secondary) on left, Confirm (primary/destructive) on right.
+
+Close icon in top-right corner (optional).
+
+Overlay click dismisses modal (unless destructive action).
+
+**Form Modals**
+
+Structured layout with clear sections.
+
+Title at top, form fields in middle, actions at bottom.
+
+Input labels always visible above fields.
+
+Error messages appear below respective inputs.
+
+Primary action button disabled until valid input.
+
+**Modal Actions**
+
+Primary buttons use gradient fill with glow.
+
+Destructive actions use red accent (not bright red, muted).
+
+Secondary actions are ghost buttons (transparent with border).
+
+Button order: Cancel/Back on left, Primary/Destructive on right.
+
+---
+
+### Enhanced Form Components
+
+**SearchableSelect**
+
+Dropdown with integrated search input at top.
+
+List filters in real-time as user types.
+
+Keyboard navigation: arrow keys to move, enter to select, escape to close.
+
+Selected value shown in collapsed state with chevron icon.
+
+No results state shows friendly message ("No matches found").
+
+**File Upload (Drag-and-Drop)**
+
+Dashed border zone with hover state change.
+
+Icon (upload cloud) centered with helper text below.
+
+Drag over changes border to accent color with scale effect.
+
+File name displays after selection with remove button.
+
+Error state shows red border with message below.
+
+**Input States**
+
+Focus: glow effect using accent color (subtle, not harsh).
+
+Error: red border with error message below (calm red, not aggressive).
+
+Disabled: reduced opacity with cursor not-allowed.
+
+Success: optional green checkmark icon on right (used sparingly).
+
+---
+
+### Loading States
+
+**Skeleton Loaders**
+
+Animated gray shimmer blocks for content placeholders.
+
+Match shape of actual content (rectangles for text, circles for avatars).
+
+Shimmer animation moves left to right with gradient.
+
+Duration: continuous loop until content loads.
+
+Used during initial page load and data fetches.
+
+**Empty States**
+
+Specific patterns for "No data yet" scenarios.
+
+Icon centered (relevant to content type).
+
+Friendly message explaining what's missing.
+
+Call-to-action button prominent and inviting.
+
+Example: "No accounts yet" shows bank icon, friendly copy, "Add Account" button.
+
+Never show empty gray space without explanation.
+
+---
+
+### Button Variants
+
+**Primary**
+
+Gradient fill with glow on hover.
+
+Used for main actions (Add Account, Save, etc.).
+
+Scale effect on hover (1.02x).
+
+Active state shows slight compression.
+
+**Hero**
+
+Large buttons for main actions on page load.
+
+Gradient fill with stronger glow.
+
+Icon + text layout (icon on left).
+
+Used for: Add Investment, Add Bank Account, Add Loan.
+
+Prominent size draws attention.
+
+**Destructive**
+
+Red accent for delete/remove actions.
+
+Not bright red—muted red that fits theme.
+
+Hover strengthens red slightly.
+
+Always paired with confirmation modal.
+
+**Secondary**
+
+Ghost/outline style for less prominent actions.
+
+Transparent background with border.
+
+Hover adds subtle background fill.
+
+Used for: Cancel, Go Back, Skip.
+
+---
+
+### Notification Patterns
+
+**Toast Notifications**
+
+Bottom-right floating toasts with glassmorphic styling.
+
+Success: green accent with checkmark icon.
+
+Error: red accent with X icon.
+
+Info: blue accent with info icon.
+
+Auto-dismiss after 3-4 seconds (or user can dismiss).
+
+Slide-in animation from bottom.
+
+Multiple toasts stack vertically.
+
+**Inline Feedback**
+
+Subtle messages within cards after actions.
+
+Used for immediate feedback (e.g., "Saving...").
+
+Appears below action button or at top of card.
+
+Fades out after 2 seconds.
+
+Less intrusive than toasts for minor updates.
+
+---
+
+### Special Card Designs
+
+**Wealth Radar Card**
+
+Distinct styling for AI insights.
+
+"Powered by Perplexity" badge at bottom with logo.
+
+Content formatted as bulleted list (5 key points).
+
+Refresh button in top-right corner.
+
+Last updated timestamp at bottom.
+
+Loading state shows skeleton with shimmer.
+
+**Payment History Card**
+
+Table/list hybrid with summary statistics at top.
+
+Summary shows: Total Paid, Total Principal, Total Interest.
+
+List below shows individual payments with date, amount, P&I breakdown.
+
+Delete button appears on hover (destructive action).
+
+Alternating row colors for readability (subtle).
+
+**Category Cards (Dashboard)**
+
+Summary cards with icons and trend indicators.
+
+Large number at center (animated on change).
+
+Icon in top-left corner (bank, investment, home).
+
+Trend arrow and percentage in top-right (green up, red down).
+
+Hover lifts card slightly with increased shadow.
+
+---
+
 ## Charts
 
 Charts must feel alive.

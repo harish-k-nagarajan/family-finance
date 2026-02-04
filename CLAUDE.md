@@ -31,18 +31,24 @@ Configuration files:
 - `instant.perms.ts` - Permission rules
 
 ### Key Data Entities
-- **households** - Contains currency, appreciation rate, home purchase info (1 per app instance)
-- **users** - Linked to household with configurable display names (max 2 per household)
-- **accounts** - Bank accounts with institution, balance, owner
-- **investments** - Brokerage accounts with type (401k, IRA, Taxable)
-- **holdings** - Optional individual holdings within investments
-- **mortgage** - Loan details, amortization, extra payments (1 per household)
+- **households** - Contains currency, appreciation rate, home purchase info, country, relationship status (1 per app instance)
+- **users** - Linked to household with display name, full name, profile picture (max 2 per household)
+- **accounts** - Bank accounts with institution, balance, account type, owner, optional logo URL
+- **investments** - Brokerage accounts with type (401k, IRA, Taxable), optional logo URL
+- **holdings** - Optional individual holdings within investments (stocks, bonds, ETFs) with shares, cost basis, current price
+- **mortgage** - Loan details with support for multiple loan types (home, car, student, personal, other)
+- **extraPayments** - Planned extra payment scenarios (monthly/annual frequency)
+- **payments** - Actual payment history with principal/interest breakdown
 - **snapshots** - Auto-saved historical data on any balance change
 
 ### Utility Modules
 - `src/utils/mortgageCalculations.js` - Amortization math, extra payment projections
 - `src/utils/formatters.js` - Date formatting (DD/MM/YYYY or DD/MM with 'short' format), currency, number formatting
 - `src/utils/currencies.js` - Currency list with symbols
+- `src/utils/logoFetcher.js` - Institution logo URL generation via logo.dev API with domain mapping
+- `src/utils/insightsParser.js` - Parse AI insights from Perplexity responses
+- `src/utils/demoData.js` - Generate realistic demo data with growth trends
+- `src/utils/snapshots.js` - Utilities for creating and calculating snapshot data
 
 ## Coding Standards
 
@@ -127,6 +133,62 @@ db.transact(
 ### Auto-Snapshot Trigger
 Call `createSnapshot()` utility function after any account/investment/mortgage balance update. Snapshots enable historical trend charts.
 
+## API Routes (Vercel Serverless Functions)
+
+### Wealth Radar Endpoint
+
+**File:** `api/wealth-radar.js`
+
+**Purpose:** Generates AI-powered financial insights using Perplexity API
+
+**Request:**
+```javascript
+POST /api/wealth-radar
+{
+  household: { currency, country, appreciationRate, ... },
+  accounts: [...],
+  investments: [...],
+  mortgage: [...],
+  snapshots: [last 12 months]
+}
+```
+
+**Response:**
+```javascript
+{
+  success: true,
+  data: {
+    content: "5 lines of plain text insights",
+    citations: [...],
+    inferredCountry: "United States",
+    generatedAt: 1706140800000
+  }
+}
+```
+
+**Features:**
+- Country inference from institutions and currency
+- Perplexity Sonar model with web search (past week)
+- 30-second timeout
+- Error handling for rate limits, auth failures
+- Returns plain text (no markdown)
+
+## External API Integrations
+
+### Perplexity AI (Wealth Radar)
+- **Purpose:** Generate real-time market insights
+- **Model:** Sonar with web search enabled
+- **API Key:** Stored in `PERPLEXITY_API_KEY` env var
+- **Rate Limiting:** Handled gracefully with user feedback
+- **Caching:** 30-day localStorage cache to minimize costs
+
+### logo.dev (Institution Logos)
+- **Purpose:** Fetch company logos by domain name
+- **API Key:** Stored in `VITE_LOGO_DEV_API_KEY` env var (publishable key)
+- **Domain Mapping:** 150+ financial institutions mapped in `logoFetcher.js`
+- **Fallback:** Gradient placeholder icon if logo unavailable
+- **Format:** PNG, 128px size for consistent display
+
 ## Design System
 
 ### Theme Colors
@@ -174,6 +236,10 @@ Call `createSnapshot()` utility function after any account/investment/mortgage b
 - **Snapshot:** Historical data point auto-created on balance changes (NOT user-initiated)
 - **Extra Payment:** Mortgage overpayment with "monthly" or "annual" frequency
 - **Household:** The shared account between 2 users (limit enforced by InstantDB permissions)
+- **Loan Types:** Five supported types - Home (mortgage), Auto (car loan), Student (education loan), Personal (unsecured loan), Other (custom)
+- **Loan Name:** User-defined label (e.g., "Primary Home", "Honda Civic", "MBA Loan")
+- **Payment Types:** Regular (scheduled P&I split) vs Extra (100% principal)
+- **Soft Delete:** Loans can be archived (isDeleted flag) without permanent removal
 
 ## Key UI Patterns
 
@@ -196,8 +262,9 @@ App uses tabs throughout: "User1 | User2 | Combined"
 ## File Organization
 
 ### Component Placement
-- **Feature components:** `src/components/{FeatureName}/` (e.g., `BankAccounts/`, `Mortgage/`)
-- **Shared UI:** `src/components/common/` (e.g., `Sidebar.jsx`, `Toast.jsx`, `AnimatedNumber.jsx`)
+- **Feature components:** `src/components/{FeatureName}/` (e.g., `BankAccounts/`, `Mortgage/`, `Investments/`)
+- **Shared UI:** `src/components/common/` (e.g., `Sidebar.jsx`, `Toast.jsx`, `AnimatedNumber.jsx`, `ConfirmationModal.jsx`, `SearchableSelect.jsx`, `WealthRadarCard.jsx`, `Button.jsx`, `CountrySelect.jsx`, `Avatar.jsx`, `ToggleSwitch.jsx`)
+- **Chart components:** `src/components/Charts/` (e.g., `DashboardTrendChart.jsx`, `SimpleTrendChart.jsx`, `AmortizationChart.jsx`)
 - **No component should exceed 300 lines** - Extract sub-components if needed
 
 ### Import Order
@@ -216,9 +283,16 @@ App uses tabs throughout: "User1 | User2 | Combined"
 
 ```
 VITE_INSTANT_APP_ID=your-instant-app-id-here
+PERPLEXITY_API_KEY=pplx-your-api-key-here
+VITE_LOGO_DEV_API_KEY=your-logo-dev-publishable-key
 ```
 
-> **Note:** Get your App ID from the [InstantDB Dashboard](https://instantdb.com/dash) and add it to your `.env` file.
+> **Security Note:** These API keys must be rotated before public release. Never commit `.env` file to git.
+
+**API Key Sources:**
+- InstantDB App ID: [InstantDB Dashboard](https://instantdb.com/dash)
+- Perplexity API: [Perplexity Settings](https://www.perplexity.ai/settings/api)
+- logo.dev API: [logo.dev Dashboard](https://logo.dev/dashboard)
 
 ## Debugging
 
@@ -241,6 +315,37 @@ npm run dev          # Start development server (localhost:5173)
 npm run build        # Production build
 npm run preview      # Preview production build locally
 vercel --prod        # Deploy to Vercel
+```
+
+## Demo Data System
+
+### Generating Demo Data
+
+```javascript
+import { createDemoData } from './utils/demoData';
+
+// Generate 12 months of realistic data
+await createDemoData(db, user, householdId);
+```
+
+**Generated data:**
+- 2-3 bank accounts with realistic balances
+- 2-3 investment accounts across different types
+- 1 mortgage with payment history
+- 12 months of snapshots with upward trending growth
+- Partner user named "Sarah" for 2-user demonstration
+- All entities tagged with `isDemo: true`
+
+### Cleanup Demo Data
+
+Users can remove all demo data from Settings page:
+```javascript
+// Deletes all entities where isDemo === true
+await db.transact([
+  ...demoAccounts.map(a => db.tx.accounts[a.id].delete()),
+  ...demoInvestments.map(i => db.tx.investments[i.id].delete()),
+  // ... etc
+]);
 ```
 
 ## Key Implementation Notes

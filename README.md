@@ -15,6 +15,9 @@ Family Finance is a premium, real-time dashboard designed specifically for house
 - **Bank Accounts**: Track multiple checking, savings, and credit accounts
 - **Investment Portfolios**: Monitor 401k, IRA, Roth IRA, and taxable brokerage accounts
 - **Mortgage Analysis**: Built-in amortization schedules, extra payment modeling, and equity tracking
+- **Multiple Loan Types**: Track mortgages, auto loans, student loans, personal loans with custom names
+- **Payment History**: Record actual payments made with automatic principal/interest calculations
+- **AI-Powered Insights**: Real-time market analysis and personalized recommendations via Perplexity AI
 - **Home Value**: Automated appreciation calculations based on market rates
 
 ### 🎨 Premium User Experience
@@ -150,6 +153,10 @@ npm run preview  # Preview production build locally
 | Variable | Description | Required |
 |----------|-------------|----------|
 | `VITE_INSTANT_APP_ID` | Your InstantDB application ID | Yes |
+| `PERPLEXITY_API_KEY` | Perplexity AI API key (for Wealth Radar insights) | Optional* |
+| `VITE_LOGO_DEV_API_KEY` | logo.dev API key (for institution logos) | Optional* |
+
+\* Optional features will gracefully degrade if API keys not provided
 
 ## 📝 Configuration
 
@@ -178,6 +185,19 @@ Set a custom annual appreciation rate for your home value calculations in Settin
 
 ### Other Platforms
 The app is a static site and can be deployed to any hosting platform that supports Vite builds (Netlify, Cloudflare Pages, etc.).
+
+## 🔐 Security & API Keys
+
+**IMPORTANT:** Before deploying or sharing this project:
+
+1. **Rotate API Keys:** The repository does not contain sensitive keys in git history, but you should generate fresh keys for production:
+   - Create a new InstantDB app for production use
+   - Generate new Perplexity API key
+   - Generate new logo.dev API key
+
+2. **Environment Variables:** Set all keys in your deployment platform (Vercel, Netlify, etc.)
+
+3. **Never Commit:** Ensure `.env` is in `.gitignore` (already configured)
 
 ## 🤝 Contributing
 

@@ -77,6 +77,35 @@ Household (auto-created on first signup)
 - **Last updated timestamps** for each account
 - **Recommendations:** Smart insights like "Paying $200 extra/month saves $50k in interest"
 
+### 1.5 Wealth Radar (AI-Powered Insights)
+
+Real-time financial insights powered by Perplexity AI with 30-day caching:
+
+- **Insights categories:**
+  - US markets (S&P 500, Nasdaq, Dow) with specific numbers
+  - EU & Asian markets (STOXX 600, FTSE, Nikkei, Hang Seng, Sensex)
+  - Commodities (Gold, Silver trends with prices)
+  - Geopolitical events affecting portfolio
+  - Personalized action recommendations
+
+- **Personalization:**
+  - Analyzes user's actual accounts and institutions
+  - Considers currency and inferred country (from institutions)
+  - Reviews 12-month net worth trend
+  - Factors in mortgage/loan status
+
+- **Caching:**
+  - 30-day localStorage cache to minimize API costs
+  - Manual refresh button available
+  - Last generated timestamp displayed
+
+- **API:**
+  - Backend: `/api/wealth-radar.js` (Vercel serverless function)
+  - Model: Perplexity Sonar with web search enabled
+  - Search recency: Past week only
+
+- **Attribution:** "Powered by Perplexity" badge with logo
+
 ### 2. Bank Accounts View
 - List of bank accounts with owner filter tabs
 - Account details: institution (free text), account name, current balance
@@ -117,12 +146,92 @@ Household (auto-created on first signup)
   - **Track actual extra payments made** (date + amount)
   - Compare payoff dates and interest saved
 
+### 4.5 Multiple Loan Types Support
+
+The app supports tracking multiple types of loans beyond just mortgages:
+
+- **Loan Types:**
+  - Home (traditional mortgage)
+  - Auto (car loans)
+  - Student (education loans)
+  - Personal (unsecured loans)
+  - Other (custom loan types)
+
+- **Features per loan:**
+  - Custom loan name (e.g., "Honda Civic", "Primary Home")
+  - Lender name (free text)
+  - Original amount, current balance, interest rate
+  - Start date and term length
+  - Monthly payment amount
+  - Amortization schedule
+  - Extra payment scenarios
+  - Payment history tracking
+
+- **Multiple loans:** Users can add multiple loans of different types
+- **Soft delete:** Loans can be archived without permanent deletion (isDeleted flag)
+- **Icon indicators:** Visual loan type indicators using Lucide React icons (Home, Car, GraduationCap, CreditCard, FileText)
+- **Loan tabs:** Switch between individual loans and "All Loans" combined view
+
+### 4.6 Payment History Tracking
+
+Track actual loan payments made with full principal/interest breakdown:
+
+- **Payment types:**
+  - Regular payments (scheduled monthly payments with P&I split)
+  - Extra payments (100% to principal)
+
+- **Payment details:**
+  - Date of payment
+  - Total amount paid
+  - Principal paid
+  - Interest paid
+  - Optional note field
+
+- **Summary statistics:**
+  - Total paid to date
+  - Total principal reduction
+  - Total interest paid
+
+- **Actions:**
+  - Add payment modal with automatic P&I calculation
+  - Delete payment (restores loan balance accordingly)
+  - View payment history with filters
+
+- **Integration:** Payments update loan balance and trigger snapshot creation
+
 ### 5. Settings Page
-- Change display name
-- Change currency
-- Update appreciation rate
-- Manage household (invite/remove second user)
-- **Enable/disable mortgage tracking** — toggle to show or hide the Mortgage section from the sidebar and exclude it from net worth calculations when disabled
+
+- **User Profile:**
+  - Display name
+  - Full name
+  - Profile picture (drag-and-drop upload, base64 storage)
+  - Email (read-only, from auth)
+
+- **Household Settings:**
+  - Currency selection (24 currencies supported)
+  - Country selection (dropdown with flag emojis, 50+ countries)
+  - Relationship status (Single, Married, Domestic Partnership, Roommates, Other)
+  - Home appreciation rate
+  - Home purchase price and date
+
+- **Mortgage Toggle:**
+  - Enable/disable mortgage tracking
+  - Hides Mortgage section from sidebar when disabled
+  - Excludes mortgage from net worth calculations
+
+- **Household Members:**
+  - View current members (max 2)
+  - Add partner via "Add Member" button (creates pending user)
+  - Remove member (with confirmation)
+
+- **Demo Data:**
+  - Load demo data (generates 12 months of realistic data)
+  - Clear demo data (removes all entities with isDemo flag)
+
+- **Theme Preference:**
+  - Stored in InstantDB user settings (source of truth)
+  - Cached in localStorage to prevent flicker
+  - Synced before first render
 
 ### 6. Onboarding
 - **First-time flow:** Guided setup wizard that **automatically creates a household** for the user (no separate "Create Household" step)
@@ -133,6 +242,27 @@ Household (auto-created on first signup)
   5. Add first investment (optional)
   6. Add mortgage (optional)
 - **Invite second user:** Enter email to add to household (from Settings)
+
+### 7. Demo Data System
+
+For testing and demonstrations:
+
+- **One-click demo setup:**
+  - Generates realistic 12-month historical data
+  - Creates sample bank accounts (2-3 accounts)
+  - Creates sample investments (2-3 accounts)
+  - Creates sample mortgage with payment history
+  - Generates snapshots with upward trending net worth
+
+- **Data characteristics:**
+  - Investments: 8% annual growth with ±4% volatility
+  - Banks: 2% annual growth with ±4% volatility
+  - Mortgage: $600/month principal paydown
+  - Home: 3.5% annual appreciation
+
+- **Demo flag:** All demo entities tagged with `isDemo: true`
+- **Cleanup:** Easy removal of all demo data via Settings page
+- **Demo user:** Creates a partner user named "Sarah" for 2-user demonstration
 
 ---
 
@@ -157,7 +287,16 @@ src/
 │       ├── ThemeToggle.jsx
 │       ├── Toast.jsx
 │       ├── OwnerTabs.jsx
-│       └── AnimatedNumber.jsx
+│       ├── AnimatedNumber.jsx
+│       ├── Button.jsx
+│       ├── ConfirmationModal.jsx
+│       ├── SearchableSelect.jsx
+│       ├── CountrySelect.jsx
+│       ├── WealthRadarCard.jsx
+│       ├── Avatar.jsx
+│       ├── ToggleSwitch.jsx
+│       ├── Card.jsx
+│       └── SkeletonLoader.jsx
 ├── pages/
 │   ├── Home.jsx
 │   ├── Banks.jsx
@@ -176,6 +315,28 @@ src/
 └── App.jsx
 ```
 
+### New UI Components
+
+**Common Components:**
+- `ConfirmationModal.jsx` - Reusable confirmation dialog for destructive actions
+- `SearchableSelect.jsx` - Dropdown with search/filter capability
+- `CountrySelect.jsx` - Country picker with flag emojis (50+ countries)
+- `WealthRadarCard.jsx` - AI insights card with Perplexity integration
+- `Button.jsx` - Standardized button component with variants (primary, hero, destructive, secondary)
+- `SkeletonLoader.jsx` - Loading state placeholders with shimmer animation
+- `SimpleTrendChart.jsx` - Single-series teal gradient chart for Banks/Investments pages
+- `Avatar.jsx` - User profile picture display with fallback initials
+- `ToggleSwitch.jsx` - Animated toggle for binary settings
+- `Card.jsx` - Reusable card wrapper with glassmorphic styling
+
+**Mortgage Components:**
+- `PaymentHistory.jsx` - Payment tracking with summary stats and delete capability
+- `AddPaymentModal.jsx` - Form for recording loan payments with automatic P&I calculations
+- `LoanTabs.jsx` - Switch between individual loans and "All Loans" combined view
+
+**Profile Components:**
+- `ProfilePictureUpload.jsx` - Drag-and-drop image upload with preview and file validation
+
 **Key Libraries:**
 - `@instantdb/react` - Real-time database + magic link auth
 - React Router for navigation
@@ -183,7 +344,12 @@ src/
 - Tailwind CSS for styling
 - Framer Motion for animations
 
-### No Backend Required
+**Additional Libraries:**
+- `lucide-react` - Icon library (Home, Car, GraduationCap, CreditCard, FileText icons for loan types)
+- Perplexity AI API - Real-time market insights with web search
+- logo.dev API - Institution logo fetching with domain mapping (150+ financial institutions)
+
+### No Backend Required (Except Serverless Function)
 InstantDB provides:
 - Real-time database (serverless)
 - Magic link authentication
@@ -203,7 +369,11 @@ InstantDB provides:
   "currencySymbol": "$",
   "homeAppreciationRate": 3.5,
   "homePurchasePrice": 500000,
-  "homePurchaseDate": 1672531200000
+  "homePurchaseDate": 1672531200000,
+  "name": "My Household",
+  "ownerId": "user-uuid",
+  "country": "US",
+  "relationshipStatus": "Married"
 }
 ```
 
@@ -212,8 +382,11 @@ InstantDB provides:
 {
   "id": "uuid",
   "email": "harish@example.com",
-  "name": "Harish",
-  "householdId": "household-uuid"
+  "displayName": "Harish",
+  "name": "Harish Nagarajan",
+  "householdId": "household-uuid",
+  "profilePicture": "data:image/png;base64,...",
+  "isDemo": false
 }
 ```
 
@@ -225,7 +398,10 @@ InstantDB provides:
   "ownerId": "user-uuid",
   "institution": "Chase",
   "accountName": "Checking",
+  "accountType": "checking",
   "balance": 5000,
+  "logoUrl": "https://img.logo.dev/chase.com?token=...",
+  "isDemo": false,
   "updatedAt": 1706140800000
 }
 ```
@@ -240,6 +416,8 @@ InstantDB provides:
   "accountType": "401k",
   "accountName": "Company 401k",
   "value": 150000,
+  "logoUrl": "https://img.logo.dev/fidelity.com?token=...",
+  "isDemo": false,
   "updatedAt": 1706140800000
 }
 ```
@@ -251,16 +429,22 @@ InstantDB provides:
   "investmentId": "investment-uuid",
   "symbol": "VTSAX",
   "name": "Vanguard Total Stock Market",
+  "shares": 250,
+  "costBasis": 40000,
+  "currentPrice": 200,
   "value": 50000,
   "updatedAt": 1706140800000
 }
 ```
 
-**mortgage** (one per household):
+**mortgage** (supports multiple loans):
 ```json
 {
   "id": "uuid",
   "householdId": "household-uuid",
+  "loanName": "Primary Home",
+  "loanType": "home",
+  "lender": "Rocket Mortgage",
   "originalAmount": 500000,
   "currentBalance": 450000,
   "interestRate": 6.5,
@@ -268,6 +452,8 @@ InstantDB provides:
   "startDate": 1672531200000,
   "termYears": 30,
   "nextPaymentDate": 1706140800000,
+  "isDeleted": false,
+  "isDemo": false,
   "updatedAt": 1706140800000
 }
 ```
@@ -282,6 +468,23 @@ InstantDB provides:
   "startDate": 1706140800000,
   "isActual": true,
   "note": "Annual bonus payment"
+}
+```
+
+**payments** (actual payment history):
+```json
+{
+  "id": "uuid",
+  "mortgageId": "mortgage-uuid",
+  "date": 1706140800000,
+  "amount": 3160,
+  "paymentType": "regular",
+  "principalPaid": 600,
+  "interestPaid": 2560,
+  "note": "February payment",
+  "isDemo": false,
+  "createdAt": 1706140800000,
+  "updatedAt": 1706140800000
 }
 ```
 
