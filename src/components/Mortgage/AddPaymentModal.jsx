@@ -164,7 +164,7 @@ function AddPaymentModal({ loan, householdId, onClose, currency }) {
                 errors.date
                   ? 'border-red-500 dark:border-red-500'
                   : 'border-gray-200 dark:border-white/10'
-              } text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 disabled:opacity-60 disabled:cursor-not-allowed`}
+              } text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:shadow-lg focus:shadow-teal-500/20 dark:focus:shadow-teal-400/30 disabled:opacity-60 disabled:cursor-not-allowed`}
             />
             {errors.date && (
               <p className="text-xs text-red-600 dark:text-red-400 mt-1">{errors.date}</p>
@@ -190,7 +190,7 @@ function AddPaymentModal({ loan, householdId, onClose, currency }) {
                 }}
                 placeholder="0.00"
                 disabled={isLoading}
-                className="w-full pl-16 pr-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full pl-16 pr-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:shadow-lg focus:shadow-teal-500/20 dark:focus:shadow-teal-400/30 disabled:opacity-60 disabled:cursor-not-allowed"
               />
             </div>
             {errors.amount && (
@@ -240,7 +240,7 @@ function AddPaymentModal({ loan, householdId, onClose, currency }) {
               placeholder="Add a note about this payment..."
               disabled={isLoading}
               rows="3"
-              className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 disabled:opacity-60 disabled:cursor-not-allowed resize-none"
+              className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:shadow-lg focus:shadow-teal-500/20 dark:focus:shadow-teal-400/30 disabled:opacity-60 disabled:cursor-not-allowed resize-none"
             />
           </div>
 

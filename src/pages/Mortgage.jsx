@@ -172,7 +172,7 @@ function Mortgage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 laptop:space-y-8">
         <SkeletonLoader variant="title" />
         <SkeletonLoader variant="card" />
       </div>
@@ -180,7 +180,7 @@ function Mortgage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 laptop:space-y-8">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
@@ -741,7 +741,7 @@ function MortgageForm({ loan, householdId, onClose }) {
               onChange={(e) => setFormData({ ...formData, loanName: e.target.value })}
               placeholder="e.g., Primary Home, Honda Civic, Student Loan"
               required
-              className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:shadow-lg focus:shadow-teal-500/20 dark:focus:shadow-teal-400/30"
             />
           </div>
           <div>
@@ -782,7 +782,7 @@ function MortgageForm({ loan, householdId, onClose }) {
                 onChange={(e) => setFormData({ ...formData, lender: e.target.value })}
                 placeholder="e.g., Wells Fargo, Chase, Sallie Mae"
                 required
-                className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:shadow-lg focus:shadow-teal-500/20 dark:focus:shadow-teal-400/30"
               />
             </div>
             <div>
@@ -850,7 +850,7 @@ function MortgageForm({ loan, householdId, onClose }) {
                 value={formData.originalAmount}
                 onChange={(e) => setFormData({ ...formData, originalAmount: e.target.value })}
                 required
-                className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:shadow-lg focus:shadow-teal-500/20 dark:focus:shadow-teal-400/30"
               />
             </div>
             <div>
@@ -863,7 +863,7 @@ function MortgageForm({ loan, householdId, onClose }) {
                 value={formData.currentBalance}
                 onChange={(e) => setFormData({ ...formData, currentBalance: e.target.value })}
                 required
-                className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:shadow-lg focus:shadow-teal-500/20 dark:focus:shadow-teal-400/30"
               />
             </div>
           </div>
@@ -878,7 +878,7 @@ function MortgageForm({ loan, householdId, onClose }) {
                 value={formData.interestRate}
                 onChange={(e) => setFormData({ ...formData, interestRate: e.target.value })}
                 required
-                className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:shadow-lg focus:shadow-teal-500/20 dark:focus:shadow-teal-400/30"
               />
             </div>
             <div>
@@ -894,7 +894,7 @@ function MortgageForm({ loan, householdId, onClose }) {
                 onChange={(e) => setFormData({ ...formData, termYears: e.target.value })}
                 placeholder="e.g., 5, 15, 30"
                 required
-                className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:shadow-lg focus:shadow-teal-500/20 dark:focus:shadow-teal-400/30"
               />
             </div>
           </div>
@@ -907,7 +907,7 @@ function MortgageForm({ loan, householdId, onClose }) {
               value={formData.startDate}
               onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
               required
-              className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:shadow-lg focus:shadow-teal-500/20 dark:focus:shadow-teal-400/30"
             />
           </div>
           <div className="flex justify-end gap-3 pt-4">

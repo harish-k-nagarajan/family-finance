@@ -57,7 +57,7 @@ function InviteUserModal({ isOpen, onClose, onInvite, isInviting }) {
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="partner@example.com"
                                     required
-                                    className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 placeholder-gray-500"
+                                    className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:shadow-lg focus:shadow-teal-500/20 dark:focus:shadow-teal-400/30 placeholder-gray-500"
                                 />
                             </div>
 

@@ -127,7 +127,7 @@ function Settings() {
                   value={household.name || ''}
                   onChange={(e) => updateHousehold({ name: e.target.value })}
                   placeholder="e.g. Smith Family"
-                  className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:shadow-lg focus:shadow-teal-500/20 dark:focus:shadow-teal-400/30 transition-all"
                 />
               </div>
 
@@ -140,7 +140,7 @@ function Settings() {
                   <select
                     value={household.ownerId || ''}
                     onChange={(e) => updateHousehold({ ownerId: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 appearance-none transition-all cursor-pointer"
+                    className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:shadow-lg focus:shadow-teal-500/20 dark:focus:shadow-teal-400/30 appearance-none transition-all cursor-pointer"
                   >
                     <option value="" disabled>Select an owner</option>
                     {users.map((u) => (
@@ -177,7 +177,7 @@ function Settings() {
                   <select
                     value={household.relationshipStatus || 'Single'}
                     onChange={(e) => updateHousehold({ relationshipStatus: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 appearance-none transition-all cursor-pointer"
+                    className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:shadow-lg focus:shadow-teal-500/20 dark:focus:shadow-teal-400/30 appearance-none transition-all cursor-pointer"
                   >
                     <option value="Single">Single</option>
                     <option value="In a Relationship">In a Relationship</option>
@@ -207,7 +207,7 @@ function Settings() {
                   <select
                     value={household.currency || 'USD'}
                     onChange={(e) => updateHousehold({ currency: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 appearance-none transition-all cursor-pointer"
+                    className="w-full px-4 py-2.5 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:shadow-lg focus:shadow-teal-500/20 dark:focus:shadow-teal-400/30 appearance-none transition-all cursor-pointer"
                   >
                     {currencies.map((c) => (
                       <option key={c.code} value={c.code}>

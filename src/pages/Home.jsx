@@ -179,7 +179,7 @@ function Home() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 laptop:space-y-8">
         <SkeletonLoader variant="title" />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[...Array(4)].map((_, i) => (
@@ -272,7 +272,7 @@ function Home() {
                   <button
                     key={range}
                     onClick={() => setTimeRange(range)}
-                    className={`px-2.5 laptop:px-3.5 py-1.5 rounded-lg text-xs laptop:text-sm font-medium font-body transition-all focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 dark:focus:ring-offset-navy-900 ${
+                    className={`px-2.5 laptop:px-3.5 py-1.5 rounded-lg text-xs laptop:text-sm font-medium font-body transition-all focus:outline-none focus:ring-2 focus:ring-teal-500 focus:shadow-lg focus:shadow-teal-500/20 dark:focus:shadow-teal-400/30 focus:ring-offset-2 dark:focus:ring-offset-navy-900 ${
                       timeRange === range
                         ? 'bg-teal-500/20 text-teal-600 dark:text-teal-400 shadow-sm'
                         : 'text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5'

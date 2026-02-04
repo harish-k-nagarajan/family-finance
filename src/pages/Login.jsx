@@ -82,7 +82,7 @@ function Login() {
                     placeholder="you@example.com"
                     autoComplete="email webauthn"
                     required
-                    className="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:shadow-lg focus:shadow-teal-500/20 dark:focus:shadow-teal-400/30 focus:border-transparent transition-all"
                   />
                 </div>
 
@@ -128,7 +128,7 @@ function Login() {
                     maxLength={6}
                     required
                     autoFocus
-                    className="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-center text-2xl tracking-widest"
+                    className="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:shadow-lg focus:shadow-teal-500/20 dark:focus:shadow-teal-400/30 focus:border-transparent transition-all text-center text-2xl tracking-widest"
                   />
                 </div>
 

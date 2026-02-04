@@ -25,6 +25,20 @@ const getAccountTypeIcon = (accountType) => {
   }
 };
 
+const getAccountTypeGradient = (accountType) => {
+  switch (accountType?.toLowerCase()) {
+    case 'checking':
+      return 'from-blue-400 to-teal-400';
+    case 'savings':
+      return 'from-emerald-400 to-green-500';
+    case 'credit':
+    case 'credit card':
+      return 'from-purple-400 to-pink-500';
+    default:
+      return 'from-teal-400 to-purple-500';
+  }
+};
+
 function Banks() {
   const { user } = db.useAuth();
   const [selectedOwner, setSelectedOwner] = useState('combined');
@@ -92,7 +106,7 @@ function Banks() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 laptop:space-y-8">
         <SkeletonLoader variant="title" />
         <SkeletonLoader variant="card" />
       </div>
@@ -100,7 +114,7 @@ function Banks() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 laptop:space-y-8">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
@@ -174,12 +188,14 @@ function Banks() {
                         }}
                       />
                     )}
-                    <div
-                      className="fallback-icon w-12 h-12 rounded-lg bg-gradient-to-br from-teal-400 to-purple-500 flex items-center justify-center flex-shrink-0"
+                    <motion.div
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      transition={{ duration: 0.2 }}
+                      className={`fallback-icon w-12 h-12 rounded-lg bg-gradient-to-br ${getAccountTypeGradient(account.accountType)} flex items-center justify-center flex-shrink-0`}
                       style={{ display: account.logoUrl ? 'none' : 'flex' }}
                     >
                       {getAccountTypeIcon(account.accountType)}
-                    </div>
+                    </motion.div>
                   </div>
 
                   <div>

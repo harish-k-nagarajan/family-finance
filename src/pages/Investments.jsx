@@ -24,6 +24,23 @@ const getInvestmentTypeIcon = (investmentType) => {
   }
 };
 
+const getInvestmentTypeGradient = (investmentType) => {
+  switch (investmentType?.toLowerCase()) {
+    case '401k':
+      return 'from-purple-400 to-pink-500';
+    case 'ira':
+    case 'roth ira':
+      return 'from-blue-400 to-indigo-500';
+    case 'taxable':
+      return 'from-teal-400 to-cyan-500';
+    case 'hsa':
+    case '529':
+      return 'from-orange-400 to-amber-500';
+    default:
+      return 'from-purple-400 to-pink-500';
+  }
+};
+
 function Investments() {
   const { user } = db.useAuth();
   const [selectedOwner, setSelectedOwner] = useState('combined');
@@ -91,7 +108,7 @@ function Investments() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 laptop:space-y-8">
         <SkeletonLoader variant="title" />
         <SkeletonLoader variant="card" />
       </div>
@@ -99,7 +116,7 @@ function Investments() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 laptop:space-y-8">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
@@ -173,12 +190,14 @@ function Investments() {
                         }}
                       />
                     )}
-                    <div
-                      className="fallback-icon w-12 h-12 rounded-lg bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center flex-shrink-0"
+                    <motion.div
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      transition={{ duration: 0.2 }}
+                      className={`fallback-icon w-12 h-12 rounded-lg bg-gradient-to-br ${getInvestmentTypeGradient(investment.accountType)} flex items-center justify-center flex-shrink-0`}
                       style={{ display: investment.logoUrl ? 'none' : 'flex' }}
                     >
                       {getInvestmentTypeIcon(investment.accountType)}
-                    </div>
+                    </motion.div>
                   </div>
 
                   <div>

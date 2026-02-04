@@ -210,7 +210,7 @@ function BankAccountModal({ account, users, householdId, onClose }) {
                   errors.institution
                     ? 'border-red-500 dark:border-red-500'
                     : 'border-gray-200 dark:border-white/10'
-                } text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 disabled:opacity-60 disabled:cursor-not-allowed`}
+                } text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:shadow-lg focus:shadow-teal-500/20 dark:focus:shadow-teal-400/30 disabled:opacity-60 disabled:cursor-not-allowed`}
               />
               {errors.institution && (
                 <p className="text-xs text-red-600 dark:text-red-400 mt-1">{errors.institution}</p>
@@ -225,7 +225,7 @@ function BankAccountModal({ account, users, householdId, onClose }) {
                 value={formData.accountType}
                 onChange={(e) => setFormData({ ...formData, accountType: e.target.value })}
                 disabled={isLoading}
-                className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:shadow-lg focus:shadow-teal-500/20 dark:focus:shadow-teal-400/30 disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 <option value="checking" className="bg-white dark:bg-navy-800">
                   Checking
@@ -257,7 +257,7 @@ function BankAccountModal({ account, users, householdId, onClose }) {
                   errors.balance
                     ? 'border-red-500 dark:border-red-500'
                     : 'border-gray-200 dark:border-white/10'
-                } text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 disabled:opacity-60 disabled:cursor-not-allowed`}
+                } text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:shadow-lg focus:shadow-teal-500/20 dark:focus:shadow-teal-400/30 disabled:opacity-60 disabled:cursor-not-allowed`}
               />
               {errors.balance && (
                 <p className="text-xs text-red-600 dark:text-red-400 mt-1">{errors.balance}</p>
