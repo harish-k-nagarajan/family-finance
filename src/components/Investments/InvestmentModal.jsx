@@ -180,7 +180,7 @@ function InvestmentModal({ investment, users, householdId, onClose }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-gradient-radial from-black/60 via-black/50 to-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4"
       onClick={onClose}
     >
       <motion.div
@@ -197,7 +197,7 @@ function InvestmentModal({ investment, users, householdId, onClose }) {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+              <label className="block text-xs uppercase tracking-wider font-medium text-gray-600 dark:text-gray-300 mb-2">
                 Institution
               </label>
               <input
@@ -221,7 +221,7 @@ function InvestmentModal({ investment, users, householdId, onClose }) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+              <label className="block text-xs uppercase tracking-wider font-medium text-gray-600 dark:text-gray-300 mb-2">
                 Account Type
               </label>
               <select
@@ -252,7 +252,7 @@ function InvestmentModal({ investment, users, householdId, onClose }) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+              <label className="block text-xs uppercase tracking-wider font-medium text-gray-600 dark:text-gray-300 mb-2">
                 Balance
               </label>
               <input
@@ -277,7 +277,7 @@ function InvestmentModal({ investment, users, householdId, onClose }) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+              <label className="block text-xs uppercase tracking-wider font-medium text-gray-600 dark:text-gray-300 mb-2">
                 Owner
               </label>
               <select
@@ -305,7 +305,7 @@ function InvestmentModal({ investment, users, householdId, onClose }) {
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+              <label className="block text-xs uppercase tracking-wider font-medium text-gray-600 dark:text-gray-300 mb-2">
                 Institution Logo (optional)
               </label>
               <div className="flex items-center gap-4">

@@ -54,6 +54,9 @@ export default {
         '300': '300ms',
         '400': '400ms',
       },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(circle, var(--tw-gradient-stops))',
+      },
     },
   },
   plugins: [],

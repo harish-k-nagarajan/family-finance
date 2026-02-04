@@ -732,7 +732,7 @@ function MortgageForm({ loan, householdId, onClose }) {
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+            <label className="block text-xs uppercase tracking-wider font-medium text-gray-600 dark:text-gray-300 mb-2">
               Loan Name
             </label>
             <input
@@ -745,7 +745,7 @@ function MortgageForm({ loan, householdId, onClose }) {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+            <label className="block text-xs uppercase tracking-wider font-medium text-gray-600 dark:text-gray-300 mb-2">
               Loan Type
             </label>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
@@ -773,7 +773,7 @@ function MortgageForm({ loan, householdId, onClose }) {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+              <label className="block text-xs uppercase tracking-wider font-medium text-gray-600 dark:text-gray-300 mb-2">
                 Lender
               </label>
               <input
@@ -786,7 +786,7 @@ function MortgageForm({ loan, householdId, onClose }) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+              <label className="block text-xs uppercase tracking-wider font-medium text-gray-600 dark:text-gray-300 mb-2">
                 Lender Logo (optional)
               </label>
               <div className="flex items-center gap-2">
@@ -841,7 +841,7 @@ function MortgageForm({ loan, householdId, onClose }) {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+              <label className="block text-xs uppercase tracking-wider font-medium text-gray-600 dark:text-gray-300 mb-2">
                 Original Amount
               </label>
               <input
@@ -854,7 +854,7 @@ function MortgageForm({ loan, householdId, onClose }) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+              <label className="block text-xs uppercase tracking-wider font-medium text-gray-600 dark:text-gray-300 mb-2">
                 Current Balance
               </label>
               <input
@@ -869,7 +869,7 @@ function MortgageForm({ loan, householdId, onClose }) {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+              <label className="block text-xs uppercase tracking-wider font-medium text-gray-600 dark:text-gray-300 mb-2">
                 Interest Rate (%)
               </label>
               <input
@@ -882,7 +882,7 @@ function MortgageForm({ loan, householdId, onClose }) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+              <label className="block text-xs uppercase tracking-wider font-medium text-gray-600 dark:text-gray-300 mb-2">
                 Term (Years)
               </label>
               <input
@@ -899,7 +899,7 @@ function MortgageForm({ loan, householdId, onClose }) {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+            <label className="block text-xs uppercase tracking-wider font-medium text-gray-600 dark:text-gray-300 mb-2">
               Start Date
             </label>
             <input

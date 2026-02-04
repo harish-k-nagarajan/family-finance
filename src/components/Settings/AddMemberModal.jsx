@@ -58,7 +58,7 @@ function AddMemberModal({ isOpen, onClose, onAdd, isAdding }) {
 
                             {/* Full Name */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                                <label className="block text-xs uppercase tracking-wider font-medium text-gray-700 dark:text-gray-300 mb-1.5">
                                     Full Name
                                 </label>
                                 <input
@@ -72,7 +72,7 @@ function AddMemberModal({ isOpen, onClose, onAdd, isAdding }) {
 
                             {/* Display Name */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                                <label className="block text-xs uppercase tracking-wider font-medium text-gray-700 dark:text-gray-300 mb-1.5">
                                     Display Name <span className="text-red-500">*</span>
                                 </label>
                                 <input
@@ -87,7 +87,7 @@ function AddMemberModal({ isOpen, onClose, onAdd, isAdding }) {
 
                             {/* Email */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                                <label className="block text-xs uppercase tracking-wider font-medium text-gray-700 dark:text-gray-300 mb-1.5">
                                     Email Address <span className="text-red-500">*</span>
                                 </label>
                                 <input

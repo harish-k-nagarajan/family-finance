@@ -49,7 +49,7 @@ function DeleteAccountModal({
                         </p>
 
                         <div className="w-full mb-6 text-left">
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label className="block text-xs uppercase tracking-wider font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Type <span className="font-bold text-red-600 dark:text-red-400">DELETE</span> to confirm
                             </label>
                             <input

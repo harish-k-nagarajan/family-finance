@@ -119,7 +119,7 @@ function Settings() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Household Name */}
               <div>
-                <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+                <label className="block text-xs uppercase tracking-wider font-medium text-gray-600 dark:text-gray-300 mb-2">
                   Household Name
                 </label>
                 <input
@@ -133,7 +133,7 @@ function Settings() {
 
               {/* Household Owner */}
               <div>
-                <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+                <label className="block text-xs uppercase tracking-wider font-medium text-gray-600 dark:text-gray-300 mb-2">
                   Household Owner
                 </label>
                 <div className="relative">
@@ -159,7 +159,7 @@ function Settings() {
 
               {/* Country of Residence */}
               <div>
-                <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+                <label className="block text-xs uppercase tracking-wider font-medium text-gray-600 dark:text-gray-300 mb-2">
                   Country of Residence
                 </label>
                 <CountrySelect
@@ -170,7 +170,7 @@ function Settings() {
 
               {/* Relationship Status */}
               <div>
-                <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+                <label className="block text-xs uppercase tracking-wider font-medium text-gray-600 dark:text-gray-300 mb-2">
                   Relationship Status
                 </label>
                 <div className="relative">
@@ -200,7 +200,7 @@ function Settings() {
 
               {/* Base Currency */}
               <div>
-                <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+                <label className="block text-xs uppercase tracking-wider font-medium text-gray-600 dark:text-gray-300 mb-2">
                   Base Currency
                 </label>
                 <div className="relative">
@@ -329,7 +329,7 @@ function Settings() {
                 </svg>
               </div>
               <div className="text-center">
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
                   Add a partner
                 </h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 px-8">
@@ -354,7 +354,7 @@ function Settings() {
         <Card>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                 Track Total Debt
               </h3>
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
@@ -387,7 +387,7 @@ function Settings() {
         <Card>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                 Account Actions
               </h3>
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">

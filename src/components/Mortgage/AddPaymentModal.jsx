@@ -132,7 +132,7 @@ function AddPaymentModal({ loan, householdId, onClose, currency }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-gradient-radial from-black/60 via-black/50 to-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4"
       onClick={onClose}
     >
       <motion.div
@@ -149,7 +149,7 @@ function AddPaymentModal({ loan, householdId, onClose, currency }) {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Payment Date */}
           <div>
-            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+            <label className="block text-xs uppercase tracking-wider font-medium text-gray-600 dark:text-gray-300 mb-2">
               Payment Date
             </label>
             <input
@@ -173,7 +173,7 @@ function AddPaymentModal({ loan, householdId, onClose, currency }) {
 
           {/* Payment Amount */}
           <div>
-            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+            <label className="block text-xs uppercase tracking-wider font-medium text-gray-600 dark:text-gray-300 mb-2">
               Payment Amount
             </label>
             <div className="relative">
@@ -200,7 +200,7 @@ function AddPaymentModal({ loan, householdId, onClose, currency }) {
 
           {/* Payment Type */}
           <div>
-            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-3">
+            <label className="block text-xs uppercase tracking-wider font-medium text-gray-600 dark:text-gray-300 mb-3">
               Payment Type
             </label>
             <div className="flex gap-4">
@@ -231,7 +231,7 @@ function AddPaymentModal({ loan, householdId, onClose, currency }) {
 
           {/* Note (Optional) */}
           <div>
-            <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+            <label className="block text-xs uppercase tracking-wider font-medium text-gray-600 dark:text-gray-300 mb-2">
               Note (Optional)
             </label>
             <textarea

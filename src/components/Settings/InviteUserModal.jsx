@@ -48,7 +48,7 @@ function InviteUserModal({ isOpen, onClose, onInvite, isInviting }) {
 
                         <form onSubmit={handleSubmit} className="w-full">
                             <div className="mb-6 text-left">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                <label className="block text-xs uppercase tracking-wider font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Email Address
                                 </label>
                                 <input
