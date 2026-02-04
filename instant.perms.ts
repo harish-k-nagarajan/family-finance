@@ -14,7 +14,7 @@ const rules = {
       view: "true",
       create: "true",
       update: "true",
-      delete: "false",
+      delete: "data.isDemo == true", // Allow deleting demo users only
     },
   },
   accounts: {
@@ -69,7 +69,7 @@ const rules = {
       view: "true",
       create: "true",
       update: "true", // Allow updates to same-day snapshots when balances change
-      delete: "false", // Snapshots should not be deleted
+      delete: "data.isDemo == true", // Allow deleting demo snapshots only
     },
   },
 } satisfies InstantRules;

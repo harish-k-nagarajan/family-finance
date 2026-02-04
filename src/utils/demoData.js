@@ -40,6 +40,7 @@ export const seedDemoData = async (householdId, currentUserId) => {
     txs.push(
         db.tx.mortgage[mortgageId].update({
             householdId: householdId,
+            loanType: 'home',
             lender: 'Chase Bank',
             originalAmount: 400000,
             currentBalance: 342000,

@@ -8,6 +8,7 @@ import { formatCurrency } from '../utils/formatters';
 import { createSnapshot, calculateTotals } from '../utils/snapshots';
 import { Landmark, PiggyBank, CreditCard, Wallet } from 'lucide-react';
 import BankAccountModal from '../components/BankAccounts/BankAccountModal';
+import SimpleTrendChart from '../components/Charts/SimpleTrendChart';
 
 const getAccountTypeIcon = (accountType) => {
   const iconProps = { className: "w-6 h-6 text-white", strokeWidth: 2 };
@@ -39,6 +40,7 @@ function Banks() {
         mortgage: {
           $: { where: { householdId: user.householdId, isDeleted: false } }
         },
+        snapshots: {},
       }
       : null
   );
@@ -48,6 +50,7 @@ function Banks() {
   const allAccounts = data?.accounts || [];
   const investments = data?.investments || [];
   const loans = data?.mortgage || [];
+  const snapshots = data?.snapshots || [];
 
   // Get household members
   const { data: householdData } = db.useQuery(
@@ -72,6 +75,11 @@ function Banks() {
       : allAccounts.filter((a) => a.ownerId === selectedOwner);
 
   const totalBalance = accounts.reduce((sum, a) => sum + (a.balance || 0), 0);
+
+  // Transform snapshots for chart (always use combined household data)
+  const chartData = snapshots
+    .sort((a, b) => a.date - b.date)
+    .map(s => ({ date: s.date, value: s.totalBankBalance }));
 
   const handleDeleteAccount = async (accountId) => {
     await db.transact(db.tx.accounts[accountId].delete());
@@ -125,6 +133,21 @@ function Banks() {
           {formatCurrency(totalBalance, currency)}
         </p>
       </Card>
+
+      {/* Balance History Chart */}
+      {snapshots.length > 0 && (
+        <Card>
+          <h3 className="text-base font-display font-semibold text-gray-900 dark:text-white mb-4">
+            Balance History
+          </h3>
+          <SimpleTrendChart data={chartData} currency={currency} label="Bank Balance" color="#2DD4BF" />
+          {selectedOwner !== 'combined' && (
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 italic">
+              * Chart shows combined household data
+            </p>
+          )}
+        </Card>
+      )}
 
       {/* Accounts List */}
       <div className="space-y-4">

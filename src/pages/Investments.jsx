@@ -8,6 +8,7 @@ import { formatCurrency } from '../utils/formatters';
 import { createSnapshot, calculateTotals } from '../utils/snapshots';
 import { TrendingUp, LineChart, BarChart3, PieChart } from 'lucide-react';
 import InvestmentModal from '../components/Investments/InvestmentModal';
+import SimpleTrendChart from '../components/Charts/SimpleTrendChart';
 
 const getInvestmentTypeIcon = (investmentType) => {
   const iconProps = { className: "w-6 h-6 text-white", strokeWidth: 2 };
@@ -38,6 +39,7 @@ function Investments() {
         mortgage: {
           $: { where: { householdId: user.householdId, isDeleted: false } }
         },
+        snapshots: {},
       }
       : null
   );
@@ -47,6 +49,7 @@ function Investments() {
   const accounts = data?.accounts || [];
   const allInvestments = data?.investments || [];
   const loans = data?.mortgage || [];
+  const snapshots = data?.snapshots || [];
 
   // Get household members
   const { data: householdData } = db.useQuery(
@@ -71,6 +74,11 @@ function Investments() {
       : allInvestments.filter((i) => i.ownerId === selectedOwner);
 
   const totalBalance = investments.reduce((sum, i) => sum + (i.balance || 0), 0);
+
+  // Transform snapshots for chart (always use combined household data)
+  const chartData = snapshots
+    .sort((a, b) => a.date - b.date)
+    .map(s => ({ date: s.date, value: s.totalInvestments }));
 
   const handleDeleteInvestment = async (investmentId) => {
     await db.transact(db.tx.investments[investmentId].delete());
@@ -124,6 +132,21 @@ function Investments() {
           {formatCurrency(totalBalance, currency)}
         </p>
       </Card>
+
+      {/* Investment History Chart */}
+      {snapshots.length > 0 && (
+        <Card>
+          <h3 className="text-base font-display font-semibold text-gray-900 dark:text-white mb-4">
+            Investment History
+          </h3>
+          <SimpleTrendChart data={chartData} currency={currency} label="Investment Total" color="#2DD4BF" />
+          {selectedOwner !== 'combined' && (
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 italic">
+              * Chart shows combined household data
+            </p>
+          )}
+        </Card>
+      )}
 
       {/* Investments List */}
       <div className="space-y-4">

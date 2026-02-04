@@ -57,8 +57,9 @@ function DemoDataSection({ household, currentUser }) {
                 db.tx.households[household.id].update({
                     mortgageEnabled: false,
                     homePurchasePrice: 0,
+                    homePurchaseDate: 0,
                     appreciationRate: 0,
-                    debtType: null, // or undefined
+                    debtType: null,
                     updatedAt: Date.now(),
                 })
             );

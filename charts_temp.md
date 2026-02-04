@@ -5,15 +5,15 @@
 - [x] **Task 4**: Replace Emojis with Professional Icons ✅ COMPLETED
 - [x] **Task 2**: Upward Trending Demo Data ✅ COMPLETED
 - [x] **Task 1**: Intelligent X-Axis Formatting ✅ COMPLETED
-- [ ] **Task 3**: Trend Charts for Banks & Investments Pages
+- [x] **Task 3**: Trend Charts for Banks & Investments Pages ✅ COMPLETED
 
 ---
 
 ## Overview
 This plan implements four improvements to the personal finance dashboard:
-1. Intelligent X-axis labels based on time window selection
+1. Intelligent X-axis labels based on time window selection ✅ **DONE**
 2. Realistic upward-trending demo data with natural fluctuations ✅ **DONE**
-3. Beautiful trend charts on Banks and Investments pages (teal gradient)
+3. Beautiful trend charts on Banks and Investments pages (teal gradient) ✅ **DONE**
 4. Professional icon replacements for loan type selector ✅ **DONE**
 
 ---
@@ -186,11 +186,11 @@ Replace decay with **growth calculations** working backward from current values:
 - Use `color="#2DD4BF"` (teal) and `label="Investment Total"`
 
 **Verification:**
-- [ ] Banks page shows teal gradient chart above account list
-- [ ] Investments page shows teal gradient chart above investment list
-- [ ] Charts animate on page load (fade-in, slide-up)
-- [ ] Disclaimer appears when User1/User2 filter active
-- [ ] Charts match AmortizationChart aesthetic
+- [x] Banks page shows teal gradient chart above account list
+- [x] Investments page shows teal gradient chart above investment list
+- [x] Charts animate on page load (fade-in, slide-up)
+- [x] Disclaimer appears when User1/User2 filter active
+- [x] Charts match AmortizationChart aesthetic
 
 ---
 
@@ -200,9 +200,9 @@ Replace decay with **growth calculations** working backward from current values:
 2. ✅ [src/utils/demoData.js](src/utils/demoData.js:119-127) - Fix growth calculations **COMPLETED**
 3. ✅ [src/utils/formatters.js](src/utils/formatters.js) - Add `formatChartAxisDate` function **COMPLETED**
 4. ✅ [src/components/Dashboard/DashboardTrendChart.jsx](src/components/Dashboard/DashboardTrendChart.jsx:157) - Update XAxis tickFormatter **COMPLETED**
-5. [ ] [src/components/Charts/SimpleTrendChart.jsx](src/components/Charts/SimpleTrendChart.jsx) - Create new reusable chart component
-6. [ ] [src/pages/Banks.jsx](src/pages/Banks.jsx:127) - Add trend chart
-7. [ ] [src/pages/Investments.jsx](src/pages/Investments.jsx:126) - Add trend chart
+5. ✅ [src/components/Charts/SimpleTrendChart.jsx](src/components/Charts/SimpleTrendChart.jsx) - Create new reusable chart component **COMPLETED**
+6. ✅ [src/pages/Banks.jsx](src/pages/Banks.jsx) - Add trend chart **COMPLETED**
+7. ✅ [src/pages/Investments.jsx](src/pages/Investments.jsx) - Add trend chart **COMPLETED**
 
 ---
 
@@ -264,3 +264,25 @@ Replace decay with **growth calculations** working backward from current values:
 - Updated [src/components/Dashboard/DashboardTrendChart.jsx](src/components/Dashboard/DashboardTrendChart.jsx) line 4 to import `formatChartAxisDate`
 - Updated line 157 XAxis tickFormatter to use `formatChartAxisDate(date, timeRange, data[0]?.date)`
 - Result: Dashboard chart now shows intelligent x-axis labels that adapt to the selected time window, making charts more readable and meaningful at different time scales
+
+### Task 3 Completion Details
+**Date**: 2026-02-04
+**Changes Made**:
+- Created new [src/components/Charts/SimpleTrendChart.jsx](src/components/Charts/SimpleTrendChart.jsx) component
+  - Uses Recharts AreaChart with teal gradient (#2DD4BF)
+  - Gradient: 80% opacity at top → 5% opacity at bottom
+  - 3px stroke width with smooth animation
+  - Custom tooltip with glass-card styling
+  - Handles empty data with friendly message
+  - Adapts to light/dark theme
+- Updated [src/pages/Banks.jsx](src/pages/Banks.jsx):
+  - Added SimpleTrendChart import
+  - Added `snapshots: {}` to query
+  - Extracted snapshots data and transformed for chart
+  - Inserted chart component between Total Balance card and Accounts List
+  - Shows disclaimer when owner filter is active (chart always shows combined household data)
+- Updated [src/pages/Investments.jsx](src/pages/Investments.jsx):
+  - Same pattern as Banks page
+  - Uses `s.totalInvestments` for chart data
+  - Inserted chart between Total Investments card and Investments List
+- Result: Both Banks and Investments pages now display beautiful teal gradient trend charts showing historical balance data with smooth animations, matching the AmortizationChart aesthetic

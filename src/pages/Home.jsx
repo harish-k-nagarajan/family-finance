@@ -231,7 +231,7 @@ function Home() {
       </motion.div>
 
       {/* Stats Grid - Responsive Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 laptop:grid-cols-4 gap-4 laptop:gap-6">
+      <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 laptop:gap-6 ${allStats.length === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'}`}>
         {allStats.map((stat, index) => (
           <StatCard
             key={stat.label}
