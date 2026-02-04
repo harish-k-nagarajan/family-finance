@@ -64,7 +64,7 @@ function Login() {
               <h1 className="text-xl font-display font-semibold text-gray-900 dark:text-white text-center mb-2">
                 Welcome Back
               </h1>
-              <p className="text-gray-600 dark:text-gray-400 text-center mb-6">
+              <p className="text-gray-700 dark:text-gray-400 text-center mb-6">
                 Enter your email to sign in with a magic link
               </p>
 
@@ -104,7 +104,7 @@ function Login() {
               <h1 className="text-xl font-display font-semibold text-gray-900 dark:text-white text-center mb-2">
                 Check Your Email
               </h1>
-              <p className="text-gray-600 dark:text-gray-400 text-center mb-6">
+              <p className="text-gray-700 dark:text-gray-400 text-center mb-6">
                 We sent a code to <span className="text-teal-500 dark:text-teal-400">{sentEmail}</span>
               </p>
 
@@ -151,7 +151,7 @@ function Login() {
                     setCode('');
                     setError('');
                   }}
-                  className="w-full py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-sm transition-colors"
+                  className="w-full py-2 text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white text-sm transition-colors"
                 >
                   Use a different email
                 </button>

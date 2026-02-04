@@ -65,7 +65,7 @@ const PerplexityBadge = () => (
         alt="Perplexity"
         className="h-4 opacity-70"
       />
-      <span className="font-semibold text-gray-600 dark:text-gray-400 tracking-tight" style={{ fontFamily: "'Inter', sans-serif" }}>
+      <span className="font-semibold text-gray-700 dark:text-gray-400 tracking-tight" style={{ fontFamily: "'Inter', sans-serif" }}>
         perplexity
       </span>
     </div>
@@ -228,7 +228,7 @@ function WealthRadarCard({ householdId }) {
             <h3 className="text-lg font-display font-semibold text-gray-900 dark:text-white mb-2">
               Wealth Radar
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 text-center max-w-md">
+            <p className="text-sm text-gray-700 dark:text-gray-400 mb-6 text-center max-w-md">
               Get personalized financial insights based on your household data and current market conditions
             </p>
             <button
@@ -278,7 +278,7 @@ function WealthRadarCard({ householdId }) {
             <h3 className="text-lg font-display font-semibold text-gray-900 dark:text-white mb-2">
               Unable to Generate Insights
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 text-center max-w-md">
+            <p className="text-sm text-gray-700 dark:text-gray-400 mb-6 text-center max-w-md">
               {error || 'An unexpected error occurred. Please try again.'}
             </p>
             <button
@@ -331,7 +331,7 @@ function WealthRadarCard({ householdId }) {
                       <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
                         {suggestion.title}
                       </span>
-                      <span className="text-sm text-gray-600 dark:text-gray-400">
+                      <span className="text-sm text-gray-700 dark:text-gray-400">
                         {' — '}{suggestion.description}
                       </span>
                     </div>

@@ -50,7 +50,7 @@ function DashboardTrendChart({ data, currency = 'USD', timeRange = 'all', lastHi
 
             return (
                 <div className="glass-card p-4 shadow-xl border border-white/20 dark:border-white/10 rounded-xl">
-                    <p className="text-xs font-body text-gray-600 dark:text-gray-400 mb-2">
+                    <p className="text-xs font-body text-gray-700 dark:text-gray-400 mb-2">
                         {formatDate(label)}
                     </p>
                     <div className="space-y-1.5">
@@ -63,7 +63,7 @@ function DashboardTrendChart({ data, currency = 'USD', timeRange = 'all', lastHi
                                         className="w-2 h-2 rounded-full"
                                         style={{ backgroundColor: entry.color }}
                                     />
-                                    <p className="text-sm font-medium tabular-nums" style={{ color: entry.color }}>
+                                    <p className="text-sm font-medium tabular-nums text-gray-900 dark:text-gray-100">
                                         {name}: {formatCurrency(entry.value, currency)}
                                     </p>
                                 </div>
@@ -99,7 +99,7 @@ function DashboardTrendChart({ data, currency = 'USD', timeRange = 'all', lastHi
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1, duration: 0.4, ease: 'easeOut' }}
+                transition={{ delay: 0.1, duration: 0.3, ease: 'easeOut' }}
                 className="w-full h-64 laptop:h-80"
             >
                 <ResponsiveContainer width="100%" height="100%">
@@ -146,7 +146,7 @@ function DashboardTrendChart({ data, currency = 'USD', timeRange = 'all', lastHi
                     <CartesianGrid
                         strokeDasharray="3 3"
                         vertical={false}
-                        stroke={document.body.classList.contains('dark') ? 'rgba(255,255,255,0.06)' : 'rgba(156,163,175,0.15)'}
+                        stroke={document.body.classList.contains('dark') ? 'rgba(255,255,255,0.06)' : 'rgba(156,163,175,0.25)'}
                     />
 
                     {/* Subdued axes - no lines, with domain control */}
@@ -277,12 +277,12 @@ function DashboardTrendChart({ data, currency = 'USD', timeRange = 'all', lastHi
                         onClick={() => toggleSeries(series.key)}
                         disabled={series.locked}
                         className={`
-                            flex items-center gap-1.5 px-1.5 laptop:px-2 py-1 rounded text-xs font-medium font-body transition-all
+                            flex items-center gap-1.5 px-1.5 laptop:px-2 py-1 rounded text-xs font-medium font-body transition-all duration-200
                             ${visibleSeries[series.key]
                                 ? 'text-gray-700 dark:text-gray-300'
                                 : 'text-gray-400 dark:text-gray-600 line-through'
                             }
-                            ${series.locked ? 'cursor-default' : 'cursor-pointer hover:text-gray-900 dark:hover:text-white'}
+                            ${series.locked ? 'cursor-default' : 'cursor-pointer hover:text-gray-900 dark:hover:text-white hover:scale-105 active:scale-95'}
                         `}
                     >
                         {/* Small solid color dot */}

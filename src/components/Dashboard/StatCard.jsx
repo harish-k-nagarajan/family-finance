@@ -8,7 +8,7 @@ function StatCard({ label, value, currency, delay = 0 }) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.3, ease: 'easeOut' }}
+      transition={{ delay, duration: 0.35, ease: 'easeOut' }}
     >
       <Card hover>
         {/* Label - quiet, small, muted, uppercase */}

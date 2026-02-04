@@ -35,14 +35,14 @@ function ThemeToggle({ user, currentTheme }) {
   return (
     <button
       onClick={toggleTheme}
-      className="group relative w-10 h-10 rounded-full flex items-center justify-center bg-gray-100 dark:bg-navy-600 hover:bg-gray-200 dark:hover:bg-navy-500 border border-gray-200/60 dark:border-white/10 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-teal-500/20 dark:hover:shadow-purple-500/20"
+      className="group relative w-10 h-10 rounded-full flex items-center justify-center bg-gray-100 dark:bg-navy-600 hover:bg-gray-200 dark:hover:bg-navy-500 border border-gray-200 dark:border-white/10 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-teal-500/20 dark:hover:shadow-purple-500/20"
       title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
     >
       <div className="relative w-5 h-5">
         {/* Moon icon (dark mode) */}
         <svg
-          className={`absolute inset-0 w-5 h-5 text-gray-700 dark:text-yellow-400 transition-all duration-500 ${isDark ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 -rotate-90 scale-0'
+          className={`absolute inset-0 w-5 h-5 text-gray-700 dark:text-yellow-400 transition-all duration-400 ${isDark ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 -rotate-90 scale-0'
             }`}
           fill="currentColor"
           viewBox="0 0 20 20"
@@ -52,7 +52,7 @@ function ThemeToggle({ user, currentTheme }) {
 
         {/* Sun icon (light mode) */}
         <svg
-          className={`absolute inset-0 w-5 h-5 text-yellow-500 dark:text-gray-400 transition-all duration-500 ${!isDark ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 rotate-90 scale-0'
+          className={`absolute inset-0 w-5 h-5 text-yellow-500 dark:text-gray-400 transition-all duration-400 ${!isDark ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 rotate-90 scale-0'
             }`}
           fill="currentColor"
           viewBox="0 0 20 20"

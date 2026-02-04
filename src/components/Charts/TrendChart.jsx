@@ -17,14 +17,20 @@ function TrendChart({ data, currency = 'USD', timeRange = 'all' }) {
         if (active && payload && payload.length) {
             return (
                 <div className="glass-card p-4 shadow-lg">
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{formatDate(label)}</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-400 mb-2">{formatDate(label)}</p>
                     {payload.map((entry, index) => {
                         // Handle Forecast label specifically
                         const name = entry.name === 'forecast' ? 'Projected NW' : entry.name;
                         return (
-                            <p key={index} className="text-sm font-medium" style={{ color: entry.color }}>
-                                {name}: {formatCurrency(entry.value, currency)}
-                            </p>
+                            <div key={index} className="flex items-center gap-2">
+                                <div
+                                    className="w-2 h-2 rounded-full"
+                                    style={{ backgroundColor: entry.color }}
+                                />
+                                <p className="text-sm font-medium tabular-nums text-gray-900 dark:text-gray-100">
+                                    {name}: {formatCurrency(entry.value, currency)}
+                                </p>
+                            </div>
                         );
                     })}
                     {payload.some(p => p.dataKey === 'forecast') && (
@@ -42,7 +48,7 @@ function TrendChart({ data, currency = 'USD', timeRange = 'all' }) {
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
             className="w-full h-80"
         >
             <ResponsiveContainer width="100%" height="100%">

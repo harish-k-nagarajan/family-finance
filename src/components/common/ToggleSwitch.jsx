@@ -17,7 +17,7 @@ function ToggleSwitch({ enabled, onChange, disabled = false, srLabel = 'Toggle' 
             <span className="sr-only">{srLabel}</span>
             <motion.span
                 layout
-                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                transition={{ duration: 0.2, ease: 'easeOut' }}
                 initial={false}
                 animate={{
                     x: enabled ? 22 : 2,

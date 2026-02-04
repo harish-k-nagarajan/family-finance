@@ -225,7 +225,7 @@ function Home() {
         <h1 className="text-2xl laptop:text-3xl desktop:text-4xl font-display font-bold text-gray-900 dark:text-white mb-2 laptop:mb-3">
           Welcome back, {currentUser?.displayName || 'User'}
         </h1>
-        <p className="text-sm laptop:text-base font-body text-gray-600 dark:text-gray-400">
+        <p className="text-sm laptop:text-base font-body text-gray-700 dark:text-gray-400">
           Here's your financial overview
         </p>
       </motion.div>
@@ -275,7 +275,7 @@ function Home() {
                     className={`px-2.5 laptop:px-3.5 py-1.5 rounded-lg text-xs laptop:text-sm font-medium font-body transition-all focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 dark:focus:ring-offset-navy-900 ${
                       timeRange === range
                         ? 'bg-teal-500/20 text-teal-600 dark:text-teal-400 shadow-sm'
-                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5'
+                        : 'text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5'
                     }`}
                   >
                     {range}
@@ -377,13 +377,13 @@ function Home() {
                   </div>
                 ))}
                 {accounts.length > 3 && (
-                  <p className="text-xs font-body text-gray-600 dark:text-gray-400 text-center pt-2">
+                  <p className="text-xs font-body text-gray-700 dark:text-gray-400 text-center pt-2">
                     +{accounts.length - 3} more accounts
                   </p>
                 )}
               </div>
             ) : (
-              <p className="text-sm font-body text-gray-600 dark:text-gray-400 text-center py-8">
+              <p className="text-sm font-body text-gray-700 dark:text-gray-400 text-center py-8">
                 No bank accounts added yet
               </p>
             )}
@@ -433,7 +433,7 @@ function Home() {
                         <span className="text-sm font-body text-gray-700 dark:text-gray-300">
                           {investment.institution}
                         </span>
-                        <span className="text-xs font-body text-gray-600 dark:text-gray-400 ml-2">
+                        <span className="text-xs font-body text-gray-700 dark:text-gray-400 ml-2">
                           ({investment.accountType})
                         </span>
                       </div>
@@ -444,13 +444,13 @@ function Home() {
                   </div>
                 ))}
                 {investments.length > 3 && (
-                  <p className="text-xs font-body text-gray-600 dark:text-gray-400 text-center pt-2">
+                  <p className="text-xs font-body text-gray-700 dark:text-gray-400 text-center pt-2">
                     +{investments.length - 3} more investments
                   </p>
                 )}
               </div>
             ) : (
-              <p className="text-sm font-body text-gray-600 dark:text-gray-400 text-center py-8">
+              <p className="text-sm font-body text-gray-700 dark:text-gray-400 text-center py-8">
                 No investments added yet
               </p>
             )}

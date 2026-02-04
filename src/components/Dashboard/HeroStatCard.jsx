@@ -8,7 +8,7 @@ function HeroStatCard({ label, value, currency, delay = 0 }) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.4, ease: 'easeOut' }}
+      transition={{ delay, duration: 0.35, ease: 'easeOut' }}
       className="md:col-span-2"
     >
       <Card hover className="relative overflow-hidden">
@@ -24,7 +24,7 @@ function HeroStatCard({ label, value, currency, delay = 0 }) {
           </p>
 
           {/* Value - hero size, bold */}
-          <p className="text-5xl md:text-6xl font-display font-bold text-gray-900 dark:text-white tabular-nums mb-2">
+          <p className="text-5xl md:text-6xl font-display font-bold text-gray-900 dark:text-white tabular-nums -tracking-tight mb-2">
             <AnimatedNumber
               value={value}
               formatFn={(val) => formatCurrency(val, currency)}
@@ -32,7 +32,7 @@ function HeroStatCard({ label, value, currency, delay = 0 }) {
           </p>
 
           {/* Subtle description */}
-          <p className="text-sm font-body text-gray-600 dark:text-gray-400 mt-3">
+          <p className="text-sm font-body text-gray-700 dark:text-gray-400 mt-3">
             Total assets minus liabilities
           </p>
         </div>

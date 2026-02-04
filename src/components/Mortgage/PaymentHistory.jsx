@@ -96,19 +96,19 @@ function PaymentHistory({ loan, payments, currency, householdId }) {
           {payments.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
               <div className="glass-card p-4 rounded-lg">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Paid</p>
+                <p className="text-sm text-gray-700 dark:text-gray-400 mb-1">Total Paid</p>
                 <p className="text-2xl font-semibold text-gray-900 dark:text-white">
                   {formatCurrency(totalPaid, currency)}
                 </p>
               </div>
               <div className="glass-card p-4 rounded-lg">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Principal Paid</p>
+                <p className="text-sm text-gray-700 dark:text-gray-400 mb-1">Principal Paid</p>
                 <p className="text-2xl font-semibold text-teal-600 dark:text-teal-400">
                   {formatCurrency(totalPrincipal, currency)}
                 </p>
               </div>
               <div className="glass-card p-4 rounded-lg">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Interest Paid</p>
+                <p className="text-sm text-gray-700 dark:text-gray-400 mb-1">Interest Paid</p>
                 <p className="text-2xl font-semibold text-purple-600 dark:text-purple-400">
                   {formatCurrency(totalInterest, currency)}
                 </p>
@@ -145,14 +145,14 @@ function PaymentHistory({ loan, payments, currency, householdId }) {
                       </div>
 
                       {/* Date */}
-                      <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mb-2">
+                      <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-400 mb-2">
                         <Calendar className="w-4 h-4" />
                         {formatDate(payment.date)}
                       </div>
 
                       {/* Principal and Interest Breakdown */}
                       {payment.paymentType === 'regular' && (
-                        <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+                        <div className="flex items-center gap-4 text-sm text-gray-700 dark:text-gray-400">
                           <div>
                             Principal: <span className="font-medium text-teal-600 dark:text-teal-400">{formatCurrency(payment.principalPaid, currency)}</span>
                           </div>
@@ -163,14 +163,14 @@ function PaymentHistory({ loan, payments, currency, householdId }) {
                       )}
 
                       {payment.paymentType === 'extra' && (
-                        <div className="text-sm text-gray-600 dark:text-gray-400">
+                        <div className="text-sm text-gray-700 dark:text-gray-400">
                           100% to principal: <span className="font-medium text-teal-600 dark:text-teal-400">{formatCurrency(payment.principalPaid, currency)}</span>
                         </div>
                       )}
 
                       {/* Note */}
                       {payment.note && (
-                        <div className="mt-2 text-sm text-gray-600 dark:text-gray-400 italic">
+                        <div className="mt-2 text-sm text-gray-700 dark:text-gray-400 italic">
                           "{payment.note}"
                         </div>
                       )}
@@ -194,7 +194,7 @@ function PaymentHistory({ loan, payments, currency, householdId }) {
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-white/5 mb-4">
                 <DollarSign className="w-8 h-8 text-gray-400 dark:text-gray-500" />
               </div>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">No payments recorded yet</p>
+              <p className="text-gray-700 dark:text-gray-400 mb-4">No payments recorded yet</p>
               <button
                 onClick={() => setShowAddModal(true)}
                 className="text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 transition-colors font-medium"

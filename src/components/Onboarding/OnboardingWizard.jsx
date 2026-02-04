@@ -107,7 +107,7 @@ function OnboardingWizard({ user }) {
             {currentStep > 0 && step.id !== 'done' ? (
               <button
                 onClick={handleBack}
-                className="px-4 py-2 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+                className="px-4 py-2 rounded-lg text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
                 Back
               </button>
@@ -147,7 +147,7 @@ function WelcomeStep() {
       <h2 className="text-2xl font-display font-bold text-gray-900 dark:text-white mb-3">
         Welcome to Family Finance
       </h2>
-      <p className="text-gray-600 dark:text-gray-400">
+      <p className="text-gray-700 dark:text-gray-400">
         Track your household finances in one place. Let's get you set up.
       </p>
     </div>
@@ -160,7 +160,7 @@ function NameStep({ value, onChange }) {
       <h2 className="text-xl font-display font-bold text-gray-900 dark:text-white mb-2">
         What should we call you?
       </h2>
-      <p className="text-gray-600 dark:text-gray-400 text-sm mb-6">
+      <p className="text-gray-700 dark:text-gray-400 text-sm mb-6">
         This is how you'll appear in your household
       </p>
       <input
@@ -169,7 +169,7 @@ function NameStep({ value, onChange }) {
         onChange={(e) => onChange(e.target.value)}
         placeholder="e.g. Harish"
         autoFocus
-        className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 text-lg"
+        className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 text-lg"
       />
     </div>
   );
@@ -181,7 +181,7 @@ function CurrencyStep({ value, onChange }) {
       <h2 className="text-xl font-display font-bold text-gray-900 dark:text-white mb-2">
         Choose your currency
       </h2>
-      <p className="text-gray-600 dark:text-gray-400 text-sm mb-6">
+      <p className="text-gray-700 dark:text-gray-400 text-sm mb-6">
         This will be used across all your accounts
       </p>
 
@@ -216,7 +216,7 @@ function DoneStep() {
       <h2 className="text-2xl font-display font-bold text-gray-900 dark:text-white mb-3">
         You're all set!
       </h2>
-      <p className="text-gray-600 dark:text-gray-400">
+      <p className="text-gray-700 dark:text-gray-400">
         Start adding your accounts to track your net worth.
       </p>
     </div>

@@ -213,7 +213,7 @@ function InvestmentModal({ investment, users, householdId, onClose }) {
                   errors.institution
                     ? 'border-red-500 dark:border-red-500'
                     : 'border-gray-200 dark:border-white/10'
-                } text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 disabled:opacity-60 disabled:cursor-not-allowed`}
+                } text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 disabled:opacity-60 disabled:cursor-not-allowed`}
               />
               {errors.institution && (
                 <p className="text-xs text-red-600 dark:text-red-400 mt-1">{errors.institution}</p>
@@ -269,7 +269,7 @@ function InvestmentModal({ investment, users, householdId, onClose }) {
                   errors.balance
                     ? 'border-red-500 dark:border-red-500'
                     : 'border-gray-200 dark:border-white/10'
-                } text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 disabled:opacity-60 disabled:cursor-not-allowed`}
+                } text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 disabled:opacity-60 disabled:cursor-not-allowed`}
               />
               {errors.balance && (
                 <p className="text-xs text-red-600 dark:text-red-400 mt-1">{errors.balance}</p>
@@ -366,12 +366,12 @@ function InvestmentModal({ investment, users, householdId, onClose }) {
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-2">
+          <div className="flex justify-end gap-4 pt-4">
             <button
               type="button"
               onClick={onClose}
               disabled={isLoading}
-              className="px-4 py-2 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              className="px-4 py-2 rounded-lg text-gray-700 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
               Cancel
             </button>

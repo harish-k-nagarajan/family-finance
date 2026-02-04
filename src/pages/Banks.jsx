@@ -107,7 +107,7 @@ function Banks() {
           <h1 className="text-2xl font-display font-bold text-gray-900 dark:text-white">
             Bank Accounts
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400">
+          <p className="text-gray-700 dark:text-gray-400">
             Manage your checking, savings, and credit accounts
           </p>
         </div>
@@ -128,7 +128,7 @@ function Banks() {
 
       {/* Total Balance */}
       <Card>
-        <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm mb-1">Total Balance</p>
+        <p className="text-gray-700 dark:text-gray-400 text-sm mb-1">Total Balance</p>
         <p className="text-3xl font-display font-bold text-gray-900 dark:text-white tabular-nums">
           {formatCurrency(totalBalance, currency)}
         </p>
@@ -186,7 +186,7 @@ function Banks() {
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                       {account.institution}
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">
+                    <p className="text-gray-700 dark:text-gray-400 text-sm">
                       {account.accountType} • {users.find((u) => u.id === account.ownerId)?.displayName || 'Unknown'}
                     </p>
                   </div>
@@ -198,7 +198,7 @@ function Banks() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => setEditingAccount(account)}
-                      className="p-2 text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors"
+                      className="p-2 text-gray-400 hover:text-gray-700 dark:hover:text-white transition-all duration-200 hover:scale-110 active:scale-95"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -206,7 +206,7 @@ function Banks() {
                     </button>
                     <button
                       onClick={() => handleDeleteAccount(account.id)}
-                      className="p-2 text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-colors"
+                      className="p-2 text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-all duration-200 hover:scale-110 active:scale-95"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -220,7 +220,7 @@ function Banks() {
 
         {accounts.length === 0 && (
           <Card className="text-center py-8">
-            <p className="text-gray-600 dark:text-gray-400">No accounts found</p>
+            <p className="text-gray-700 dark:text-gray-400">No accounts found</p>
             <button
               onClick={() => setEditingAccount('new')}
               className="mt-4 text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 transition-colors"

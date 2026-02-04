@@ -58,12 +58,12 @@ function Sidebar({ collapsed, onToggleCollapse, user, household }) {
     <motion.aside
       initial={false}
       animate={{ width: collapsed ? 80 : 240 }}
-      transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-      className="fixed left-0 top-0 h-full glass-card border-r border-gray-200/60 dark:border-white/10 z-50"
+      transition={{ duration: 0.3, ease: 'easeOut' }}
+      className="fixed left-0 top-0 h-full glass-card border-r border-gray-200 dark:border-white/10 z-50"
     >
       <div className="flex flex-col h-full">
         {/* Logo */}
-        <div className="p-4 border-b border-gray-200/60 dark:border-white/10">
+        <div className="p-4 border-b border-gray-200 dark:border-white/10">
           <div className="flex items-center gap-3">
             <img
               src="/Family Finance Logo.png"
@@ -96,12 +96,12 @@ function Sidebar({ collapsed, onToggleCollapse, user, household }) {
                   className={({ isActive }) =>
                     `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 hover-glow ${isActive
                       ? 'bg-teal-500/20 text-teal-600 dark:text-teal-400 border-l-2 border-teal-500 pl-[10px]'
-                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 border-l-2 border-transparent'
+                      : 'text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 border-l-2 border-transparent'
                     }`
                   }
                 >
                   <motion.div
-                    whileHover={{ rotate: -8, transition: { duration: 0.15, ease: 'easeOut' } }}
+                    whileHover={{ rotate: -8, transition: { duration: 0.25, ease: 'easeOut' } }}
                     className="flex-shrink-0"
                   >
                     {item.icon}
@@ -126,7 +126,7 @@ function Sidebar({ collapsed, onToggleCollapse, user, household }) {
         </nav>
 
         {/* Collapse Toggle */}
-        <div className="p-4 border-t border-gray-200/60 dark:border-white/10">
+        <div className="p-4 border-t border-gray-200 dark:border-white/10">
           <button
             onClick={onToggleCollapse}
             className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
@@ -145,7 +145,7 @@ function Sidebar({ collapsed, onToggleCollapse, user, household }) {
 
         {/* User Info */}
         {user && (
-          <div className="p-4 border-t border-gray-200/60 dark:border-white/10">
+          <div className="p-4 border-t border-gray-200 dark:border-white/10">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-teal-500 flex items-center justify-center overflow-hidden">
                 {user.profilePicture ? (

@@ -18,12 +18,18 @@ function SimpleTrendChart({ data, currency = 'USD', label = 'Value', color = '#2
         if (active && payload && payload.length) {
             return (
                 <div className="glass-card p-4 shadow-lg">
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                    <p className="text-sm text-gray-700 dark:text-gray-400 mb-2">
                         {formatDate(tooltipLabel)}
                     </p>
-                    <p className="text-sm font-medium" style={{ color }}>
-                        {label}: {formatCurrency(payload[0].value, currency)}
-                    </p>
+                    <div className="flex items-center gap-2">
+                        <div
+                            className="w-2 h-2 rounded-full"
+                            style={{ backgroundColor: color }}
+                        />
+                        <p className="text-sm font-medium tabular-nums text-gray-900 dark:text-gray-100">
+                            {label}: {formatCurrency(payload[0].value, currency)}
+                        </p>
+                    </div>
                 </div>
             );
         }
@@ -34,7 +40,7 @@ function SimpleTrendChart({ data, currency = 'USD', label = 'Value', color = '#2
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
             className="w-full h-80"
         >
             <ResponsiveContainer width="100%" height="100%">

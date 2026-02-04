@@ -187,7 +187,7 @@ function Mortgage() {
           <h1 className="text-2xl font-display font-bold text-gray-900 dark:text-white">
             Loans & Mortgages
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-gray-700 dark:text-gray-400">
             Track all your debt obligations
           </p>
         </div>
@@ -199,7 +199,7 @@ function Mortgage() {
                 className="p-2 rounded-lg hover:bg-white/5 dark:hover:bg-white/5 hover:bg-gray-100 transition-colors"
                 title="Edit loan details"
               >
-                <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-gray-700 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                 </svg>
               </button>
@@ -208,7 +208,7 @@ function Mortgage() {
                 className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
                 title="Delete loan"
               >
-                <svg className="w-5 h-5 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-gray-700 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
               </button>
@@ -247,7 +247,7 @@ function Mortgage() {
             <h3 className="text-xl font-display font-semibold text-gray-900 dark:text-white mb-2">
               No loans added yet
             </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-gray-700 dark:text-gray-400 mb-6">
               Track mortgages, auto loans, student debt, and more in one place
             </p>
           </div>
@@ -258,29 +258,29 @@ function Mortgage() {
           {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card>
-              <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Total Loan Balance</p>
+              <p className="text-gray-700 dark:text-gray-400 text-sm mb-1">Total Loan Balance</p>
               <p className="text-2xl font-display font-bold text-red-600 dark:text-red-400">
                 {formatCurrency(combinedMetrics?.totalBalance || 0, currency)}
               </p>
-              <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+              <p className="text-gray-700 dark:text-gray-400 text-sm mt-1">
                 Across {loans.length} {loans.length === 1 ? 'loan' : 'loans'}
               </p>
             </Card>
             <Card>
-              <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Total Borrowed</p>
+              <p className="text-gray-700 dark:text-gray-400 text-sm mb-1">Total Borrowed</p>
               <p className="text-2xl font-display font-bold text-gray-900 dark:text-white">
                 {formatCurrency(combinedMetrics?.totalOriginal || 0, currency)}
               </p>
-              <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+              <p className="text-gray-700 dark:text-gray-400 text-sm mt-1">
                 Original amount
               </p>
             </Card>
             <Card>
-              <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Avg. Interest Rate</p>
+              <p className="text-gray-700 dark:text-gray-400 text-sm mb-1">Avg. Interest Rate</p>
               <p className="text-2xl font-display font-bold text-orange-600 dark:text-orange-400">
                 {formatPercentage(combinedMetrics?.weightedRate || 0)}
               </p>
-              <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+              <p className="text-gray-700 dark:text-gray-400 text-sm mt-1">
                 Weighted by balance
               </p>
             </Card>
@@ -290,32 +290,32 @@ function Mortgage() {
           {homeLoans.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card>
-                <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Home Value</p>
+                <p className="text-gray-700 dark:text-gray-400 text-sm mb-1">Home Value</p>
                 <p className="text-2xl font-display font-bold text-orange-600 dark:text-orange-400">
                   {formatCurrency(homeValue, currency)}
                 </p>
                 {household?.appreciationRate && (
-                  <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                  <p className="text-gray-700 dark:text-gray-400 text-sm mt-1">
                     {formatPercentage(household.appreciationRate)} annual appreciation
                   </p>
                 )}
               </Card>
               <Card>
-                <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Home Loan Balance</p>
+                <p className="text-gray-700 dark:text-gray-400 text-sm mb-1">Home Loan Balance</p>
                 <p className="text-2xl font-display font-bold text-red-600 dark:text-red-400">
                   {formatCurrency(totalHomeLoanBalance, currency)}
                 </p>
-                <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                <p className="text-gray-700 dark:text-gray-400 text-sm mt-1">
                   {homeLoans.length} {homeLoans.length === 1 ? 'loan' : 'loans'}
                 </p>
               </Card>
               <Card>
-                <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Home Equity</p>
+                <p className="text-gray-700 dark:text-gray-400 text-sm mb-1">Home Equity</p>
                 <p className={`text-2xl font-display font-bold ${equity >= 0 ? 'text-teal-600 dark:text-teal-400' : 'text-red-600 dark:text-red-400'}`}>
                   {formatCurrency(equity, currency)}
                 </p>
                 {homeValue > 0 && (
-                  <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                  <p className="text-gray-700 dark:text-gray-400 text-sm mt-1">
                     {formatPercentage((equity / homeValue) * 100, 1)} of home value
                   </p>
                 )}
@@ -360,14 +360,14 @@ function Mortgage() {
                       </div>
                       <div>
                         <p className="font-medium text-gray-900 dark:text-white">{loan.loanName}</p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">{loan.lender}</p>
+                        <p className="text-sm text-gray-700 dark:text-gray-400">{loan.lender}</p>
                       </div>
                     </div>
                     <div className="text-right">
                       <p className="font-medium text-gray-900 dark:text-white">
                         {formatCurrency(loan.currentBalance, currency)}
                       </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <p className="text-sm text-gray-700 dark:text-gray-400">
                         {formatPercentage(loan.interestRate)} APR
                       </p>
                     </div>
@@ -384,32 +384,32 @@ function Mortgage() {
           {displayedLoan.loanType === 'home' && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card>
-                <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Home Value</p>
+                <p className="text-gray-700 dark:text-gray-400 text-sm mb-1">Home Value</p>
                 <p className="text-2xl font-display font-bold text-orange-600 dark:text-orange-400">
                   {formatCurrency(homeValue, currency)}
                 </p>
                 {household?.appreciationRate && (
-                  <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                  <p className="text-gray-700 dark:text-gray-400 text-sm mt-1">
                     {formatPercentage(household.appreciationRate)} annual appreciation
                   </p>
                 )}
               </Card>
               <Card>
-                <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Loan Balance</p>
+                <p className="text-gray-700 dark:text-gray-400 text-sm mb-1">Loan Balance</p>
                 <p className="text-2xl font-display font-bold text-red-600 dark:text-red-400">
                   {formatCurrency(displayedLoan.currentBalance, currency)}
                 </p>
-                <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                <p className="text-gray-700 dark:text-gray-400 text-sm mt-1">
                   {formatPercentage(displayedLoan.interestRate)} interest rate
                 </p>
               </Card>
               <Card>
-                <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Home Equity</p>
+                <p className="text-gray-700 dark:text-gray-400 text-sm mb-1">Home Equity</p>
                 <p className={`text-2xl font-display font-bold ${equity >= 0 ? 'text-teal-600 dark:text-teal-400' : 'text-red-600 dark:text-red-400'}`}>
                   {formatCurrency(equity, currency)}
                 </p>
                 {homeValue > 0 && (
-                  <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                  <p className="text-gray-700 dark:text-gray-400 text-sm mt-1">
                     {formatPercentage((equity / homeValue) * 100, 1)} of home value
                   </p>
                 )}
@@ -421,20 +421,20 @@ function Mortgage() {
           {displayedLoan.loanType !== 'home' && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card>
-                <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Current Balance</p>
+                <p className="text-gray-700 dark:text-gray-400 text-sm mb-1">Current Balance</p>
                 <p className="text-2xl font-display font-bold text-red-600 dark:text-red-400">
                   {formatCurrency(displayedLoan.currentBalance, currency)}
                 </p>
-                <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                <p className="text-gray-700 dark:text-gray-400 text-sm mt-1">
                   {formatPercentage(displayedLoan.interestRate)} interest rate
                 </p>
               </Card>
               <Card>
-                <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Time Left</p>
+                <p className="text-gray-700 dark:text-gray-400 text-sm mb-1">Time Left</p>
                 <p className="text-2xl font-display font-bold text-teal-600 dark:text-teal-400">
                   {timeRemaining?.formattedTime || 'Calculating...'}
                 </p>
-                <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                <p className="text-gray-700 dark:text-gray-400 text-sm mt-1">
                   {timeRemaining ? (() => {
                     const date = new Date(timeRemaining.payoffDate);
                     const day = date.getDate();
@@ -457,7 +457,7 @@ function Mortgage() {
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">Lender</p>
+                <p className="text-gray-700 dark:text-gray-400 text-sm mb-1">Lender</p>
                 <div className="flex items-center gap-2">
                   {/* Lender Logo */}
                   <div className="relative">
@@ -484,27 +484,27 @@ function Mortgage() {
                 </div>
               </div>
               <div>
-                <p className="text-gray-600 dark:text-gray-400 text-sm">Original Amount</p>
+                <p className="text-gray-700 dark:text-gray-400 text-sm">Original Amount</p>
                 <p className="text-gray-900 dark:text-white font-medium">
                   {formatCurrency(displayedLoan.originalAmount, currency)}
                 </p>
               </div>
               <div>
-                <p className="text-gray-600 dark:text-gray-400 text-sm">Term</p>
+                <p className="text-gray-700 dark:text-gray-400 text-sm">Term</p>
                 <p className="text-gray-900 dark:text-white font-medium">{displayedLoan.termYears} years</p>
               </div>
               <div>
-                <p className="text-gray-600 dark:text-gray-400 text-sm">Start Date</p>
+                <p className="text-gray-700 dark:text-gray-400 text-sm">Start Date</p>
                 <p className="text-gray-900 dark:text-white font-medium">{formatDate(displayedLoan.startDate)}</p>
               </div>
               <div>
-                <p className="text-gray-600 dark:text-gray-400 text-sm">Monthly Payment</p>
+                <p className="text-gray-700 dark:text-gray-400 text-sm">Monthly Payment</p>
                 <p className="text-gray-900 dark:text-white font-medium">
                   {formatCurrency(displayedLoan.monthlyPayment, currency)}
                 </p>
               </div>
               <div>
-                <p className="text-gray-600 dark:text-gray-400 text-sm">Interest Rate</p>
+                <p className="text-gray-700 dark:text-gray-400 text-sm">Interest Rate</p>
                 <p className="text-gray-900 dark:text-white font-medium">
                   {formatPercentage(displayedLoan.interestRate)}
                 </p>
@@ -537,13 +537,13 @@ function Mortgage() {
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div>
-                    <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Payoff Date</p>
+                    <p className="text-gray-700 dark:text-gray-400 dark:text-gray-400 text-sm">Payoff Date</p>
                     <p className="text-gray-900 dark:text-white font-medium">
                       {formatDate(projections.payoffDate)}
                     </p>
                   </div>
                   <div>
-                    <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Total Interest</p>
+                    <p className="text-gray-700 dark:text-gray-400 dark:text-gray-400 text-sm">Total Interest</p>
                     <p className="text-red-600 dark:text-red-400 font-medium">
                       {formatCurrency(projections.totalInterest, currency)}
                     </p>
@@ -551,13 +551,13 @@ function Mortgage() {
                   {projections.interestSaved > 0 && (
                     <>
                       <div>
-                        <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Interest Saved</p>
+                        <p className="text-gray-700 dark:text-gray-400 dark:text-gray-400 text-sm">Interest Saved</p>
                         <p className="text-teal-600 dark:text-teal-400 font-medium">
                           {formatCurrency(projections.interestSaved, currency)}
                         </p>
                       </div>
                       <div>
-                        <p className="text-gray-600 dark:text-gray-400 dark:text-gray-400 text-sm">Months Saved</p>
+                        <p className="text-gray-700 dark:text-gray-400 dark:text-gray-400 text-sm">Months Saved</p>
                         <p className="text-teal-600 dark:text-teal-400 font-medium">
                           {projections.monthsSaved} months
                         </p>
@@ -741,7 +741,7 @@ function MortgageForm({ loan, householdId, onClose }) {
               onChange={(e) => setFormData({ ...formData, loanName: e.target.value })}
               placeholder="e.g., Primary Home, Honda Civic, Student Loan"
               required
-              className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
           </div>
           <div>
@@ -782,7 +782,7 @@ function MortgageForm({ loan, householdId, onClose }) {
                 onChange={(e) => setFormData({ ...formData, lender: e.target.value })}
                 placeholder="e.g., Wells Fargo, Chase, Sallie Mae"
                 required
-                className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
               />
             </div>
             <div>
@@ -894,7 +894,7 @@ function MortgageForm({ loan, householdId, onClose }) {
                 onChange={(e) => setFormData({ ...formData, termYears: e.target.value })}
                 placeholder="e.g., 5, 15, 30"
                 required
-                className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500"
               />
             </div>
           </div>
@@ -914,7 +914,7 @@ function MortgageForm({ loan, householdId, onClose }) {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-lg text-gray-600 dark:text-gray-400 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors"
+              className="px-4 py-2 rounded-lg text-gray-700 dark:text-gray-400 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white transition-colors"
             >
               Cancel
             </button>

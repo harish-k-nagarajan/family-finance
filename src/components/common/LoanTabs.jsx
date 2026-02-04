@@ -68,7 +68,7 @@ function LoanTabs({ loans, selectedLoanId, onSelect }) {
             <motion.div
               layoutId="activeLoanTab"
               className="absolute inset-0 bg-gradient-to-r from-teal-500/30 to-purple-500/30 rounded-md"
-              transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
             />
           )}
           <span className="relative z-10 flex items-center gap-2">

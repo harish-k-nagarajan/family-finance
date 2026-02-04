@@ -24,12 +24,12 @@ function Layout({ children, user, theme, household }) {
           }`}
       >
         {/* Header with theme toggle and sign out */}
-        <div className="sticky top-0 z-40 backdrop-blur-xl bg-white/50 dark:bg-navy-900/90 border-b border-gray-200/40 dark:border-white/5">
+        <div className="sticky top-0 z-40 backdrop-blur-xl bg-white/50 dark:bg-navy-900/90 border-b border-gray-200 dark:border-white/5">
           <div className="px-4 laptop:px-6 desktop:px-8 py-3 laptop:py-4 flex items-center justify-end gap-3">
             <ThemeToggle user={user} currentTheme={theme} />
             <button
               onClick={handleSignOut}
-              className="group relative w-10 h-10 rounded-full flex items-center justify-center bg-gray-100 dark:bg-navy-600 hover:bg-red-50 dark:hover:bg-red-900/30 border border-gray-200/60 dark:border-white/10 hover:border-red-300 dark:hover:border-red-500/50 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-red-500/20"
+              className="group relative w-10 h-10 rounded-full flex items-center justify-center bg-gray-100 dark:bg-navy-600 hover:bg-red-50 dark:hover:bg-red-900/30 border border-gray-200 dark:border-white/10 hover:border-red-300 dark:hover:border-red-500/50 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-red-500/20"
               title="Sign out"
               aria-label="Sign out"
             >

@@ -82,7 +82,7 @@ function CountrySelect({ value, onChange }) {
                                     onChange={(e) => setSearch(e.target.value)}
                                     placeholder="Search..."
                                     autoFocus
-                                    className="w-full pl-9 pr-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border-none text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:ring-1 focus:ring-teal-500"
+                                    className="w-full pl-9 pr-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border-none text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:ring-1 focus:ring-teal-500"
                                     onClick={(e) => e.stopPropagation()}
                                 />
                             </div>
