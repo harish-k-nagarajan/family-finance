@@ -163,7 +163,7 @@ function DashboardTrendChart({ data, currency = 'USD', timeRange = 'all', lastHi
                     <YAxis
                         tickFormatter={(value) => formatCurrency(value, currency, 0)}
                         stroke={document.body.classList.contains('dark') ? '#6B7280' : '#9CA3AF'}
-                        fontSize={10}
+                        fontSize={9}
                         tickLine={false}
                         axisLine={false}
                         width={70}
@@ -176,7 +176,7 @@ function DashboardTrendChart({ data, currency = 'USD', timeRange = 'all', lastHi
                         <ReferenceArea
                             x1={lastHistoricalDate}
                             x2={xDomainMax}
-                            fill={document.body.classList.contains('dark') ? 'rgba(167, 139, 250, 0.08)' : 'rgba(139, 92, 246, 0.05)'}
+                            fill={document.body.classList.contains('dark') ? 'rgba(167, 139, 250, 0.08)' : 'rgba(139, 92, 246, 0.08)'}
                             fillOpacity={1}
                             label={{
                                 value: 'Forecast',
@@ -236,6 +236,8 @@ function DashboardTrendChart({ data, currency = 'USD', timeRange = 'all', lastHi
                             dot={{ fill: '#3B82F6', r: 2 }}
                             name="Bank Accounts"
                             strokeOpacity={0.7}
+                            animationDuration={300}
+                            animationEasing="ease-out"
                         />
                     )}
                     {visibleSeries.investments && (
@@ -247,6 +249,8 @@ function DashboardTrendChart({ data, currency = 'USD', timeRange = 'all', lastHi
                             dot={{ fill: '#A78BFA', r: 2 }}
                             name="Investments"
                             strokeOpacity={0.7}
+                            animationDuration={300}
+                            animationEasing="ease-out"
                         />
                     )}
                     {visibleSeries.homeEquity && (
@@ -258,6 +262,8 @@ function DashboardTrendChart({ data, currency = 'USD', timeRange = 'all', lastHi
                             dot={{ fill: '#F59E0B', r: 2 }}
                             name="Home Equity"
                             strokeOpacity={0.7}
+                            animationDuration={300}
+                            animationEasing="ease-out"
                         />
                     )}
                 </ComposedChart>
