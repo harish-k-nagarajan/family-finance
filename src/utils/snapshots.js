@@ -1,5 +1,6 @@
 import { id } from '@instantdb/react';
 import db from '../lib/instant';
+import { calculateLoanAssetValue } from './mortgageCalculations';
 
 /**
  * Create a snapshot of current financial state
@@ -92,18 +93,19 @@ export async function getSnapshots(householdId, startDate, endDate = Date.now())
  * @param {Array} investments - Investment accounts
  * @param {object} household - Household data with home info
  * @param {Array} loans - Array of loan/mortgage data (supports multiple loans)
+ * @param {number} date - Optional date for historical calculations (defaults to now)
  * @returns {object} Totals for snapshot
  */
-export function calculateTotals(accounts, investments, household, loans) {
+export function calculateTotals(accounts, investments, household, loans, date = Date.now()) {
   const totalBankBalance = accounts?.reduce((sum, a) => sum + (a.balance || 0), 0) || 0;
   const totalInvestments = investments?.reduce((sum, i) => sum + (i.balance || 0), 0) || 0;
 
+  // Calculate home value from all home loans
   let homeValue = 0;
-  if (household?.homePurchasePrice && household?.homePurchaseDate) {
-    const appreciationRate = household.appreciationRate || 0;
-    const yearsOwned = (Date.now() - household.homePurchaseDate) / (365.25 * 24 * 60 * 60 * 1000);
-    homeValue = Math.round(household.homePurchasePrice * Math.pow(1 + appreciationRate / 100, yearsOwned));
-  }
+  const homeLoans = loans?.filter(l => l.loanType === 'home') || [];
+  homeLoans.forEach(loan => {
+    homeValue += calculateLoanAssetValue(loan, household, date);
+  });
 
   // Sum all loan balances (supports multiple loans)
   const mortgageBalance = loans?.reduce((sum, loan) => sum + (loan.currentBalance || 0), 0) || 0;

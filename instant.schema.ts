@@ -71,7 +71,11 @@ const _schema = i.schema({
       termYears: i.number(),
       startDate: i.number(), // Unix timestamp
       monthlyPayment: i.number(),
+      purchasePrice: i.number().optional(), // Asset purchase price (for home/auto/other loans)
+      purchaseDate: i.number().optional(), // Asset purchase date (Unix timestamp)
+      appreciationRate: i.number().optional(), // Appreciation/depreciation rate (can be negative)
       isDeleted: i.boolean().optional(), // Soft delete flag
+      closedAt: i.number().optional(), // Date when loan was closed/paid off (Unix timestamp)
       isDemo: i.boolean().optional(), // Flag for demo data
       createdAt: i.number(),
       updatedAt: i.number(),

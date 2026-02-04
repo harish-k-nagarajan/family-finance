@@ -8,7 +8,7 @@ import StatCard from '../components/Dashboard/StatCard';
 import DashboardTrendChart from '../components/Dashboard/DashboardTrendChart';
 import WealthRadarCard from '../components/common/WealthRadarCard';
 import { formatCurrency } from '../utils/formatters';
-import { calculateHomeValue } from '../utils/mortgageCalculations';
+import { calculateLoanAssetValue } from '../utils/mortgageCalculations';
 import { Landmark, PiggyBank, CreditCard, Wallet, TrendingUp, LineChart, BarChart3, PieChart } from 'lucide-react';
 
 const getAccountTypeIcon = (accountType) => {
@@ -77,14 +77,12 @@ function Home() {
   // Filter for home loans only
   const homeLoans = loans.filter(l => l.loanType === 'home');
 
-  // Only calculate home value if there are actual home loans
+  // Calculate total home value from all home loans
   let homeValue = 0;
-  if (mortgageEnabled && homeLoans.length > 0 && household?.homePurchasePrice && household?.homePurchaseDate) {
-    homeValue = calculateHomeValue(
-      household.homePurchasePrice,
-      household.homePurchaseDate,
-      household.appreciationRate || 0
-    );
+  if (mortgageEnabled && homeLoans.length > 0) {
+    homeLoans.forEach(loan => {
+      homeValue += calculateLoanAssetValue(loan, household);
+    });
   }
 
   // Calculate loan balance from home loans only
@@ -114,7 +112,7 @@ function Home() {
       netWorth: s.netWorth,
       totalBanks: s.totalBankBalance,
       totalInvestments: s.totalInvestments,
-      homeEquity: s.homeValue - s.totalLoanBalance,
+      homeEquity: (s.homeValue || 0) - (s.totalLoanBalance || 0),
       forecast: null,
     }));
 

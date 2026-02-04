@@ -184,6 +184,24 @@ export function calculateEquity(homeValue, mortgageBalance) {
 }
 
 /**
+ * Calculate asset value for a loan (home/auto/other)
+ * @param {object} loan - Loan object with purchasePrice, purchaseDate, appreciationRate
+ * @param {object} household - Household object (fallback for home data)
+ * @param {number} asOfDate - Date to calculate value for (defaults to now)
+ * @returns {number} Current asset value with appreciation/depreciation
+ */
+export function calculateLoanAssetValue(loan, household, asOfDate = Date.now()) {
+  // Use loan-level data if available, fallback to household
+  const purchasePrice = loan.purchasePrice ?? household?.homePurchasePrice;
+  const purchaseDate = loan.purchaseDate ?? household?.homePurchaseDate;
+  const appreciationRate = loan.appreciationRate ?? household?.appreciationRate ?? 0;
+
+  if (!purchasePrice || !purchaseDate) return 0;
+
+  return calculateHomeValue(purchasePrice, purchaseDate, appreciationRate, asOfDate);
+}
+
+/**
  * Calculate interest and principal portions for a payment
  * @param {number} currentBalance - Current loan balance before this payment
  * @param {number} annualRate - Annual interest rate as percentage (e.g., 3.5 for 3.5%)

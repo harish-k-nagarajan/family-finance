@@ -5,7 +5,7 @@ import Card from '../components/common/Card';
 import OwnerTabs from '../components/common/OwnerTabs';
 import SkeletonLoader from '../components/common/SkeletonLoader';
 import Button from '../components/common/Button';
-import { formatCurrency } from '../utils/formatters';
+import { formatCurrency, formatAccountType } from '../utils/formatters';
 import { createSnapshot, calculateTotals } from '../utils/snapshots';
 import { Landmark, PiggyBank, CreditCard, Wallet } from 'lucide-react';
 import BankAccountModal from '../components/BankAccounts/BankAccountModal';
@@ -204,7 +204,7 @@ function Banks() {
                       {account.institution}
                     </h3>
                     <p className="text-gray-700 dark:text-gray-400 text-sm">
-                      {account.accountType} • {users.find((u) => u.id === account.ownerId)?.displayName || 'Unknown'}
+                      {formatAccountType(account.accountType)} • {users.find((u) => u.id === account.ownerId)?.displayName || 'Unknown'}
                     </p>
                   </div>
                 </div>

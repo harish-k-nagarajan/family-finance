@@ -41,7 +41,7 @@ export function AmortizationChart({ data, currency = 'USD' }) {
                         fontSize={12}
                         tickLine={false}
                         axisLine={false}
-                        width={80}
+                        width={100}
                     />
                     <Tooltip
                         contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
@@ -110,12 +110,12 @@ export function PaymentCompositionChart({ data, currency = 'USD' }) {
                         fontSize={12}
                         tickLine={false}
                         axisLine={false}
-                        width={80}
+                        width={100}
                     />
                     <Tooltip
                         cursor={{ fill: 'rgba(255,255,255,0.05)' }}
                         contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
-                        formatter={(value, name) => [formatCurrency(value, currency), name === 'interest' ? 'Interest' : 'Principal']}
+                        formatter={(value, name) => [formatCurrency(value, currency), name]}
                     />
                     <Legend />
                     <Bar dataKey="interest" stackId="a" fill="#EC4899" radius={[0, 0, 4, 4]} name="Interest" />

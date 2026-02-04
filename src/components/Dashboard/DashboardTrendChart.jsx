@@ -196,6 +196,7 @@ function DashboardTrendChart({ data, currency = 'USD', timeRange = 'all', lastHi
                             stroke="none"
                             fill="url(#netWorthFill)"
                             fillOpacity={1}
+                            hide={true}
                         />
                     )}
 

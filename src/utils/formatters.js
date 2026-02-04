@@ -143,3 +143,24 @@ export function formatCompactNumber(value) {
   }
   return value.toString();
 }
+
+/**
+ * Format account type with proper capitalization
+ * @param {string} accountType - Account type string (e.g., 'checking', 'savings', 'credit card')
+ * @returns {string} Properly capitalized account type
+ */
+export function formatAccountType(accountType) {
+  if (!accountType) return '';
+
+  // Handle special cases
+  const lowerType = accountType.toLowerCase();
+  if (lowerType === 'credit card' || lowerType === 'credit') {
+    return 'Credit Card';
+  }
+
+  // Capitalize first letter of each word
+  return accountType
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}

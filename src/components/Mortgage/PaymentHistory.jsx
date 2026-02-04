@@ -105,13 +105,13 @@ function PaymentHistory({ loan, payments, currency, householdId }) {
               </div>
               <div className="glass-card p-4 rounded-lg">
                 <p className="text-sm text-gray-700 dark:text-gray-400 mb-1">Principal Paid</p>
-                <p className="text-2xl font-semibold text-teal-600 dark:text-teal-400">
+                <p className="text-2xl font-semibold text-purple-600 dark:text-purple-400">
                   {formatCurrency(totalPrincipal, currency)}
                 </p>
               </div>
               <div className="glass-card p-4 rounded-lg">
                 <p className="text-sm text-gray-700 dark:text-gray-400 mb-1">Interest Paid</p>
-                <p className="text-2xl font-semibold text-purple-600 dark:text-purple-400">
+                <p className="text-2xl font-semibold text-pink-600 dark:text-pink-400">
                   {formatCurrency(totalInterest, currency)}
                 </p>
               </div>
@@ -138,8 +138,8 @@ function PaymentHistory({ loan, payments, currency, householdId }) {
                         <span
                           className={`px-2 py-1 rounded text-xs font-medium ${
                             payment.paymentType === 'extra'
-                              ? 'bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300'
-                              : 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300'
+                              ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300'
+                              : 'bg-gray-100 dark:bg-gray-800/30 text-gray-700 dark:text-gray-300'
                           }`}
                         >
                           {payment.paymentType === 'extra' ? 'Extra Payment' : 'Regular Payment'}
@@ -156,17 +156,17 @@ function PaymentHistory({ loan, payments, currency, householdId }) {
                       {payment.paymentType === 'regular' && (
                         <div className="flex items-center gap-4 text-sm text-gray-700 dark:text-gray-400">
                           <div>
-                            Principal: <span className="font-medium text-teal-600 dark:text-teal-400">{formatCurrency(payment.principalPaid, currency)}</span>
+                            Principal: <span className="font-medium text-purple-600 dark:text-purple-400">{formatCurrency(payment.principalPaid, currency)}</span>
                           </div>
                           <div>
-                            Interest: <span className="font-medium text-purple-600 dark:text-purple-400">{formatCurrency(payment.interestPaid, currency)}</span>
+                            Interest: <span className="font-medium text-pink-600 dark:text-pink-400">{formatCurrency(payment.interestPaid, currency)}</span>
                           </div>
                         </div>
                       )}
 
                       {payment.paymentType === 'extra' && (
                         <div className="text-sm text-gray-700 dark:text-gray-400">
-                          100% to principal: <span className="font-medium text-teal-600 dark:text-teal-400">{formatCurrency(payment.principalPaid, currency)}</span>
+                          100% to principal: <span className="font-medium text-purple-600 dark:text-purple-400">{formatCurrency(payment.principalPaid, currency)}</span>
                         </div>
                       )}
 
