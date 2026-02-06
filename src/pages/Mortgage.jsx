@@ -205,9 +205,43 @@ function Mortgage() {
           <h1 className="text-2xl font-display font-bold text-gray-900 dark:text-white">
             Loans & Mortgages
           </h1>
-          <p className="text-gray-700 dark:text-gray-400">
-            Track all your debt obligations
-          </p>
+          <div className="flex items-center gap-2">
+            <p className="text-gray-700 dark:text-gray-400">
+              Track all your debt obligations
+            </p>
+            {displayedLoan && (
+              <>
+                <span className="text-gray-400 dark:text-gray-600">•</span>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-4 h-4 rounded bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center">
+                    {(() => {
+                      const iconProps = { className: "w-3 h-3 text-white", strokeWidth: 2 };
+                      switch (displayedLoan.loanType?.toLowerCase()) {
+                        case 'home':
+                          return <Home {...iconProps} />;
+                        case 'car':
+                        case 'auto':
+                          return <Car {...iconProps} />;
+                        case 'student':
+                          return <GraduationCap {...iconProps} />;
+                        case 'personal':
+                          return <CreditCard {...iconProps} />;
+                        default:
+                          return <FileText {...iconProps} />;
+                      }
+                    })()}
+                  </div>
+                  <span className="text-sm font-medium text-gray-900 dark:text-white capitalize">
+                    {displayedLoan.loanType === 'car' ? 'Auto' : displayedLoan.loanType} Loan
+                  </span>
+                  <span className="text-gray-400 dark:text-gray-600">·</span>
+                  <span className="text-sm text-gray-700 dark:text-gray-400">
+                    {displayedLoan.loanName}
+                  </span>
+                </div>
+              </>
+            )}
+          </div>
         </div>
         <div className="flex gap-3">
           <Button
@@ -982,7 +1016,7 @@ function MortgageForm({ loan, householdId, onClose }) {
                       className="w-full text-sm px-3 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-medium file:bg-teal-50 dark:file:bg-teal-500/10 file:text-teal-600 dark:file:text-teal-400 hover:file:bg-teal-100 dark:hover:file:bg-teal-500/20 file:cursor-pointer"
                     />
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                      {autoFetchedLogoUrl && !formData.logoUrl ? 'Auto-fetched. ' : ''}PNG, JPG, or SVG. Max 500KB.
+                      {autoFetchedLogoUrl && !formData.logoUrl ? 'Auto-fetched from logo.dev. ' : ''}PNG, JPG, or SVG. Max 500KB.
                     </p>
                   </div>
                 </div>
