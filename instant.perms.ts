@@ -6,7 +6,7 @@ const rules = {
       view: "true",
       create: "true",
       update: "true",
-      delete: "false",
+      delete: "true",
     },
   },
   users: {
@@ -14,7 +14,7 @@ const rules = {
       view: "true",
       create: "true",
       update: "true",
-      delete: "data.isDemo", // Allow deleting demo users only
+      delete: "true",
     },
   },
   accounts: {
@@ -69,7 +69,7 @@ const rules = {
       view: "true",
       create: "true",
       update: "true", // Allow updates to same-day snapshots when balances change
-      delete: "data.isDemo", // Allow deleting demo snapshots only
+      delete: "true",
     },
   },
 } satisfies InstantRules;

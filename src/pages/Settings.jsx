@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { db } from '../lib/instant';
+import { useToast } from '../components/common/Toast';
 import Card from '../components/common/Card';
 import SkeletonLoader from '../components/common/SkeletonLoader';
 import ToggleSwitch from '../components/common/ToggleSwitch';
@@ -431,30 +432,71 @@ function Settings() {
 function DeleteAccountButton({ user, household, onDelete }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const { showToast } = useToast();
 
-  // Check if current user is the owner
   const isOwner = user.id === household.ownerId;
+
+  // Pre-fetch all household data needed for a complete deletion
+  const { data: allData } = db.useQuery({
+    accounts: { $: { where: { householdId: household.id } } },
+    investments: { $: { where: { householdId: household.id } } },
+    mortgage: { $: { where: { householdId: household.id } } },
+    snapshots: { $: { where: { householdId: household.id } } },
+    users: { $: { where: { householdId: household.id } } },
+  });
+
+  const investmentIds = allData?.investments?.map(i => i.id) || [];
+  const mortgageIds = allData?.mortgage?.map(m => m.id) || [];
+
+  // Second query for entities keyed by parent ID (not householdId)
+  const { data: nestedData } = db.useQuery(
+    investmentIds.length > 0 || mortgageIds.length > 0
+      ? {
+          ...(investmentIds.length > 0 && {
+            holdings: { $: { where: { investmentId: { in: investmentIds } } } },
+          }),
+          ...(mortgageIds.length > 0 && {
+            extraPayments: { $: { where: { mortgageId: { in: mortgageIds } } } },
+            payments: { $: { where: { mortgageId: { in: mortgageIds } } } },
+          }),
+        }
+      : null
+  );
 
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
       if (isOwner) {
-        // Delete entire household and associated data
-        // 1. Delete household record
-        await db.transact(
-          db.tx.households[household.id].delete()
-        );
-        // Note: We might need to handle user deletion separately if cascading isn't automatic
-        // For simple implementations, just delete self and household.
-        await db.transact(db.tx.users[user.id].delete());
+        // Build one transaction that deletes all household data
+        const txs = [];
+
+        // Nested entities first (holdings, extraPayments, payments)
+        (nestedData?.holdings || []).forEach(h => txs.push(db.tx.holdings[h.id].delete()));
+        (nestedData?.extraPayments || []).forEach(ep => txs.push(db.tx.extraPayments[ep.id].delete()));
+        (nestedData?.payments || []).forEach(p => txs.push(db.tx.payments[p.id].delete()));
+
+        // Household-level entities
+        (allData?.accounts || []).forEach(a => txs.push(db.tx.accounts[a.id].delete()));
+        (allData?.investments || []).forEach(i => txs.push(db.tx.investments[i.id].delete()));
+        (allData?.mortgage || []).forEach(m => txs.push(db.tx.mortgage[m.id].delete()));
+        (allData?.snapshots || []).forEach(s => txs.push(db.tx.snapshots[s.id].delete()));
+
+        // All users in the household (including the current user)
+        (allData?.users || []).forEach(u => txs.push(db.tx.users[u.id].delete()));
+
+        // The household itself
+        txs.push(db.tx.households[household.id].delete());
+
+        await db.transact(txs);
       } else {
-        // Just delete self (leave household)
+        // Non-owner: just remove self from the household
         await db.transact(db.tx.users[user.id].delete());
       }
 
       onDelete(); // Sign out
     } catch (error) {
       console.error('Failed to delete account:', error);
+      showToast('Failed to delete. Please try again.', 'error');
       setIsDeleting(false);
     }
   };
