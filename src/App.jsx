@@ -12,7 +12,7 @@ import OnboardingWizard from './components/Onboarding/OnboardingWizard';
 
 function App() {
   const { isLoading, user, error } = db.useAuth();
-  const userSetupDone = useRef(null);
+  const transactionInFlight = useRef(false);
 
   // Get user data by email to handle linking pre-created accounts
   const { data: userData, isLoading: isQueryLoading } = db.useQuery(
@@ -22,7 +22,7 @@ function App() {
   // Automatically create or link user profile
   useEffect(() => {
     if (!user) {
-      userSetupDone.current = null; // Reset on logout so re-login works
+      transactionInFlight.current = false; // Reset on logout
       return;
     }
     if (isLoading || isQueryLoading || !userData) return;
@@ -30,11 +30,17 @@ function App() {
     const existingUsers = userData.users || [];
     const userById = existingUsers.find((u) => u.id === user.id);
 
-    if (userById) return; // User already exists in DB, nothing to do
+    if (userById) {
+      transactionInFlight.current = false; // User exists in DB, clear flag
+      return;
+    }
 
-    // Guard against multiple rapid effect runs firing duplicate transactions
-    if (userSetupDone.current === user.id) return;
-    userSetupDone.current = user.id;
+    // Prevent concurrent duplicate transactions (the original crash loop cause).
+    // Unlike the previous approach, this flag is cleared after each transaction
+    // (success via userById check above, failure via .catch below) so retries
+    // are possible if a transaction fails.
+    if (transactionInFlight.current) return;
+    transactionInFlight.current = true;
 
     const preCreatedUser = existingUsers.find((u) => u.id !== user.id && u.email === user.email);
 
@@ -46,7 +52,7 @@ function App() {
           createdAt: Date.now(),
           updatedAt: Date.now(),
         })
-      );
+      ).catch(() => { transactionInFlight.current = false; });
     }
     // Case 2: Pre-created user exists (manual add) -> Migrate to real Auth ID
     else if (preCreatedUser) {
@@ -97,8 +103,10 @@ function App() {
           // Actually, we can assume if the user is being linked, they are NOT the owner unless explicitly set.
         }
 
-        db.transact(updates);
-      }
+        db.transact(updates).catch(() => { transactionInFlight.current = false; });
+    } else {
+      transactionInFlight.current = false; // No applicable case, clear flag
+    }
   }, [user, isLoading, isQueryLoading, userData]);
 
   // Use the user that matches Auth ID for the app
