@@ -19,6 +19,7 @@ function OnboardingWizard({ user }) {
   const [displayName, setDisplayName] = useState('');
   const [currency, setCurrency] = useState('USD');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
   const step = steps[currentStep];
 
@@ -30,27 +31,33 @@ function OnboardingWizard({ user }) {
   const handleNext = async () => {
     if (step.id === 'currency') {
       // Final data step — create household and update user
+      setError(null);
       setIsSubmitting(true);
       const householdId = id();
       const now = Date.now();
-      await db.transact([
-        db.tx.households[householdId].update({
-          currency,
-          appreciationRate: 3,
-          homePurchasePrice: 0,
-          homePurchaseDate: null,
-          mortgageEnabled: false,
-          createdAt: now,
-          updatedAt: now,
-        }),
-        db.tx.users[user.id].update({
-          householdId,
-          displayName: displayName.trim(),
-          updatedAt: now,
-        }),
-      ]);
-      setIsSubmitting(false);
-      setCurrentStep(currentStep + 1);
+      try {
+        await db.transact([
+          db.tx.households[householdId].update({
+            currency,
+            appreciationRate: 3,
+            homePurchasePrice: 0,
+            homePurchaseDate: 0,
+            mortgageEnabled: false,
+            createdAt: now,
+            updatedAt: now,
+          }),
+          db.tx.users[user.id].update({
+            householdId,
+            displayName: displayName.trim(),
+            updatedAt: now,
+          }),
+        ]);
+        setCurrentStep(currentStep + 1);
+      } catch (err) {
+        setError('Something went wrong setting up your household. Please try again.');
+      } finally {
+        setIsSubmitting(false);
+      }
       return;
     }
 
@@ -102,6 +109,11 @@ function OnboardingWizard({ user }) {
               {step.id === 'done' && <DoneStep />}
             </motion.div>
           </AnimatePresence>
+
+          {/* Error message */}
+          {error && (
+            <p className="mt-4 text-sm text-red-500 dark:text-red-400 text-center">{error}</p>
+          )}
 
           {/* Actions */}
           <div className="flex justify-between mt-8">
