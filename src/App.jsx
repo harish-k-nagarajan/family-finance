@@ -106,7 +106,7 @@ function App() {
   const household = userData?.households?.find(h => h.id === currentUser?.householdId);
   const theme = currentUser?.theme || localStorage.getItem('theme') || 'dark';
 
-  if (isLoading) {
+  if (isLoading || (user && isQueryLoading)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-pulse text-teal-600 dark:text-teal-400 text-xl font-display">
