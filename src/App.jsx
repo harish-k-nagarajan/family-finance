@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { db } from './lib/instant';
 import Layout from './components/common/Layout';
@@ -12,6 +12,7 @@ import OnboardingWizard from './components/Onboarding/OnboardingWizard';
 
 function App() {
   const { isLoading, user, error } = db.useAuth();
+  const userSetupDone = useRef(null);
 
   // Get user data by email to handle linking pre-created accounts
   const { data: userData, isLoading: isQueryLoading } = db.useQuery(
@@ -20,23 +21,35 @@ function App() {
 
   // Automatically create or link user profile
   useEffect(() => {
-    if (user && !isLoading && !isQueryLoading && userData) {
-      const existingUsers = userData.users || [];
-      const userById = existingUsers.find((u) => u.id === user.id);
-      const preCreatedUser = existingUsers.find((u) => u.id !== user.id && u.email === user.email);
+    if (!user) {
+      userSetupDone.current = null; // Reset on logout so re-login works
+      return;
+    }
+    if (isLoading || isQueryLoading || !userData) return;
 
-      // Case 1: Brand new user (no profile at all)
-      if (existingUsers.length === 0) {
-        db.transact(
-          db.tx.users[user.id].update({
-            email: user.email,
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
-          })
-        );
-      }
-      // Case 2: Pre-created user exists (manual add) -> Migrate to real Auth ID
-      else if (!userById && preCreatedUser) {
+    const existingUsers = userData.users || [];
+    const userById = existingUsers.find((u) => u.id === user.id);
+
+    if (userById) return; // User already exists in DB, nothing to do
+
+    // Guard against multiple rapid effect runs firing duplicate transactions
+    if (userSetupDone.current === user.id) return;
+    userSetupDone.current = user.id;
+
+    const preCreatedUser = existingUsers.find((u) => u.id !== user.id && u.email === user.email);
+
+    // Case 1: Brand new user (no profile at all)
+    if (existingUsers.length === 0) {
+      db.transact(
+        db.tx.users[user.id].update({
+          email: user.email,
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        })
+      );
+    }
+    // Case 2: Pre-created user exists (manual add) -> Migrate to real Auth ID
+    else if (preCreatedUser) {
         console.log('Linking pre-created profile to new Auth ID...');
         const updates = [
           // 1. Create new user record with Auth ID, copying partial data
@@ -86,7 +99,6 @@ function App() {
 
         db.transact(updates);
       }
-    }
   }, [user, isLoading, isQueryLoading, userData]);
 
   // Use the user that matches Auth ID for the app
