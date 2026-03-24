@@ -107,8 +107,8 @@ export function calculateTotals(accounts, investments, household, loans, date = 
     homeValue += calculateLoanAssetValue(loan, household, date);
   });
 
-  // Sum all loan balances (supports multiple loans)
-  const mortgageBalance = loans?.reduce((sum, loan) => sum + (loan.currentBalance || 0), 0) || 0;
+  // Sum only home loan balances (only real estate counts toward equity/net worth)
+  const mortgageBalance = loans?.filter(l => l.loanType === 'home').reduce((sum, loan) => sum + (loan.currentBalance || 0), 0) || 0;
 
   return {
     totalBankBalance,

@@ -530,31 +530,10 @@ function Mortgage() {
             );
           })()}
 
-          {/* Summary Card for Non-Home Loans */}
+          {/* Summary Cards for Non-Home Loans */}
           {displayedLoan.loanType !== 'home' && (() => {
-            const loanAssetValue = ['auto', 'other'].includes(displayedLoan.loanType)
-              ? calculateLoanAssetValue(displayedLoan, household)
-              : 0;
-            const appreciationRate = displayedLoan.appreciationRate ?? household?.appreciationRate;
-            const hasAssetValue = loanAssetValue > 0;
-
             return (
-              <div className={`grid grid-cols-1 md:grid-cols-${hasAssetValue ? '3' : '2'} gap-6`}>
-                {hasAssetValue && (
-                  <Card>
-                    <p className="text-gray-700 dark:text-gray-400 text-sm mb-1">
-                      {displayedLoan.loanType === 'auto' ? 'Car' : 'Asset'} Value
-                    </p>
-                    <p className="text-2xl font-display font-bold text-teal-600 dark:text-teal-400">
-                      {formatCurrency(loanAssetValue, currency)}
-                    </p>
-                    {appreciationRate != null && (
-                      <p className="text-gray-700 dark:text-gray-400 text-sm mt-1">
-                        {formatPercentage(appreciationRate)} {appreciationRate < 0 ? 'depreciation' : 'appreciation'}
-                      </p>
-                    )}
-                  </Card>
-                )}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card>
                   <p className="text-gray-700 dark:text-gray-400 text-sm mb-1">Current Balance</p>
                   <p className="text-2xl font-display font-bold text-gray-900 dark:text-white">
@@ -1098,11 +1077,11 @@ function MortgageForm({ loan, householdId, onClose }) {
             </div>
           </div>
 
-          {/* Asset Information Section (conditional) */}
-          {['home', 'auto', 'other'].includes(formData.loanType) && (
+          {/* Asset Information Section (Home loans only) */}
+          {formData.loanType === 'home' && (
             <div className="border-t border-gray-200 dark:border-white/10 pt-5">
               <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
-                {formData.loanType === 'home' ? 'Home' : formData.loanType === 'auto' ? 'Car' : 'Asset'} Details
+                Home Details
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
@@ -1132,18 +1111,15 @@ function MortgageForm({ loan, householdId, onClose }) {
                 </div>
                 <div>
                   <label className="block text-xs uppercase tracking-wider font-medium text-gray-600 dark:text-gray-300 mb-2">
-                    {formData.loanType === 'auto' ? 'Depreciation' : 'Appreciation'} Rate (%)
+                    Appreciation Rate (%)
                   </label>
                   <input
                     type="number"
                     step="0.1"
-                    value={formData.appreciationRate ?? (formData.loanType === 'auto' ? -15 : household?.appreciationRate || 3)}
+                    value={formData.appreciationRate ?? (household?.appreciationRate || 3)}
                     onChange={(e) => setFormData({ ...formData, appreciationRate: parseFloat(e.target.value) })}
                     className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:shadow-lg focus:shadow-teal-500/20 dark:focus:shadow-teal-400/30"
                   />
-                  {formData.loanType === 'auto' && (
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Negative values indicate depreciation</p>
-                  )}
                 </div>
               </div>
             </div>
